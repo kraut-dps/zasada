@@ -1,0 +1,42 @@
+{
+  "name": "app",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "webpack": "./node_modules/.bin/webpack --mode=development",
+    "webpack-watch": "./node_modules/.bin/webpack --watch --mode=development",
+    "webpack-p": "./node_modules/.bin/webpack --watch --mode=production"
+  },
+  "dependencies": {
+    "classlist-polyfill": ">=1.2.0",
+    "proto-polyfill": ">=1.7.0",
+    "sourcemapped-stacktrace": "^1.1.11",
+    "weakmap-polyfill": ">=1.0.1",
+    "yaku": ">=0.19.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-proposal-function-bind": "^7.10.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.7.4",
+    "@babel/plugin-syntax-async-generators": "^7.7.4",
+    "@babel/plugin-syntax-dynamic-import": "^7.7.4",
+    "@babel/plugin-transform-runtime": "^7.10.5",
+    "@babel/preset-env": "^7.7.5",
+    "babel-loader": "^8.0.6",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "comments": {
+    "devDependencies": {
+      "@babel/plugin-proposal-function-bind": "::this.method syntax",
+      "@babel/plugin-proposal-object-rest-spread": "...{} syntax",
+      "@babel/plugin-syntax-async-generators": "sync await  tests",
+      "@babel/plugin-syntax-dynamic-import": "import()",
+      "@babel/plugin-transform-runtime": "reuse babel helpers"
+    }
+  }
+}

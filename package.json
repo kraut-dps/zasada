@@ -1,0 +1,62 @@
+{
+  "name": "zasada",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "files": [
+    "src/"
+  ],
+  "scripts": {
+    "unit": "./node_modules/.bin/karma start ./tests/karma.conf.js --single-run",
+    "coverage": "./node_modules/.bin/karma start ./tests/karma.conf.js --single-run --coverage",
+    "bolerplate": "mkdir -p ./app && cp -r ./webpack-bolerplate/* ./app",
+    "webpack-bolerplate-development": "cd ./app && ./../node_modules/.bin/webpack --mode=development",
+    "webpack-bolerplate-pproduction": "cd ./app && ./../node_modules/.bin/webpack --mode=production"
+  },
+  "dependencies": {
+    "classlist-polyfill": "^1.2.0",
+    "proto-polyfill": "^1.7.0",
+    "sourcemapped-stacktrace": "^1.1.11",
+    "weakmap-polyfill": "^1.0.1",
+    "yaku": "^1.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-proposal-function-bind": "^7.10.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.7.4",
+    "@babel/plugin-syntax-async-generators": "^7.7.4",
+    "@babel/plugin-syntax-dynamic-import": "^7.7.4",
+    "@babel/plugin-transform-runtime": "^7.10.5",
+    "@babel/preset-env": "^7.7.5",
+    "babel-loader": "^8.0.6",
+    "istanbul-instrumenter-loader": "^3.0.1",
+    "jasmine-core": "^2.9.1",
+    "karma": "^3.1.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage-istanbul-reporter": "^2.0.4",
+    "karma-firefox-launcher": "^1.1.0",
+    "karma-ie-launcher": "^1.0.0",
+    "karma-jasmine": "^1.1.2",
+    "karma-jasmine-ajax": "^0.1.13",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-virtualbox-ie11-launcher": "^1.2.0",
+    "karma-webpack": "^3.0.5",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack": "^4.44.0",
+    "webpack-cli": "^3.3.10"
+  },
+  "comments": {
+    "devDependencies": {
+      "@babel/plugin-proposal-function-bind": "::this.method syntax",
+      "@babel/plugin-proposal-object-rest-spread": "...{} syntax",
+      "@babel/plugin-syntax-async-generators": "sync await tests",
+      "@babel/plugin-syntax-dynamic-import": "import()",
+      "@babel/plugin-transform-runtime": "reuse babel helpers",
+      "jasmine-core": "tests, old version for test with polyfills",
+      "karma": "tests",
+      "istanbul-instrumenter-loader": "coverage"
+    }
+  }
+}
