@@ -1,7 +1,7 @@
-import {Widget} from '../../src/Widget.es6';
-import {TestMainBox} from "../_support/main/TestMainBox.es6";
-import { RouteString } from "../../src/log/route/RouteString.es6";
-import { RouteConsole } from "../../src/log/route/RouteConsole.es6";
+import {Widget} from '../../src/Widget.js';
+import {TestMainBox} from "../_support/main/TestMainBox.js";
+import { RouteString } from "../../src/log/route/RouteString.js";
+import { RouteConsole } from "../../src/log/route/RouteConsole.js";
 
 let oApp, fnSendSpy = jasmine.createSpy('spy');
 

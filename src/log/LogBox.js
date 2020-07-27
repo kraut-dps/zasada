@@ -1,6 +1,6 @@
-import {Box} from "zasada/src/Box.es6";
-import { Logger } from "zasada/src/log/Logger.es6";
-import { RouteConsole } from "zasada/src/log/route/RouteConsole.es6";
+import {Box} from "zasada/src/Box.js";
+import { Logger } from "zasada/src/log/Logger.js";
+import { RouteConsole } from "zasada/src/log/route/RouteConsole.js";
 
 export class LogBox extends Box{
 

@@ -1,5 +1,5 @@
-import { deepKey } from "zasada/src/utils/deepKey.es6";
-import { mergeDeep } from "zasada/src/utils/mergeDeep.es6";
+import { deepKey } from "zasada/src/utils/deepKey.js";
+import { mergeDeep } from "zasada/src/utils/mergeDeep.js";
 
 describe( "Utils", () => {
 

@@ -1,7 +1,7 @@
-import {CoreBox} from "zasada/src/core/CoreBox.es6";
-import {Box} from "zasada/src/Box.es6";
-import {PolyfillBox} from "zasada/src/polyfill/PolyfillBox.es6";
-import {LogBox} from "zasada/src/log/LogBox.es6";
+import {CoreBox} from "zasada/src/core/CoreBox.js";
+import {Box} from "zasada/src/Box.js";
+import {PolyfillBox} from "zasada/src/polyfill/PolyfillBox.js";
+import {LogBox} from "zasada/src/log/LogBox.js";
 
 export class MainBox extends Box {
 

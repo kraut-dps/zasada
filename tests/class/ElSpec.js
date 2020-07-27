@@ -1,5 +1,5 @@
-import {TestMainBox} from "../_support/main/TestMainBox.es6";
-import {Widget} from "zasada/src/Widget.es6";
+import {TestMainBox} from "../_support/main/TestMainBox.js";
+import {Widget} from "zasada/src/Widget.js";
 
 class WidgetTest extends Widget {
 }

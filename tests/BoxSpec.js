@@ -1,4 +1,4 @@
-import {Box} from "../src/Box.es6";
+import {Box} from "../src/Box.js";
 
 describe( "Box", () => {
 

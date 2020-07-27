@@ -1,5 +1,5 @@
-import {Widget} from '../src/Widget.es6';
-import {TestMainBox} from "zasada/tests/_support/main/TestMainBox.es6";
+import {Widget} from '../src/Widget.js';
+import {TestMainBox} from "zasada/tests/_support/main/TestMainBox.js";
 
 let oApp;
 

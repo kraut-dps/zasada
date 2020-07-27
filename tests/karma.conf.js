@@ -25,7 +25,7 @@ var fnGetWebpackConfig = function ( oConfig ) {
 	if ( fnIsCoverageRun( oConfig ) ) {
 		oWebpackConfig.module.rules.push(
 			{
-				test: /\.es6$/,
+				test: /\.js$/,
 				use: {
 					loader: 'istanbul-instrumenter-loader',
 					options: {esModules: true}
@@ -61,7 +61,7 @@ module.exports = function ( config ) {
 		files: [
 			{pattern: 'node_modules/yaku/lib/yaku.js', included: true},
 			{pattern: 'node_modules/proto-polyfill/index.js', included: false},
-			'./tests/**/*Spec.es6',
+			'./tests/**/*Spec.js',
 			{pattern: './tests/_support/data/*.js', included: false},
 			{pattern: 'node_modules/weakmap-polyfill/weakmap-polyfill.js', included: false},
 			{pattern: 'node_modules/classlist-polyfill/src/index.js', included: false},
@@ -74,7 +74,7 @@ module.exports = function ( config ) {
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
-			'./tests/**/*Spec.es6': ['webpack', 'sourcemap']
+			'./tests/**/*Spec.js': ['webpack', 'sourcemap']
 		},
 
 		// test results reporter to use

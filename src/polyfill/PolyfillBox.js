@@ -1,4 +1,4 @@
-import {Box} from "zasada/src/Box.es6";
+import {Box} from "zasada/src/Box.js";
 /**
  * @implements IPolyfillBox
  */
@@ -49,7 +49,7 @@ export class PolyfillBox extends Box{
 				Element.prototype.closest
 			)
 			||
-			import( /* webpackChunkName: "polyfill-mozilla" */ './polyfill/mozillaPolyfills.es6' )
+			import( /* webpackChunkName: "polyfill-mozilla" */ './polyfill/mozillaPolyfills.js' )
 		);
 	}
 

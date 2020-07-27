@@ -1,5 +1,5 @@
-import {Widget as WidgetBase} from '../../src/Widget.es6';
-import {TestMainBox} from "../_support/main/TestMainBox.es6";
+import {Widget as WidgetBase} from '../../src/Widget.js';
+import {TestMainBox} from "../_support/main/TestMainBox.js";
 
 /**
  *  @type {IStorage}

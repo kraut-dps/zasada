@@ -4,8 +4,8 @@ var fnWebpackItem = require( './webpackItem.js' );
 module.exports = [
 	fnWebpackItem(
 		{
-			index: './desktop/index.es6',
-			promise: './promise.es6'
+			index: './desktop/index.js',
+			promise: './promise.js'
 		},
 		__dirname + '/www/desktop-build/',
 		'desktop-build/',
@@ -19,8 +19,8 @@ module.exports = [
 	),
 	fnWebpackItem(
 		{
-			index: './mobile/index.es6',
-			promise: './promise.es6'
+			index: './mobile/index.js',
+			promise: './promise.js'
 		},
 		__dirname + '/www/mobile-build/',
 		'mobile-build/',

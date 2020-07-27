@@ -1,13 +1,13 @@
-import { Box } from "zasada/src/Box.es6";
-import { Linker } from "zasada/src/core/class/Linker.es6";
-import { Storage } from "zasada/src/core/class/Storage.es6";
-import { Attrs } from "zasada/src/core/class/Attrs.es6";
-import { Dom } from "zasada/src/core/class/Dom.es6";
-import { El } from "zasada/src/core/class/El.es6";
-import { ElQuery } from "zasada/src/core/class/ElQuery.es6";
-import { RelQuery } from "zasada/src/core/class/RelQuery.es6";
-import { deepKey } from "zasada/src/utils/deepKey.es6";
-import { mergeDeep } from 'zasada/src/utils/mergeDeep.es6';
+import { Box } from "zasada/src/Box.js";
+import { Linker } from "zasada/src/core/class/Linker.js";
+import { Storage } from "zasada/src/core/class/Storage.js";
+import { Attrs } from "zasada/src/core/class/Attrs.js";
+import { Dom } from "zasada/src/core/class/Dom.js";
+import { El } from "zasada/src/core/class/El.js";
+import { ElQuery } from "zasada/src/core/class/ElQuery.js";
+import { RelQuery } from "zasada/src/core/class/RelQuery.js";
+import { deepKey } from "zasada/src/utils/deepKey.js";
+import { mergeDeep } from 'zasada/src/utils/mergeDeep.js';
 
 export class CoreBox extends Box {
 

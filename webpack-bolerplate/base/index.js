@@ -1,5 +1,5 @@
-import {MainBox} from "zasada/src/MainBox.es6";
-import {HelloWorld} from "widget/HelloWorld.es6";
+import {MainBox} from "zasada/src/MainBox.js";
+import {HelloWorld} from "widget/HelloWorld.js";
 
 const oApp = new MainBox();
 const oLinker = oApp.oneCoreBox().oneLinker();
@@ -21,7 +21,7 @@ oLinker.setBeforeNew(
 		'HelloWorldLazy',
 		'Map'
 	], () => {
-		return import( /* webpackChunkName: "lazy-widgets" */ 'lazy-widgets.es6' ).then( ( oWidgets ) => {
+		return import( /* webpackChunkName: "lazy-widgets" */ 'lazy-widgets.js' ).then( ( oWidgets ) => {
 			oLinker.setWidgets( oWidgets );
 		} );
 	}

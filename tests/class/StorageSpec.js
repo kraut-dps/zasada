@@ -1,4 +1,4 @@
-import {TestMainBox} from "../_support/main/TestMainBox.es6";
+import {TestMainBox} from "../_support/main/TestMainBox.js";
 
 let oApp, oDom, eBase, aNodes, aIds;
 

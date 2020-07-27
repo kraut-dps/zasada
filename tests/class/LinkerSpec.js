@@ -1,7 +1,7 @@
-import {TestMainBox} from "../_support/main/TestMainBox.es6";
-import {Widget} from "../../src/Widget.es6";
-import {Linker} from "../../src/core/class/Linker.es6";
-import {CoreBox} from "../../src/core/CoreBox.es6";
+import {TestMainBox} from "../_support/main/TestMainBox.js";
+import {Widget} from "../../src/Widget.js";
+import {Linker} from "../../src/core/class/Linker.js";
+import {CoreBox} from "../../src/core/CoreBox.js";
 
 class LinkerWithError extends Linker {
 	_error( mError, eContext, sBlockId, oWidget ) {

@@ -1,4 +1,4 @@
-import {oApp} from "app/base/index.es6";
+import {oApp} from "app/base/index.js";
 const oLinker = oApp.oneCoreBox().oneLinker();
 oLinker.setOpts( {
 	HelloWorld: {

@@ -1,4 +1,4 @@
-import {Widget} from "zasada/src/Widget.es6";
+import {Widget} from "zasada/src/Widget.js";
 
 export class HelloWorld extends Widget {
 

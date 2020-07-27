@@ -1,5 +1,5 @@
-import {PolyfillBox} from "zasada/src/polyfill/PolyfillBox.es6";
-import {Mozilla} from "zasada/src/polyfill/polyfill/mozillaPolyfills.es6";
+import {PolyfillBox} from "zasada/src/polyfill/PolyfillBox.js";
+import {Mozilla} from "zasada/src/polyfill/polyfill/mozillaPolyfills.js";
 export class TestPolyfillBox extends PolyfillBox{
 
 	Promise( hResolve ) {

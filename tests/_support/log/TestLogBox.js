@@ -1,4 +1,4 @@
-import { LogBox } from "zasada/src/log/LogBox.es6";
+import { LogBox } from "zasada/src/log/LogBox.js";
 
 export class TestLogBox extends LogBox{
 

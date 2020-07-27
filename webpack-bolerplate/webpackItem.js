@@ -61,7 +61,7 @@ module.exports = function ( aEntries, sPath, sPublicPath, oResolve = { modules: 
 		module: {
 			rules: [
 				{
-					test: /\.es6$/,
+					test: /\.js$/,
 					use: {
 						loader: 'babel-loader',
 						options: {

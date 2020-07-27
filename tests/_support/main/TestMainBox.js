@@ -1,7 +1,7 @@
-import {MainBox} from "../../../src/MainBox.es6";
-import {TestPolyfillBox} from "../polyfill/TestPolyfillBox.es6";
-import { TestLogBox } from "../log/TestLogBox.es6";
-import {LogBox} from "zasada/src/log/LogBox.es6";
+import {MainBox} from "../../../src/MainBox.js";
+import {TestPolyfillBox} from "../polyfill/TestPolyfillBox.js";
+import { TestLogBox } from "../log/TestLogBox.js";
+import {LogBox} from "zasada/src/log/LogBox.js";
 
 export class TestMainBox extends MainBox{
 	
