@@ -42,12 +42,14 @@ module.exports = [
 			]
 		},
 		devServer: {
-			contentBase: __dirname,
+			contentBase: __dirname + '/',
 			open: true, // open browser
 			overlay: true, // display error overlay
 			hot: true, // enable hot module replacement
 			disableHostCheck: true,
+			inline: true, // for HMR
 			stats: "errors-only", // display only errors to reduce the amount of output
+			watchContentBase: true, // HMR html
 		},
 		resolve: {
 			modules: ["node_modules"]
@@ -55,5 +57,5 @@ module.exports = [
 		plugins: [
 			new webpack.HotModuleReplacementPlugin(),
 		]
-	}
+	},
 ];
