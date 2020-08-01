@@ -1,15 +1,13 @@
-var oPath = require("path");
-
 module.exports = [
 {
   mode: 'none',
   devtool: 'source-map',
   entry: {
-    index: oPath.resolve( __dirname ) + '/index.js'
+    index: __dirname + '/index.js'
   },
   output: {
     filename: '[name].js',
-    path: oPath.resolve( __dirname ) + '/build/',
+    path: __dirname + '/build/',
     publicPath: '/build/',
   },
   module: {
@@ -43,7 +41,8 @@ module.exports = [
     ]
   },
   devServer: {
-    contentBase: oPath.resolve( __dirname )
+    contentBase: __dirname,
+    disableHostCheck: true
   },
   resolve: {
     modules: ["node_modules"]
