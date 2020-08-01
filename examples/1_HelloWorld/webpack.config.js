@@ -46,6 +46,7 @@ module.exports = [
 			open: true, // open browser
 			overlay: true, // display error overlay
 			hot: true, // enable hot module replacement
+			disableHostCheck: true,
 			stats: "errors-only", // display only errors to reduce the amount of output
 		},
 		resolve: {
