@@ -5,6 +5,7 @@ module.exports = [
 		devtool: 'source-map',
 		entry: [
 			'webpack-dev-server/client?http://0.0.0.0/',
+			'webpack/hot/only-dev-server',
 			__dirname + '/index.js'
 		],
 		output: {
@@ -46,7 +47,7 @@ module.exports = [
 			contentBase: __dirname,
 			open: true, // open browser
 			overlay: true, // display error overlay
-			hot: true, // enable hot module replacement
+			//hot: true, // enable hot module replacement
 			disableHostCheck: true,
 			stats: "errors-only", // display only errors to reduce the amount of output
 			watchContentBase: true // HMR html
