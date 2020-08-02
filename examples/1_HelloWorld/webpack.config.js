@@ -3,11 +3,12 @@ module.exports = [
 	{
 		mode: 'none',
 		devtool: 'source-map',
-		entry: {
-			index: __dirname + '/index.js'
-		},
+		entry: [
+			'webpack-dev-server/client?http://0.0.0.0:8080/',
+			__dirname + '/index.js'
+		],
 		output: {
-			filename: '[name].js',
+			filename: 'index.js',
 			path: __dirname + '/build/',
 			publicPath: '/build/',
 		},
