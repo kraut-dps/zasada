@@ -1,18 +1,29 @@
-var webpack = require( 'webpack' );
-var hostname = require( 'os' ).hostname();
 module.exports = [
 	{
 		mode: 'none',
 		devtool: 'source-map',
-		entry: [
-			//'webpack-dev-server/client?http://0.0.0.0/',
-			//'webpack/hot/only-dev-server',
-			__dirname + '/index.js'
-		],
+		entry: {
+			index: __dirname +'/index.js'
+		},
 		output: {
-			filename: 'index.js',
+			filename: '[name].js',
 			path: __dirname + '/build/',
 			publicPath: '/build/',
+		},
+		devServer: {
+			open: true, // open browser
+
+			// только чтобы правильно хост и порт устанавливался в sockJs http://localhost:8080/sockjs-node/info...
+			openPage: 'http://localhost:8080',
+			public: 'http://0.0.0.0',
+			disableHostCheck: true,
+
+			watchContentBase: true, // HMR для html частей приложения
+
+			contentBase: __dirname,
+
+			overlay: true, // display error overlay
+			stats: "errors-only"
 		},
 		module: {
 			rules: [
@@ -43,23 +54,6 @@ module.exports = [
 					//exclude: /node_modules/
 				},
 			]
-		},
-		devServer: {
-			public: 'http://0.0.0.0',
-			contentBase: __dirname,
-			open: true, // open browser
-			openPage: 'http://localhost:8080',
-			overlay: true, // display error overlay
-			//hot: true, // enable hot module replacement
-			disableHostCheck: true,
-			stats: "errors-only", // display only errors to reduce the amount of output
-			watchContentBase: true // HMR html
-		},
-		resolve: {
-			modules: ["node_modules"]
-		},
-		plugins: [
-			new webpack.HotModuleReplacementPlugin(),
-		]
-	},
+		}
+	}
 ];
