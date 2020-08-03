@@ -45,10 +45,10 @@ module.exports = [
 			]
 		},
 		devServer: {
-			sockHost: hostname,
-			sockPort: 80,
+			public: 'http://0.0.0.0',
 			contentBase: __dirname,
 			open: true, // open browser
+			openPage: 'http://localhost:8080',
 			overlay: true, // display error overlay
 			//hot: true, // enable hot module replacement
 			disableHostCheck: true,
