@@ -1,11 +1,12 @@
 var webpack = require( 'webpack' );
+var hostname = require( 'os' ).hostname();
 module.exports = [
 	{
 		mode: 'none',
 		devtool: 'source-map',
 		entry: [
-			'webpack-dev-server/client?http://0.0.0.0/',
-			'webpack/hot/only-dev-server',
+			//'webpack-dev-server/client?http://0.0.0.0/',
+			//'webpack/hot/only-dev-server',
 			__dirname + '/index.js'
 		],
 		output: {
@@ -44,6 +45,8 @@ module.exports = [
 			]
 		},
 		devServer: {
+			sockHost: hostname,
+			sockPort: 80,
 			contentBase: __dirname,
 			open: true, // open browser
 			overlay: true, // display error overlay
