@@ -3,10 +3,10 @@ module.exports = [
 		mode: 'none',
 		devtool: 'source-map',
 		entry: {
-			index: __dirname +'/index.js'
+			"1_HelloWorld": __dirname +'/1_HelloWorld/index.js'
 		},
 		output: {
-			filename: '[name].js',
+			filename: '[name]/index.js',
 			path: __dirname + '/build/',
 			publicPath: '/build/',
 		},
@@ -51,7 +51,6 @@ module.exports = [
 							]
 						}
 					},
-					//exclude: /node_modules/
 				},
 			]
 		}
