@@ -14,7 +14,7 @@ export class PolyfillBox extends Box{
 			] ).then( fnCallback );
 		} );
 	}
-	
+
 	Promise( fnResolve ) {
 		if ( window.Promise ) {
 			fnResolve();

@@ -24,10 +24,10 @@ export class El{
 	 * кеш элементов
 	 * @type {WeakMap}
 	 */
-	_oElements;
+	_oEls;
 
 	constructor() {
-		this._oElements = new WeakMap();
+		this._oEls = new WeakMap();
 	}
 
 	/**
@@ -46,7 +46,7 @@ export class El{
 
 			// сохраняем в кеше
 			if( !oElQuery.bNoCache ) {
-				this._oElements.set( oWidget.bl(), { ...{}, ...this._oElements.get( oWidget.bl() ), [oElQuery.key()]: aElements } );
+				this._oEls.set( oWidget.bl(), { ...{}, ...this._oEls.get( oWidget.bl() ), [oElQuery.key()]: aElements } );
 			}
 		}
 
@@ -61,7 +61,7 @@ export class El{
 		}
 	}
 	resetCache( oWidget ) {
-		this._oElements.set( oWidget.bl(), {} );
+		this._oEls.set( oWidget.bl(), {} );
 	}
 
 	parse( sEl ) {
@@ -80,7 +80,7 @@ export class El{
 			return false;
 		}
 
-		const oCache = this._oElements.get( oWidget.bl() ) || {};
+		const oCache = this._oEls.get( oWidget.bl() ) || {};
 
 		const sKey = oElQuery.key();
 

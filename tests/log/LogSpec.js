@@ -15,7 +15,7 @@ class ErrorWidget extends Widget {
 
 	run() {
 
-		this._attrProp( { 'type': 'i:iType' } );
+		this._init( { 'type': 'i:iType' } );
 
 		switch( this.iType ) {
 			case ErrorWidget.TYPE_ERROR:

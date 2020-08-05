@@ -1,7 +1,9 @@
 var oConfig = {
 	mode: 'none',
 	entry: {
-		"1_HelloWorld": __dirname +'/1_HelloWorld/index.js'
+		"1_HelloWorld": __dirname +'/1_HelloWorld/index.js',
+		"2_Elements": __dirname +'/2_Elements/index.js',
+		"3_Attrs": __dirname +'/3_Attrs/index.js'
 	},
 	output: {
 		filename: '[name]/index.js',

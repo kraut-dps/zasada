@@ -16,7 +16,16 @@ export class CoreWidget{
 		this.__sId = sBlockId;
 	}
 
-	destructor() {
+	run(){
+	
+	}
+
+	bl() {
+		return this.__eBl;
+	}
+
+	blockId() {
+		return this.__sId;
 	}
 
 	index() {
@@ -26,20 +35,8 @@ export class CoreWidget{
 		return this.__sIndex;
 	}
 
-	run(){
-	
-	}
-	
 	_getIndex() {
 		return null;
-	}
-
-	bl() {
-		return this.__eBl;
-	}
-
-	blockId() {
-		return this.__sId;
 	}
 
 	/**
@@ -79,35 +76,16 @@ export class CoreWidget{
 	}
 
 	/**
-	 * @param sEvent
-	 * @param hHandler
-	 */
-	//on( sEvent, hHandler ) {
-	//	this._on( this.bl(), sEvent, hHandler );
-	//}
-
-	/**
 	 * @param {String|Element|Element[]} mContext
 	 * @param sEvent
 	 * @param hHandler
 	 * @param {boolean} bOff
 	 */
 	_on( mContext, sEvent, hHandler, bOff = false ) {
-		this._forEachElement(
-			mContext,
-			( eContext ) => {
+		this._context( mContext ).forEach( ( eContext ) => {
 				eContext.addEventListener( sEvent, hHandler );
-			}
-		);
+		} );
 	}
-
-	/**
-	 * @param sEvent
-	 * @param hHandler
-	 */
-	//off( sEvent, hHandler ) {
-	//	this._off( this.bl(), sEvent, hHandler );
-	//}
 
 	/**
 	 * @param {String|Element|Element[]} mContext
@@ -115,70 +93,67 @@ export class CoreWidget{
 	 * @param hHandler
 	 */
 	_off( mContext, sEvent, hHandler ) {
-		this._forEachElement(
-			mContext,
-			( eContext ) => {
-				eContext.removeEventListener( sEvent, hHandler );
-			}
-		);
+		this._context( mContext ).forEach( ( eContext ) => {
+			eContext.removeEventListener( sEvent, hHandler );
+		} );
 	}
 
 	_fire( mContext, sEvent, oData ) {
 		const oEvent = new CustomEvent( sEvent, { detail: oData || {} } );
-		this._forEachElement(
-			mContext,
-			( eContext ) => {
-				eContext.dispatchEvent( oEvent );
-			}
-		);
+		this._context( mContext ).forEach( ( eContext ) => {
+			eContext.dispatchEvent( oEvent );
+		} );
 	};
 
 	_fireNative( mContext, sEvent, bBubbles = false ) {
 		const oEvent = document.createEvent( 'HTMLEvents' );
 		oEvent.initEvent( sEvent, bBubbles, false );
-		this._forEachElement(
-			mContext,
-			( eContext ) => {
-				eContext.dispatchEvent( oEvent );
-			}
-		);
+		this._context( mContext ).forEach( ( eContext ) => {
+			eContext.dispatchEvent( oEvent );
+		} );
 	};
 
 	_mod( mContext, mMod, mValue ) {
-		this._forEachElement(
-			mContext,
-			( eContext ) => {
-				switch( typeof mMod ) {
-					case 'object':
-						if( Array.isArray( mMod ) ) {
-							for( let i = 0; i < mMod.length; i++ ) {
-								eContext.classList.toggle( mMod[ i ], mMod[ i ] === mValue );
-							}
-						} else {
-							for( let sModNick in mMod ) {
-								eContext.classList.toggle( mMod[sModNick], sModNick === mValue );
-							}
+		this._context( mContext ).forEach( ( eContext ) => {
+			switch ( typeof mMod ) {
+				case 'object':
+					if ( Array.isArray( mMod ) ) {
+						for ( let i = 0; i < mMod.length; i++ ) {
+							eContext.classList.toggle( mMod[i], mMod[i] === mValue );
 						}
-						break;
-					case 'string':
-						eContext.classList.toggle( mMod, mValue );
-						break;
-				}
+					} else {
+						for ( let sModNick in mMod ) {
+							eContext.classList.toggle( mMod[sModNick], sModNick === mValue );
+						}
+					}
+					break;
+				case 'string':
+					eContext.classList.toggle( mMod, mValue );
+					break;
 			}
-		);
+		} );
 	}
 
 	/**
-	 * @param {array[]|string[]|object} mMap
-	 * @param {Element[]} aContexts
+	 * @param mContext
+	 * @param {string} sAttr
 	 * @param {string|null} sAttrPrefix
 	 */
-	_attr( mMap, aContexts = null, sAttrPrefix = null ) {
-		if( aContexts === null ) {
-			aContexts = [ this.bl() ];
-		}
+	_attr( mContext, sAttr, sAttrPrefix = null ) {
+		const oAttrs = this._attrs( mContext, [ sAttr ] );
+		const aVals = Object.values( oAttrs );
+		return aVals.length ? aVals[ 0 ] : null;
+	}
+
+	/**
+	 * @param mContext
+	 * @param {array[]|string[]|object} mMap
+	 * @param {string|null} sAttrPrefix
+	 */
+	_attrs( mContext, mMap, sAttrPrefix = null ) {
+		const aElements = this._context( mContext );
 		return this.fnOneAttrs()
-			.parse( aContexts, mMap, sAttrPrefix );
+			.parse( aElements, mMap, sAttrPrefix );
 	}
 
 	/**
@@ -190,30 +165,25 @@ export class CoreWidget{
 	 * as: _toArrayOfString
 	 * @param {array|object} mMap
 	 */
-	_attrProp( mMap ) {
-		const oAttrs = this._attr( mMap );
+	_init( mMap ) {
+		const oAttrs = this._attrs( '', mMap );
 		for( let sAttr in oAttrs ) {
 			this[ sAttr ] = oAttrs[ sAttr ];
 		}
 	}
 
 	_link( mContext, bWithSelf ) {
-		const aPromises = this._forEachElement(
-			mContext,
-			( eContext ) => {
-				return this.fnOneLinker().link( eContext, bWithSelf );
-			}
-		);
+		const aPromises = [];
+		this._context( mContext ).forEach( ( eContext ) => {
+			aPromises.push( this.fnOneLinker().link( eContext, bWithSelf ) );
+		} );
 		return Promise.all( aPromises );
 	}
 
 	_unlink( mContext, bWithSelf ) {
-		this._forEachElement(
-			mContext,
-			( eContext ) => {
-				this.fnOneLinker().unlink( eContext, bWithSelf );
-			}
-		);
+		this._context( mContext ).forEach( ( eContext ) => {
+			this.fnOneLinker().unlink( eContext, bWithSelf );
+		} );
 	}
 
 	_import( sImportName ) {
@@ -224,18 +194,28 @@ export class CoreWidget{
 		return fnImport();
 	}
 
-	_forEachElement( mContext, hHandler ) {
+	/**
+	 * @param {string|string[]|Element|Element[]} mContext
+	 * @return {Element[]}
+	 * @private
+	 */
+	_context( mContext ) {
 		let aRet = [];
 		if( typeof mContext === 'string' ) {
 			mContext = this._el( mContext );
 		}
 		if ( Array.prototype.isPrototypeOf( mContext ) || NodeList.prototype.isPrototypeOf( mContext ) ) {
 			for ( let i = 0; i < mContext.length; i++ ) {
-				aRet.push( hHandler.call( this, mContext[ i ] ) );
+				this._context( mContext[ i ] ).forEach( ( eElement ) => {
+					aRet.push( eElement );
+				} )
 			}
 		} else if( mContext ) {
-			aRet.push( hHandler.call( this, mContext ) );
+			aRet.push( mContext );
 		}
 		return aRet;
+	}
+
+	destructor() {
 	}
 }

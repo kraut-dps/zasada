@@ -58,7 +58,7 @@ interface IRelQuery {
 interface IWidget {
 	bl(): Element;
 
-	blockId(): string
+	blId(): string
 
 	destructor(): void;
 
