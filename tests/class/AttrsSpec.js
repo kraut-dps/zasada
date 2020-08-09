@@ -253,4 +253,21 @@ describe( "Attrs", () => {
 		);
 		expect( oProps ).toEqual( { iData: 5 } );
 	} );
+
+	it( "map as array", () => {
+		document.body.insertAdjacentHTML(
+			'afterbegin',
+			`<div id="base" data-var="5" data-var2="two">
+				</div>`
+		);
+		eBase = document.getElementById( 'base' );
+		const oProps = oAttrs.parse(
+			[ eBase ],
+			[
+				[ 'var', 'iVar', 'i' ],
+				[ 'var2', 'sVar2' ]
+			]
+		);
+		expect( oProps ).toEqual( { iVar: 5, sVar2: "two" } );
+	} );
 } );

@@ -76,25 +76,24 @@ export class CoreWidget{
 	}
 
 	/**
-	 * @param {String|Element|Element[]} mContext
-	 * @param sEvent
-	 * @param hHandler
-	 * @param {boolean} bOff
+	 * @param {string|Element|Element[]} mContext
+	 * @param {string} sEvent
+	 * @param {function} fnHandler
 	 */
-	_on( mContext, sEvent, hHandler, bOff = false ) {
+	_on( mContext, sEvent, fnHandler ) {
 		this._context( mContext ).forEach( ( eContext ) => {
-				eContext.addEventListener( sEvent, hHandler );
+				eContext.addEventListener( sEvent, fnHandler );
 		} );
 	}
 
 	/**
-	 * @param {String|Element|Element[]} mContext
-	 * @param sEvent
-	 * @param hHandler
+	 * @param {string|Element|Element[]} mContext
+	 * @param {string} sEvent
+	 * @param {function} fnHandler
 	 */
-	_off( mContext, sEvent, hHandler ) {
+	_off( mContext, sEvent, fnHandler ) {
 		this._context( mContext ).forEach( ( eContext ) => {
-			eContext.removeEventListener( sEvent, hHandler );
+			eContext.removeEventListener( sEvent, fnHandler );
 		} );
 	}
 
@@ -140,7 +139,7 @@ export class CoreWidget{
 	 * @param {string|null} sAttrPrefix
 	 */
 	_attr( mContext, sAttr, sAttrPrefix = null ) {
-		const oAttrs = this._attrs( mContext, [ sAttr ] );
+		const oAttrs = this._attrs( mContext, [ sAttr ], sAttrPrefix );
 		const aVals = Object.values( oAttrs );
 		return aVals.length ? aVals[ 0 ] : null;
 	}
@@ -165,7 +164,7 @@ export class CoreWidget{
 	 * as: _toArrayOfString
 	 * @param {array|object} mMap
 	 */
-	_init( mMap ) {
+	_my( mMap ) {
 		const oAttrs = this._attrs( '', mMap );
 		for( let sAttr in oAttrs ) {
 			this[ sAttr ] = oAttrs[ sAttr ];

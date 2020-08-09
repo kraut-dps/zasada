@@ -46,7 +46,7 @@ export class Attrs{
 		const oRet = {};
 		const aMap = this._parseMap( mMap );
 		for( let iMapIndex = 0; iMapIndex < aMap.length; iMapIndex++ ) {
-			const [ sAttr, sName, sType ] = aMap[ iMapIndex ];
+			const [ sAttr, sName, sType = this.sType ] = aMap[ iMapIndex ];
 			for( let iElementIndex = 0; iElementIndex < aElements.length; iElementIndex++ ) {
 				const eElement = aElements[ iElementIndex ];
 				const sAttrName = ( sPrefix === null ? this.sPrefix : sPrefix ) + sAttr;
@@ -60,7 +60,7 @@ export class Attrs{
 		}
 		return oRet;
 	}
-	
+
 	/**
 	 * internal
 	 * @param {string[]|string[][]|object} mMap
@@ -70,7 +70,8 @@ export class Attrs{
 		const aRet = [];
 		if( Array.isArray( mMap ) ) {
 			for( let i = 0; i < mMap.length; i++ ) {
-				aRet.push( this._parseMapItem( mMap[ i ] ) );
+				const mMapItem = mMap[ i ];
+				aRet.push( Array.isArray( mMapItem ) ? mMapItem : this._parseMapItem( mMapItem ) );
 			}
 		} else {
 			for( let sFrom in mMap ) {
