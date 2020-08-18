@@ -1,9 +1,9 @@
-import {Widget} from '../../src/Widget.js';
-import {TestMainBox} from "../_support/main/TestMainBox.js";
-import { RouteString } from "../../src/log/route/RouteString.js";
-import { RouteConsole } from "../../src/log/route/RouteConsole.js";
+import { RouteString } from "zasada/src/log/route/RouteString.js";
+import { RouteConsole } from "zasada/src/log/route/RouteConsole.js";
+import oDeps from "zasada/tests/_support/deps.js";
+import {RootBox, Widget} from "zasada/src/index.js";
 
-let oApp, fnSendSpy = jasmine.createSpy('spy');
+let oRootBox, oHelper, oOriginConsole, fnSendSpy = jasmine.createSpy('spy');
 
 class ErrorWidget extends Widget {
 
@@ -49,15 +49,15 @@ class TestRouteConsole extends RouteConsole {
 
 describe( "Routes", () => {
 
-	beforeAll( ( hDone ) => {
-		oApp = new TestMainBox();
-		oApp.basePolyfills( () => {
-			oApp.oneLogBox().oneLogger().fnAsyncOneMapStack = null;
-			oApp.oneCoreBox().oneLinker().setWidgets( { ErrorWidget } );
-
-			hDone();
+	beforeAll( ( fnDone ) => {
+		oRootBox = new RootBox( oDeps );
+		const oCoreBox = oRootBox.box( 'core' );
+		oCoreBox.polyfills( () => {
+			//oRootBox.box( 'log' ).oneLogger().pMapStack = null;
+			oCoreBox.oneLinker().setWidgets( { ErrorWidget } );
+			oHelper = oRootBox.box( 'test' ).oneHelper();
+			fnDone();
 		} );
-
 	} );
 
 	beforeEach( () => {
@@ -65,52 +65,139 @@ describe( "Routes", () => {
 	} );
 
 
-	it( "RouteString", async () => {
+	describe( "RouteString", () => {
 
-		oApp.oneLogBox().oneLogger().aRoutes = [ new TestRouteString() ];
+		beforeAll( () => {
+			oOriginConsole = window.console;
+		} );
 
-		await oApp.addHtml(
-			`<div class="_ _ErrorWidget"></div>`,
-		);
+		afterAll( () => {
+			window.console = oOriginConsole;
+		} );
 
-		expect( fnSendSpy.calls.count() ).toEqual(1);
-		expect( fnSendSpy.calls.mostRecent().args[0][ 'sError' ]).toEqual('error' );
+		it( "base", async () => {
 
+			oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteString() };
+
+			await oHelper.addHtml(
+				`<div class="_ _ErrorWidget"></div>`,
+			);
+
+			expect( fnSendSpy.calls.count() ).toEqual(1);
+			expect( fnSendSpy.calls.mostRecent().args[0][ 'sError' ]).toEqual('error' );
+
+		} );
+
+		it( 'undefined widget', async ( fnDone ) => {
+			oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new RouteString() };
+			window.console = { log: fnDone };
+			await oHelper.addHtml(
+				`<div class="_ _UndefinedWidget"></div>`,
+			);
+		} );
+
+		it( 'long outerHTML', async ( fnDone ) => {
+			oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new RouteString() };
+			window.console = { log: ( sMessage ) => {
+				expect(sMessage.indexOf('...') !== -1).toBe(true);
+				fnDone();
+			} };
+			const s100Len = "1".repeat(100);
+			await oHelper.addHtml(
+				`<div class="_ _UndefinedWidget" data="${s100Len}"></div>`,
+			);
+		} );
 	} );
 
-	it( "RouteConsole", async () => {
+	describe( "RouteConsole", () => {
 
-		oApp.oneLogBox().oneLogger().aRoutes = [ new TestRouteConsole() ];
+		beforeAll( () => {
+			oOriginConsole = window.console;
+		} );
 
-		await oApp.addHtml(
-			`<div class="_ _ErrorWidget"></div>`,
-		);
+		afterAll( () => {
+			window.console = oOriginConsole;
+		} );
 
-		expect( fnSendSpy.calls.count() ).toEqual(1);
-		expect( fnSendSpy.calls.mostRecent().args[0][ 1 ]).toEqual('error' );
+		it( 'base', async () => {
+
+			oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new TestRouteConsole()};
+
+			await oHelper.addHtml(
+				`<div class="_ _ErrorWidget"></div>`,
+			);
+
+			expect( fnSendSpy.calls.count() ).toEqual( 1 );
+			expect( fnSendSpy.calls.mostRecent().args[0][1] ).toEqual( 'error' );
+		} );
+
+		it( 'no blockId and widget', async ( fnDone ) => {
+
+			// null, но на самом деле из дефолтного конфига возьмет RouteConsole
+			oRootBox.box( 'log' ).oneLogger().oRoutes = null;
+
+			window.console = { error: () => {
+				window.console = oOriginConsole;
+				fnDone();
+			} };
+			await oHelper.addHtml(
+				`<div class="_"></div>`,
+			);
+
+		} );
+
+		it( 'undefined widget console', async ( fnDone ) => {
+			oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new RouteConsole() };
+			window.console = { error: () => {
+				window.console = oOriginConsole;
+				fnDone();
+			} };
+			await oHelper.addHtml(
+				`<div class="_ _UndefinedWidget"></div>`,
+			);
+		} );
+
+		it( 'throw string', async ( fnDone ) => {
+
+			oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new RouteConsole()};
+
+			class ThrowWidget extends Widget {
+				run() {
+					throw "exception";
+				}
+			}
+			oRootBox.box( 'core' ).oneLinker().setWidgets( { ThrowWidget } );
+			window.console = { error: () => {
+				window.console = oOriginConsole;
+				fnDone();
+			} };
+			await oHelper.addHtml(
+				`<div class="_ _ThrowWidget"></div>`,
+			);
+		} );
 
 	} );
 
 	it( "types", async () => {
 
-		oApp.oneLogBox().oneLogger().aRoutes = [ new TestRouteConsole() ];
+		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteConsole() };
 
 
-		await oApp.addHtml(
+		await oHelper.addHtml(
 			`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_COMPAT}"></div>`,
 		);
 
 		expect( fnSendSpy.calls.count() ).toEqual(1);
 		expect( fnSendSpy.calls.mostRecent().args[0][ 1 ]).toEqual('error' );
 
-		await oApp.addHtml(
+		await oHelper.addHtml(
 			`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_ERROR}"></div>`,
 		);
 
 		expect( fnSendSpy.calls.count() ).toEqual(2);
 		expect( fnSendSpy.calls.mostRecent().args[0][ 1 ]).toEqual('error' );
 
-		await oApp.addHtml(
+		await oHelper.addHtml(
 			`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_STRING}"></div>`,
 		);
 
@@ -119,18 +206,52 @@ describe( "Routes", () => {
 
 	} );
 
-	it( "MapStack", async ( hDone ) => {
+	it( "mapStack lib error", async ( fnDone ) => {
 
-		oApp.oneLogBox().oneLogger().fnAsyncOneMapStack = oApp.oneLogBox().asyncOneMapStack;
-		oApp.oneLogBox().oneLogger().aRoutes = [ new TestRouteString() ];
+		// ситуация, когда по какой то причине вместо подгрузки sourcemapped-stacktrace библиотеки
+		// произошла ошибка
+		oRootBox.box( 'log' ).oneLogger().pMapStack = () => {
+			throw "error";
+		};
+		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteString() };
 
-		await oApp.addHtml(
+		fnSendSpy.and.callFake( ( oSend ) => {
+			expect( oSend[ 'sStack' ].indexOf( 'at' ) !== -1 ).toEqual(true );
+			oRootBox.box( 'log' ).oneLogger().pMapStack = oDeps.log.pMapStack;
+			fnDone();
+		} );
+
+		await oHelper.addHtml(
 			`<div class="_ _ErrorWidget"></div>`,
 		);
+	} );
+
+	it( "unset route by name", () => {
+
+		const oLogger = oRootBox.box( 'log' ).oneLogger();
+
+		// изначально был задан тип
+		oLogger.oRouteTypes = { test: RouteConsole };
+		// потом его сбросили
+		oLogger.oRouteTypes = { test: false };
+		// нужно чтобы по новой Logger собрал oRoutes
+		oLogger.oRoutes = null;
+
+		expect( oLogger._getRoutes() ).toEqual({  } );
+	} );
+
+	it( "MapStack", async ( fnDone ) => {
+
+		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteString() };
 
 		fnSendSpy.and.callFake( ( oSend ) => {
 			expect( oSend[ 'sError' ] ).toEqual('error' );
-			hDone();
+			fnDone();
 		} );
+
+		await oHelper.addHtml(
+			`<div class="_ _ErrorWidget"></div>`,
+		);
+
 	} );
 } );

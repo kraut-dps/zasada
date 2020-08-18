@@ -1,4 +1,5 @@
-import {TestMainBox} from "../_support/main/TestMainBox.js";
+import oDeps from "zasada/tests/_support/deps.js";
+import {RootBox} from "zasada/src/index.js";
 
 let oAttrs, eBase;
 
@@ -24,10 +25,13 @@ const fnCast = ( sAttrs, sPrefix, iCnt ) => {
 
 describe( "Attrs", () => {
 
-	beforeAll( ( hDone ) => {
-		const oApp = new TestMainBox();
-		oApp.basePolyfills( hDone );
-		oAttrs = oApp.oneCoreBox().oneAttrs();
+	beforeAll( ( fnDone ) => {
+		const oRoot = new RootBox( oDeps );
+		const oCoreBox = oRoot.box( 'core' );
+		oCoreBox.polyfills( () => {
+			oAttrs = oCoreBox.oneAttrs();
+			fnDone();
+		} );
 	} );
 
 	it( "map types", () => {

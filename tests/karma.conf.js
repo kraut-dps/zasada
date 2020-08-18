@@ -5,21 +5,22 @@ var fnIsCoverageRun = function ( oConfig ) {
 };
 
 var fnGetWebpackConfig = function ( oConfig ) {
-	var fnWebpackItem = require( '../webpack-bolerplate/webpackItem.js' );
-	var oWebpackConfig = fnWebpackItem(
-		{},
-		'/',
-		'/',
+	var oWebpackBase = require( '../src/utils/webpackBase.js' );
+	var fnWebpackMerge = require( 'webpack-merge' ).merge;
+	var oWebpackConfig = fnWebpackMerge(
+		oWebpackBase,
 		{
-			alias: {
-				zasada: sProjectRoot
-			},
-			modules: [ sProjectRoot + '/node_modules' ]
+			resolve:{
+				alias: {
+					zasada: sProjectRoot
+				},
+				modules: [ sProjectRoot + '/node_modules' ]
+			}
 		}
 	);
 	oWebpackConfig.entry = '';
 	oWebpackConfig.plugins = [];
-	//oWebpackConfig.devtool = 'source-map';
+	oWebpackConfig.devtool = 'source-map';
 
 	// если этот запрос только генерация coverage
 	if ( fnIsCoverageRun( oConfig ) ) {
@@ -31,7 +32,7 @@ var fnGetWebpackConfig = function ( oConfig ) {
 					options: {esModules: true}
 				},
 				enforce: 'post',
-				exclude: /node_modules|tests/
+				exclude: /node_modules|tests|polyfill/
 			}
 		);
 	}
@@ -62,6 +63,7 @@ module.exports = function ( config ) {
 			{pattern: 'node_modules/yaku/lib/yaku.js', included: true},
 			{pattern: 'node_modules/proto-polyfill/index.js', included: false},
 			'./tests/**/*Spec.js',
+			'./src/utils/polyfillPromise.js',
 			{pattern: './tests/_support/data/*.js', included: false},
 			{pattern: 'node_modules/weakmap-polyfill/weakmap-polyfill.js', included: false},
 			{pattern: 'node_modules/classlist-polyfill/src/index.js', included: false},
@@ -74,7 +76,8 @@ module.exports = function ( config ) {
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
-			'./tests/**/*Spec.js': ['webpack', 'sourcemap']
+			'./tests/**/*Spec.js': ['webpack', 'sourcemap'],
+			'./src/utils/polyfillPromise.js': ['webpack', 'sourcemap']
 		},
 
 		// test results reporter to use

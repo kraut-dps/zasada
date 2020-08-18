@@ -4,15 +4,10 @@ export class Box{
 	 * кеш по синглетонам
 	 * @type {{}}
 	 */
-
 	_oOne;
 
-	_oRootBox;
-
-	constructor( oBox = null ) {
+	constructor() {
 		this._autoBind();
-		this._oOne = new WeakMap();
-		this._oRootBox = oBox ? oBox.root() : this;
 	}
 
 	/**
@@ -21,6 +16,12 @@ export class Box{
 	 * @return {object}
 	 */
 	one( fnNew ) {
+		// не в конструкторе, потому что к моменту вызова конструктора может не быть
+		// полифила WeakMap
+		if( !this._oOne ) {
+			this._oOne = new WeakMap();
+		}
+
 		if( this._oOne.has( fnNew ) ) {
 			return this._oOne.get( fnNew );
 		} else {
@@ -31,52 +32,29 @@ export class Box{
 	}
 
 	/**
-	 * загрузка внешнего скрипта
-	 * @param {string} sUrl
-	 * @param {function} fnResolve callback функция успешной загрузки, если указан, не будет использоваться Promise
-	 * @param {function} fnReject callback функция ошибки
-	 * @return {Promise<any>}
-	 */
-	importExt( sUrl, fnResolve, fnReject ) {
-		const hExecutor = ( hResolve, hReject ) => {
-			const eScript = document.createElement( "script" );
-			eScript.src = sUrl;
-			eScript.type = 'text/javascript';
-			eScript.onload = hResolve;
-			eScript.onerror = () => {
-				hReject( "error script load " + sUrl );
-			};
-			eScript.async = true;
-			document.body.appendChild( eScript );
-		};
-		if( fnResolve ) {
-			hExecutor( fnResolve, fnReject );
-		} else {
-			return new Promise( hExecutor );
-		}
-	}
-
-	root() {
-		return this._oRootBox;
-	}
-
-	/**
 	 * автоустановка this контекста во все методы объекта
 	 * для методов new*, проверяет чтобы ни одно публичное свойство не содержало undefined
 	 */
 	_autoBind() {
 		let oObj = this;
 		do {
+			// проходимся по всем потомкам, до Box
 			if( Box === oObj.constructor ) {
 				break;
 			}
+
+			// проходимся по всем свойствам, и находим функции
 			const aProps = Object.getOwnPropertyNames( oObj );
 			for( let i = 0; i < aProps.length; i++ ) {
 				let sPropName = aProps[ i ];
-				if( typeof this[ sPropName ] !== 'function' || sPropName === 'constructor' ) {
+
+				if( !this._isFn( sPropName ) ) {
 					continue;
 				}
-				this[ sPropName ] = this._bind( this[ sPropName ], sPropName.indexOf( 'new' ) === 0 );
+
+				// если свойство функция, и начинается с new... , добавляем в просто bind this
+				// проверку, что все свйойства не undefined
+				this[ sPropName ] = this._bind( this[ sPropName ], this._isBuilder( sPropName ) );
 			}
 		} while ( ( oObj = Object.getPrototypeOf( oObj ) ) );
 	}
@@ -104,14 +82,27 @@ export class Box{
 	 * @param oObj
 	 */
 	_assertUndefProps( oObj ) {
-		for( let sProp in oObj ) {
-			if( sProp.substring( 0, 1 ) === '_' ) {
+
+		for( let sPropName in oObj ) {
+
+			// is protected prop
+			if( sPropName.substring( 0, 1 ) === '_' ) {
 				continue;
 			}
-			if( typeof oObj[ sProp ] !== 'undefined' ) {
+
+			if( typeof oObj[ sPropName ] !== 'undefined' ) {
 				continue;
 			}
-			throw new Error( 'required ' + oObj.constructor.name + '.' + sProp + ' is undefined' );
+
+			throw new Error( '"' + oObj.constructor.name + '.' + sPropName + '" object property value  is undefined' );
 		}
+	}
+
+	_isBuilder( sPropName ) {
+		return sPropName.indexOf( 'new' ) === 0;
+	}
+
+	_isFn( sPropName ) {
+		return typeof this[ sPropName ] === 'function' && sPropName !== 'constructor';
 	}
 }

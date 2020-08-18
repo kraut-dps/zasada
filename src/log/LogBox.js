@@ -1,8 +1,11 @@
-import {Box} from "zasada/src/Box.js";
-import { Logger } from "zasada/src/log/Logger.js";
-import { RouteConsole } from "zasada/src/log/route/RouteConsole.js";
+import {Box} from "zasada/src/utils/Box.js";
 
 export class LogBox extends Box{
+
+	Logger;
+	Error;
+	oRouteTypes;
+	pMapStack;
 
 	/**
 	 * @type {function(): Logger}
@@ -12,15 +15,16 @@ export class LogBox extends Box{
 	}
 
 	newLogger() {
-		const oLogger = new Logger();
-		oLogger.aRoutes = [
-			new RouteConsole()
-		];
-		oLogger.fnAsyncOneMapStack = this.asyncOneMapStack;
+		const oLogger = new this.Logger();
+		oLogger.oRouteTypes = this.oRouteTypes;
+		oLogger.Error = this.Error;
+		oLogger.fnAsyncOneMapStack = this.pMapStack;
 		return oLogger;
 	};
 
-	asyncOneMapStack() {
-		return import( /* webpackChunkName: "sourcemapped-stacktrace" */ 'sourcemapped-stacktrace' );
+	newError( sMessage, sName ) {
+		const oError = new this.Error( sMessage );
+		oError.name = sName;
+		return oError;
 	}
 }

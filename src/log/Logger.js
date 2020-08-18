@@ -3,26 +3,28 @@
  */
 export class Logger {
 
-	/**
-	 * @type ILogRoute[]
-	 */
-	aRoutes = [];
+	oRouteTypes;
+
+	Error;
+
+	oRoutes = null;
 
 	/**
 	 * sourcemapped-stacktrace
 	 * @type {function(): Promise<object>}
 	 */
-	fnAsyncOneMapStack = null;
+	pMapStack = null;
 
 	/**
 	 * возникновение ошибки
 	 */
-	log( oLog ) {
+	error( oLog ) {
 		this._getStack( oLog.mError, ( sStack ) => {
 			const sError = this._getErrorStr( oLog.mError );
-			for( let i = 0; i < this.aRoutes.length; i++ ) {
-				const oRoute = this.aRoutes[ i ];
-				oRoute.log( { ...oLog, sError, sStack } );
+			const oRoutes = this._getRoutes();
+			for( let sRoute in oRoutes ) {
+				const oRoute = oRoutes[ sRoute ];
+				oRoute.error( { ...oLog, sError, sStack } );
 			}
 		} );
 	}
@@ -35,23 +37,41 @@ export class Logger {
 		} else if( mError.sourceURL ) {
 			sStack = mError.message + "\n@" + mError.sourceURL + ':' + mError.line + ":1";
 		} else {
-			fnDone( mError );
-			return;
-		}
-		if( typeof window.Promise === 'undefined' || !this.fnAsyncOneMapStack ) {
 			fnDone( sStack );
 			return;
 		}
-		this.fnAsyncOneMapStack().then( ( oLib ) => {
-			oLib.mapStackTrace( sStack, ( aMappedStack ) => {
-				fnDone( aMappedStack.join( "\n" ).trim() );
-			} );
-		} ).catch( () => {
-			fnDone( mError );
-		} );
+		try {
+			this.pMapStack().then( ( oLib ) => {
+				oLib.mapStackTrace( sStack, ( aMappedStack ) => {
+					fnDone( aMappedStack.join( "\n" ).trim() );
+				} );
+			} )
+		} catch( e ) {
+			fnDone( sStack );
+		}
 	}
 
 	_getErrorStr( mError ) {
-		return typeof mError === 'string' ? mError : mError.message;
+		if( mError instanceof this.Error ) {
+			return mError.message + ' https://github.com/kraut-dps/zasada/#error-' + mError.name;
+		} else if( typeof mError === 'string' ) {
+			return mError;
+		} else {
+			return mError.message;
+		}
+	}
+
+	_getRoutes() {
+		if( this.oRoutes === null ) {
+			this.oRoutes = {};
+			for( let sRoute in this.oRouteTypes ) {
+				const cRouteClass = this.oRouteTypes[ sRoute ];
+				if( !cRouteClass ) {
+					continue;
+				}
+				this.oRoutes[ sRoute ] = new cRouteClass();
+			}
+		}
+		return this.oRoutes;
 	}
 }

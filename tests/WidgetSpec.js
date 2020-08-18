@@ -1,20 +1,24 @@
-import {Widget} from '../src/Widget.js';
-import {TestMainBox} from "zasada/tests/_support/main/TestMainBox.js";
+import oDeps from "zasada/tests/_support/deps.js";
+import {RootBox, Widget} from "zasada/src/index.js";
 
-let oApp;
+let oHelper, oLinker;
 
 describe( "Widget", () => {
 
 	beforeAll( ( fnDone ) => {
-		oApp = new TestMainBox();
-		oApp.basePolyfills( fnDone );
+		const oRootBox = new RootBox( oDeps );
+		oRootBox.box( 'core' ).polyfills( () => {
+			oHelper = oRootBox.box( 'test' ).oneHelper();
+			oLinker = oRootBox.box( 'core' ).oneLinker();
+			fnDone();
+		} );
 	} );
 
 	afterAll( () => {
-		oApp.destroy();
+		oHelper.destroy();
 	} );
 
-	it( ".link .unlink", async () => {
+	it( "._link() ._unlink()", async () => {
 		let fnRunSpy = jasmine.createSpy('spy' );
 		let fnDestructorSpy = jasmine.createSpy('spy' );
 
@@ -30,12 +34,12 @@ describe( "Widget", () => {
 			}
 		}
 
-		oApp.oneCoreBox().oneLinker().setWidgets( { TestWidget, TestSubWidget } );
-		await oApp.addHtml(
+		oLinker.setWidgets( { TestWidget, TestSubWidget } );
+		await oHelper.addHtml(
 			'<div class="widget _ _TestWidget"></div>'
 		);
 
-		const oWidget = oApp.widget( '.widget', TestWidget );
+		const oWidget = oHelper.widget( '.widget', TestWidget );
 
 		expect( fnRunSpy.calls.count() ).toEqual(0 );
 		expect( fnDestructorSpy.calls.count() ).toEqual(0 );
@@ -56,15 +60,15 @@ describe( "Widget", () => {
 
 	it( "._el()", async () => {
 
-		oApp.oneCoreBox().oneLinker().setWidgets( { Widget } );
-		await oApp.addHtml(
+		oLinker.setWidgets( { Widget } );
+		await oHelper.addHtml(
 			'<div class="widget _ _Widget">' +
 				'<div class="_Widget-Item">1</div>' +
 				'<div class="_Widget-Item">2</div>' +
 			'</div>'
 		);
 
-		const oWidget = oApp.widget( '.widget', Widget );
+		const oWidget = oHelper.widget( '.widget', Widget );
 
 		expect( oWidget._el( 'Item[]' ).length ).toEqual(2 );
 		expect( oWidget._el( 'Item' ).textContent ).toEqual('1' );
@@ -84,14 +88,14 @@ describe( "Widget", () => {
 
 		}
 
-		oApp.oneCoreBox().oneLinker().setWidgets( { TestWidget } );
-		await oApp.addHtml(
+		oLinker.setWidgets( { TestWidget } );
+		await oHelper.addHtml(
 			'<div class="widget1 _ _TestWidget"></div>' +
 				'<div class="widget2 _ _TestWidget"></div>'
 		);
 
-		const oWidget1 = oApp.widget( '.widget1', TestWidget );
-		const oWidget2 = oApp.widget( '.widget2', TestWidget );
+		const oWidget1 = oHelper.widget( '.widget1', TestWidget );
+		const oWidget2 = oHelper.widget( '.widget2', TestWidget );
 
 		// тут только coverage rel false, остальное отдельно в RelQuery тестируется
 		expect( oWidget1.rel( false ).onlyFirst().cssSel('.widget1').find() ).toEqual( oWidget1 );
@@ -104,12 +108,12 @@ describe( "Widget", () => {
 
 		}
 
-		oApp.oneCoreBox().oneLinker().setWidgets( { TestWidget } );
-		await oApp.addHtml(
+		oLinker.setWidgets( { TestWidget } );
+		await oHelper.addHtml(
 			'<div class="widget _ _TestWidget"></div>'
 		);
 
-		const oWidget = oApp.widget( '.widget1', TestWidget );
+		const oWidget = oHelper.widget( '.widget1', TestWidget );
 		let fnOnSpy = jasmine.createSpy('spy' );
 
 		oWidget._on( '', 'event', fnOnSpy );
@@ -135,14 +139,14 @@ describe( "Widget", () => {
 
 		}
 
-		oApp.oneCoreBox().oneLinker().setWidgets( { TestWidget } );
-		await oApp.addHtml(
+		oLinker.setWidgets( { TestWidget } );
+		await oHelper.addHtml(
 			'<div class="widget _ _TestWidget">' +
 				'<div class="_TestWidget-El"></div>' +
 			'</div>'
 		);
 
-		const oWidget = oApp.widget( '.widget', TestWidget );
+		const oWidget = oHelper.widget( '.widget', TestWidget );
 		let fnOnSpy = jasmine.createSpy('spy' );
 
 		oWidget._on( '', 'click', fnOnSpy );
@@ -167,12 +171,12 @@ describe( "Widget", () => {
 			sVar2 = null;
 		}
 
-		oApp.oneCoreBox().oneLinker().setWidgets( { TestWidget } );
-		await oApp.addHtml(
+		oLinker.setWidgets( { TestWidget } );
+		await oHelper.addHtml(
 			'<div class="widget _ _TestWidget" data-var1="7" data-var2="two" var3="3"></div>'
 		);
 
-		const oWidget = oApp.widget( '.widget', TestWidget );
+		const oWidget = oHelper.widget( '.widget', TestWidget );
 		expect( oWidget._attr( '', 'i:var1' )).toEqual( 7 );
 		expect( oWidget._attr( oWidget.bl(), 'i:var1' )).toEqual( 7 );
 		expect( oWidget._attr( [ oWidget.bl() ], 'i:var1' )).toEqual( 7 );
@@ -189,12 +193,12 @@ describe( "Widget", () => {
 		class TestWidget extends Widget {
 		}
 
-		oApp.oneCoreBox().oneLinker().setWidgets( { TestWidget } );
-		await oApp.addHtml(
+		oLinker.setWidgets( { TestWidget } );
+		await oHelper.addHtml(
 			'<div class="widget _ _TestWidget"></div>'
 		);
 
-		const oWidget = oApp.widget( '.widget', TestWidget );
+		const oWidget = oHelper.widget( '.widget', TestWidget );
 
 		oWidget._mod( '', 'widget_mod', true );
 		expect( oWidget.bl().classList.contains( 'widget_mod' ) ).toEqual( true );
@@ -220,34 +224,34 @@ describe( "Widget", () => {
 		class TestWidget extends Widget {
 		}
 
-		oApp.oneCoreBox().oneLinker().setWidgets( { TestWidget } );
+		oLinker.setWidgets( { TestWidget } );
 
 		let fnImport1 = jasmine.createSpy('spy' );
 		let fnImport2 = jasmine.createSpy('spy' );
 
-		oApp.oneCoreBox().oneLinker().setImports( {
+		oLinker.setImports( {
 			fnImport1,
 			fnImport2,
 		} );
 
+		await oHelper.addHtml(
+			'<div class="widget _ _TestWidget"></div>'
+		);
+
+		const oWidget = oHelper.widget( '.widget', TestWidget );
+
+		expect( fnImport1.calls.count() ).toEqual(0 );
+		oWidget._import( 'fnImport1' );
+		expect( fnImport1.calls.count() ).toEqual(1 );
+
 		// создадим одтельное правило, что fnCustomImport = fnImport2 для нашего виджета
-		oApp.oneCoreBox().oneLinker().setOpts( {
+		oLinker.setOpts( {
 			TestWidget: {
 				oImports: {
 					fnCustomImport: 'fnImport2'
 				}
 			}
 		} );
-
-		await oApp.addHtml(
-			'<div class="widget _ _TestWidget"></div>'
-		);
-
-		const oWidget = oApp.widget( '.widget', TestWidget );
-
-		expect( fnImport1.calls.count() ).toEqual(0 );
-		oWidget._import( 'fnImport1' );
-		expect( fnImport1.calls.count() ).toEqual(1 );
 
 		expect( fnImport2.calls.count() ).toEqual(0 );
 		oWidget._import( 'fnCustomImport' );

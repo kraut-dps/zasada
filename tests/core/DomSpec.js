@@ -1,6 +1,7 @@
-import {TestMainBox} from "../_support/main/TestMainBox.js";
+import oDeps from "zasada/tests/_support/deps.js";
+import {RootBox} from "zasada/src/index.js";
 
-let oApp, oDom, eBase, aNodes, aIds;
+let oHelper, oDom, eBase, aNodes, aIds;
 
 const fnGetIds = ( aNodes ) => {
 	let aRet = [];
@@ -12,22 +13,26 @@ const fnGetIds = ( aNodes ) => {
 
 describe( "Dom", () => {
 
-	beforeAll( ( hDone ) => {
-		oApp = new TestMainBox();
-		oDom = oApp.oneCoreBox().oneDom();
-		oApp.basePolyfills( hDone );
+	beforeAll( ( fnDone ) => {
+		const oRoot = new RootBox( oDeps );
+		const oCoreBox = oRoot.box( 'core' );
+		oCoreBox.polyfills( () => {
+			oDom = oCoreBox.oneDom();
+			oHelper = oRoot.box( 'test' ).oneHelper();
+			fnDone();
+		} );
 	} );
 
 	describe( ".children()", () => {
 		beforeAll( async() => {
-			await oApp.addHtml( `<div id="base" class="all">
+			await oHelper.addHtml( `<div id="base" class="all">
 					<div id="child" class="all">
 						<div id="subchild" class="all">
 						</div>
 					</div>
 				</div>`
 			);
-			eBase = oApp.element( '#base' );
+			eBase = oHelper.element( '#base' );
 		} );
 		
 		it( "with self all", () => {
@@ -58,7 +63,7 @@ describe( "Dom", () => {
 	
 	describe( ".parents()", () => {
 		beforeAll( async() => {
-			oApp.addHtml(
+			oHelper.addHtml(
 				`<div id="supparent" class="all">
 				  <div id="parent" class="all">
 					<div id="base" class="all">
@@ -66,7 +71,7 @@ describe( "Dom", () => {
 				  </div>
 				</div>`
 			);
-			eBase = oApp.element( '#base' );
+			eBase = oHelper.element( '#base' );
 		} );
 		
 		it( "with self all", () => {
@@ -103,10 +108,10 @@ describe( "Dom", () => {
 	
 	describe( ".parseBlockIds()", () => {
 		beforeAll( async() => {
-			await oApp.addHtml(
+			await oHelper.addHtml(
 				`<div class="base _BlockId Block _BlockId-ElementId _BlockId2-ElementId2 _BlockId3_Block _OtherBlockId"></div>`
 			);
-			eBase = oApp.element( '.base' );
+			eBase = oHelper.element( '.base' );
 		} );
 		
 		it( "base", () => {

@@ -1,31 +1,38 @@
-import {Box} from "zasada/src/Box.js";
 /**
  * @implements IPolyfillBox
  */
-export class PolyfillBox extends Box{
-	
-	base( fnCallback ) {
+export class Polyfills{
+
+	sPromiseUrl;
+	pProto;
+	pMozilla;
+	pWeakMap;
+	pClassList;
+
+	base( fnCallback, fnReject ) {
 		this.Promise( () => {
 			Promise.all( [
 				this.ObjectProto(),
 				this.Mozilla(), // Object.assign, CustomEvent, Element.prototype.matches, Element.prototype.closest
 				this.WeakMap(),
 				this.ElementClassList()
-			] ).then( fnCallback );
-		} );
+			] ).then( fnCallback )
+			.catch( fnReject );
+		}, fnReject );
 	}
 
-	Promise( fnResolve ) {
+	Promise( fnResolve, fnReject ) {
 		if ( window.Promise ) {
 			fnResolve();
 		} else {
-			this.importExt(
-				( __webpack_public_path__ || '/' ) + 'promise.js',
-				fnResolve,
-				( mError ) => {
-					throw new Error( mError );
-				}
-			);
+			const eScript = document.createElement( "script" );
+			const sUrl = this.sPromiseUrl;
+			eScript.src = sUrl;
+			eScript.type = 'text/javascript';
+			eScript.onload = fnResolve;
+			eScript.onerror = fnReject;
+			eScript.async = true;
+			document.body.appendChild( eScript );
 		}
 	}
 
@@ -33,7 +40,7 @@ export class PolyfillBox extends Box{
 		return Promise.resolve(
 			( "__proto__" in Object )
 			||
-			import( /* webpackChunkName: "polyfill-proto" */ 'proto-polyfill' )
+			this.pProto()
 		);
 	}
 
@@ -49,7 +56,7 @@ export class PolyfillBox extends Box{
 				Element.prototype.closest
 			)
 			||
-			import( /* webpackChunkName: "polyfill-mozilla" */ './polyfill/mozillaPolyfills.js' )
+			this.pMozilla()
 		);
 	}
 
@@ -57,7 +64,7 @@ export class PolyfillBox extends Box{
 		return Promise.resolve(
 			window.WeakMap
 			||
-			import( /* webpackChunkName: "polyfill-weakmap" */ 'weakmap-polyfill' )
+			this.pWeakMap()
 		);
 	}
 
@@ -65,8 +72,8 @@ export class PolyfillBox extends Box{
 		let bCheck = true;
 		try {
 			const eTest = document.createElement( "_" ), sClass = 'c';
-			eTest.classList.toggle( sClass, false );
-			if ( eTest.classList.contains( sClass ) ) {
+			eTest.classList.add( sClass );
+			if ( !eTest.classList.contains( sClass ) ) {
 				throw 1;
 			}
 		} catch( e ) {
@@ -75,7 +82,7 @@ export class PolyfillBox extends Box{
 		return Promise.resolve(
 			bCheck
 			||
-			import( /* webpackChunkName: "polyfill-classlist" */ 'classlist-polyfill' )
+			this.pClassList()
 		);
 	}
 }

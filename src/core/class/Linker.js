@@ -9,6 +9,8 @@ export class Linker {
 	 */
 	newWidget;
 
+	newError;
+
 	/**
 	 * @type {function(): IStorage}
 	 */
@@ -80,7 +82,7 @@ export class Linker {
 		this._oImports = { ...this._oImports, ...oDynamicImports };
 	}
 
-	getImport( sImportName, sBlockId = '' ) {
+	getImport( sImportName, sBlockId ) {
 		const oImportAliases =  this._oOpts[ sBlockId ][ 'oImports' ] || {};
 		if( oImportAliases[ sImportName ] ) {
 			sImportName = oImportAliases[ sImportName ];
@@ -105,13 +107,13 @@ export class Linker {
 			try {
 				aBlockIds = oDom.parseBlockIds( eModelContext );
 				if ( !aBlockIds.length ) {
-					throw new Error( "not set _blockId in tag class" );
+					throw this.newError( "not set _blockId in tag class", 'linkerNoBlockId' );
 				}
 				for ( let j = 0; j < aBlockIds.length; j++ ) {
 					try {
 						sBlockId = aBlockIds[ j ];
 						if ( !this._oOpts[ sBlockId ] ) {
-							throw new Error( "not set widget config" );
+							throw this.newError( "not widget config", 'noWidgetConfig' );
 						}
 						aPromises.push( this.widget( eModelContext, sBlockId ) );
 					} catch ( oError ) {
@@ -145,7 +147,7 @@ export class Linker {
 			.then( () => {
 				const { cWidget, oProps, fnAfterNew } = this.fnDeepKey( [ 'cWidget', 'oProps', 'fnAfterNew' ], oCustomOpts, this._oOpts[ sBlockId ] );
 				if ( !cWidget ) {
-					throw new Error( "not set widget class" );
+					throw this.newError( "not set widget class", 'noWidgetClass' );
 				}
 				oNewWidget = this.newWidget( eContext, sBlockId, cWidget );
 				this._setProps( oNewWidget, oProps );
@@ -177,13 +179,13 @@ export class Linker {
 		}
 		for ( let sPropName in oProps ) {
 			if ( !( sPropName in oWidget ) ) {
-				throw new Error( 'set widget props: ' + sPropName );
+				throw this.newError( 'no widget property "' + oWidget.blockId() + '.' + sPropName + '"', 'noProp'  );
 			}
 			oWidget[ sPropName ] = oProps[ sPropName ];
 		}
 	}
 
 	_error( mError, eContext, sBlockId, oWidget ) {
-		this.oneLogger().log( { mError, eContext, sBlockId, oWidget } );
+		this.oneLogger().error( { mError, eContext, sBlockId, oWidget } );
 	}
 }

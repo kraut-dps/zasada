@@ -3,7 +3,9 @@
  * @implements IElQuery
  */
 export class ElQuery {
-	
+
+	newError;
+
 	sId = '';
 	bOnlyFirst = true;
 	bCanEmpty = false;
@@ -25,35 +27,41 @@ export class ElQuery {
 		this.id( aQuery.join( '' ) );
 	}
 
+	/**
+	 * разбирает запрос справа налево
+	 * @param {string[]} aQuery
+	 * @return {string[]}
+	 * @private
+	 */
 	_parseDir( aQuery ) {
 		let sChar;
 		let iIndex = 0;
-		while( ( sChar = aQuery[ iIndex ] ) ) {
-			switch( sChar ) {
-				case '=':
-					this.noCache( true );
-					iIndex++;
-					break;
-				case '>':
-					this.withFrom( false );
-					iIndex++;
-					break;
-				case '?':
-					this.canEmpty( true );
-					iIndex++;
-					break;
-				case ']':
-					if( aQuery[ iIndex + 1 ] === '[' ) {
-						this.onlyFirst( false );
-						iIndex += 2;
+		try {
+			while ( ( sChar = aQuery[iIndex] ) ) {
+				switch ( sChar ) {
+					case '=':
+						this.noCache( true );
 						break;
-					}
-					throw new Error( 'bad el: ' + aQuery.join( '' ) );
-				default:
-					return aQuery.slice( iIndex );
+					case '>':
+						this.withFrom( false );
+						break;
+					case '?':
+						this.canEmpty( true );
+						break;
+					case ']':
+						if ( aQuery[iIndex + 1] === '[' ) {
+							this.onlyFirst( false );
+							iIndex++;
+							break;
+						}
+						throw '';
+					default:
+						return aQuery.slice( iIndex );
+				}
+				iIndex++;
 			}
-		}
-		throw new Error( 'bad el: ' + aQuery.join( '' ) );
+		} catch( e ) {}
+		throw this.newError( 'bad el: ' + aQuery.join( '' ), 'elQueryParse' );
 	}
 
 	key() {

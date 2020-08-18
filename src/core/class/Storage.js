@@ -14,6 +14,8 @@ export class Storage {
 	 */
 	newQuery;
 
+	newError;
+
 	/**
 	 * @type {WeakMap} eBlock => { sBlockId1: oWidget1, sBlockId2: oWidget2 }
 	 */
@@ -72,9 +74,12 @@ export class Storage {
 			// удалим из WeakMap
 			oWidgets = this._oMap.get( eBlock );
 			this._oMap.delete( eBlock );
-			if ( !oWidgets ) {
-				continue;
-			}
+
+			// если появится необходимость, добавить в тесты кейс
+			// if ( !oWidgets ) {
+			// 	continue;
+			// }
+
 			for ( let sBlockId in oWidgets ) {
 				aWidgets.push( oWidgets[ sBlockId ] );
 			}
@@ -145,7 +150,7 @@ export class Storage {
 
 	_canEmptyCheck( aRet, oRelQuery ) {
 		if( !oRelQuery.bCanEmpty && !aRet.length ) {
-			throw new Error( 'empty result' );
+			throw this.newError( 'empty result', 'storageFindEmpty' );
 		}
 		return aRet;
 	}
@@ -206,7 +211,14 @@ export class Storage {
 
 		// в зависимости от направления поищем элементы
 		switch ( iDir ) {
+			case -1:
+				aMatches = oDom.parents( eContext, sSel, bWithSelf, false );
+				break;
+			case 1:
+				aMatches = oDom.children( eContext, sSel, bWithSelf, false );
+				break;
 			case 0:
+			default:
 				aMatches = oDom.children( document, sSel, 0, false );
 				if ( !bWithSelf ) {
 					aMatches = aMatches.filter( ( eMatch ) => {
@@ -214,14 +226,6 @@ export class Storage {
 					} );
 				}
 				break;
-			case -1:
-				aMatches = oDom.parents( eContext, sSel, bWithSelf, false );
-				break;
-			case 1:
-				aMatches = oDom.children( eContext, sSel, bWithSelf, false );
-				break;
-			default:
-				throw new Error( "unknown iDir" );
 		}
 
 		// если указан еще дополнительный ограничительный селектор, выборку через него пропустим
@@ -262,14 +266,15 @@ export class Storage {
 		return null;
 	}
 
-	checkWidget( oWidget, cWidget, eContext, iWay, bWithSelf, aIndex = [], sSelector = '' ) {
-		if ( cWidget && !oWidget instanceof cWidget ) {
-			return false;
-		}
+	checkWidget( oWidget, cWidget, eContext, iWay, bWithSelf, aIndex, sSelector ) {
+		// если понадобится, можно добавить
+		//if ( cWidget && !oWidget instanceof cWidget ) {
+		//	return false;
+		//}
+		//if ( aIndex.length && ( !oWidget.index() || aIndex.indexOf( oWidget.index() ) === -1 ) ) {
+		//	return false;
+		//}
 		const eBlock = oWidget.bl();
-		if ( aIndex.length && ( !oWidget.index() || aIndex.indexOf( oWidget.index() ) === -1 ) ) {
-			return false;
-		}
 		if ( sSelector && !eBlock.matches( sSelector ) ) {
 			return false;
 		}
@@ -278,14 +283,13 @@ export class Storage {
 			return true;
 		}
 		switch ( iWay ) {
-			case 0:
-				return true;
 			case -1:
 				return eBlock.contains( eContext );
 			case 1:
 				return eContext.contains( eBlock );
+			case 0:
 			default:
-				return false;
+				return true;
 		}
 	}
 

@@ -1,17 +1,6 @@
-import {Box} from "../src/Box.js";
+import {Box} from "zasada/src/index.js";
 
 describe( "Box", () => {
-
-	it( "importExt", ( hDone ) => {
-		const oBox = new Box();
-		oBox.importExt(
-			'fakeUrl',
-			() => {
-				fail();
-			},
-			hDone
-		);
-	} );
 
 	it( "_assertUndefProps", () => {
 		const oBox = new Box();

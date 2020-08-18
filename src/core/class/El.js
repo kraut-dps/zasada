@@ -9,6 +9,8 @@ export class El{
 	 */
 	newElQuery;
 
+	newError;
+
 	/**
 	 * @type {function(): IDom}
 	 */
@@ -52,7 +54,7 @@ export class El{
 
 		if( aElements.length === 0 ) {
 			if( !oElQuery.bCanEmpty ) {
-				throw new Error( "find required '" + mQuery + "' not found" );
+				throw this.newError( 'find required "_' + oWidget.blockId() + '-' + mQuery + '" not found', 'elEmpty' );
 			} else {
 				return oElQuery.bOnlyFirst ? null : [];
 			}

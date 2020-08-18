@@ -24,11 +24,8 @@ export class RelQuery{
 	 * @return IRelQuery
 	 */
 	blockId( mBlockId ) {
-		if( this.aBlockIds === null ) {
-			this.aBlockIds = [];
-		}
 		if( typeof mBlockId === 'string' ) {
-			this.aBlockIds.push( mBlockId );
+			this.aBlockIds = [ mBlockId ];
 		} else {
 			this.aBlockIds = mBlockId;
 		}

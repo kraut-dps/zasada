@@ -1,38 +1,40 @@
-import {TestMainBox} from "../_support/main/TestMainBox.js";
-import {Widget} from "zasada/src/Widget.js";
+import oDeps from "zasada/tests/_support/deps.js";
+import {RootBox, Widget} from "zasada/src/index.js";
 
 class WidgetTest extends Widget {
 }
 
-let oEl, oApp;
+let oEl, oHelper, oCoreBox;
 describe( "El", () => {
 
-	beforeAll( ( hDone ) => {
-		oApp = new TestMainBox();
-		oApp.basePolyfills( () => {
-			oApp.oneCoreBox().oneLinker().setWidgets( { WidgetTest } );
-			oEl = oApp.oneCoreBox().oneEl();
-			hDone();
+	beforeAll( ( fnDone ) => {
+		const oRootBox = new RootBox( oDeps );
+		oCoreBox = oRootBox.box( 'core' );
+		oCoreBox.polyfills( () => {
+			oCoreBox.oneLinker().setWidgets( { WidgetTest } );
+			oEl = oCoreBox.oneEl();
+			oHelper = oRootBox.box( 'test' ).oneHelper();
+			fnDone();
 		} );
 	} );
 
 	it( "find", async ( fnDone ) => {
 
-		await oApp.addHtml(
+		await oHelper.addHtml(
 			`<div class="widget _ _WidgetTest _WidgetTest-Bar">
 				<div class="_WidgetTest-Foo"></div>
 				<div class="_WidgetTest-Foo"></div>
 			</div>`
 		);
 
-		const oWidget = oApp.widget( '.widget', WidgetTest );
+		const oWidget = oHelper.widget( '.widget', WidgetTest );
 
 		const aFoos = oEl.find( oWidget, 'Foo[]' );
 
 		// просто в качестве аргумента не строка а объект
 		expect( oEl.find( oWidget, oEl.parse( 'Foo[]' ) ) ).toEqual( aFoos );
 
-		const oElQuery = oApp.oneCoreBox().newElQuery();
+		const oElQuery = oCoreBox.newElQuery();
 		oElQuery.id( 'Foo' );
 		oElQuery.onlyFirst( false );
 

@@ -1,9 +1,7 @@
-import {TestMainBox} from "../_support/main/TestMainBox.js";
-import {Widget} from "../../src/Widget.js";
-import {Linker} from "../../src/core/class/Linker.js";
-import {CoreBox} from "../../src/core/CoreBox.js";
+import oDeps from "zasada/tests/_support/deps.js";
+import {RootBox, Widget} from "zasada/src/index.js";
 
-class LinkerWithError extends Linker {
+class LinkerWithError extends oDeps.core.Linker {
 	_error( mError, eContext, sBlockId, oWidget ) {
 		throw mError;
 	}
@@ -12,9 +10,9 @@ class LinkerWithError extends Linker {
 
 describe( "Linker", () => {
 
-	beforeAll( ( hDone ) => {
-		const oApp = new TestMainBox();
-		oApp.basePolyfills( hDone );
+	beforeAll( ( fnDone ) => {
+		const oRoot = new RootBox( oDeps );
+		oRoot.box( 'core' ).polyfills( fnDone );
 	} );
 
 	describe( 'props', () => {
@@ -38,8 +36,9 @@ describe( "Linker", () => {
 				}
 			}
 
-			const oApp = new TestMainBox();
-			oApp.oneCoreBox().oneLinker()
+			const oRootBox = new RootBox( oDeps );
+			const oHelper = oRootBox.box( 'test' ).oneHelper();
+			oRootBox.box( 'core' ).oneLinker()
 				.setOpts( {
 					TestWidget: {
 						cWidget: TestWidget,
@@ -59,18 +58,18 @@ describe( "Linker", () => {
 						}
 					}
 				} );
-			await oApp.addHtml(
+			await oHelper.addHtml(
 				'<div class="widget _ _TestWidget"></div>'
 			);
 
-			const oWidget = oApp.widget( '.widget', TestWidget );
+			const oWidget = oHelper.widget( '.widget', TestWidget );
 			expect( oWidget.sProp1 ).toBe( 1 );
 			expect( oWidget.sProp2 ).toBe( 2 );
 			expect( oWidget.sProp3 ).toBe( 3 );
 
 			expect( fnDestructorSpy.calls.count() ).toEqual(0 );
 
-			oApp.destroy();
+			oHelper.destroy();
 
 			expect( fnDestructorSpy.calls.count() ).toEqual(1 );
 		} );
@@ -83,71 +82,63 @@ describe( "Linker", () => {
 				oStruct = null;
 			}
 
-			const oApp = new TestMainBox();
-			oApp.oneCoreBox().oneLinker()
-				.setOpts( {
-					TestWidget: {
-						cWidget: TestWidget,
-						oProps: {
-							oStruct: {
-								sKey1: 1
-							},
-						}
+			const oRootBox = new RootBox( oDeps );
+			const oLinker = oRootBox.box( 'core' ).oneLinker();
+			const oHelper = oRootBox.box( 'test' ).oneHelper();
+			oLinker.setOpts( {
+				TestWidget: {
+					cWidget: TestWidget,
+					oProps: {
+						oStruct: {
+							sKey1: 1
+						},
 					}
-				} );
-			oApp.oneCoreBox().oneLinker()
-				.setOpts( {
-					TestWidget: {
-						cWidget: TestWidget,
-						oProps: {
-							oStruct: {
-								sKey2: 2
-							},
-						}
+				}
+			} );
+			oLinker.setOpts( {
+				TestWidget: {
+					cWidget: TestWidget,
+					oProps: {
+						oStruct: {
+							sKey2: 2
+						},
 					}
-				} );
-			await oApp.addHtml(
+				}
+			} );
+			await oHelper.addHtml(
 				'<div class="widget _ _TestWidget"></div>'
 			);
 
-			const oWidget = oApp.widget( '.widget', TestWidget );
+			const oWidget = oHelper.widget( '.widget', TestWidget );
 			expect( oWidget.oStruct ).toEqual( {sKey1: 1, sKey2: 2} );
 		} );
 
 		it( "undefined", async ( fnDone ) => {
 
-			class TestCoreBox extends CoreBox {
-				cLinker = LinkerWithError;
-			}
-
-			class TestApp extends TestMainBox {
-				newCoreBox() {
-					return new TestCoreBox( this );
-				}
-			}
-
-			const oApp = new TestApp();
-
+			const oDepsMod = oDeps;
+			oDepsMod.core.Linker = LinkerWithError;
+			const oRootBox = new RootBox( oDepsMod );
+			const oLinker = oRootBox.box( 'core' ).oneLinker();
+			const oHelper = oRootBox.box( 'test' ).oneHelper();
 
 			class TestWidget extends Widget {
 				sProp1;
 			}
 
-			oApp.oneCoreBox().oneLinker()
-				.setOpts( {
-					TestWidget: {
-						cWidget: TestWidget,
-						oProps: {
-							sProp3: 3,
-						}
+			oLinker.setOpts( {
+				TestWidget: {
+					cWidget: TestWidget,
+					oProps: {
+						sProp3: 3,
 					}
-				} );
-			await oApp.addHtml(
+				}
+			} );
+			await oHelper.addHtml(
 				'<div class="widget _ _TestWidget"></div>'
 			).then( () => {
 				fail();
 			} )
-				.catch( fnDone );
+			.catch( fnDone );
 
 		} );
 	} );
@@ -160,26 +151,25 @@ describe( "Linker", () => {
 		class LazyWidget extends Widget {
 		}
 
-		const oApp = new TestMainBox();
-		oApp.oneCoreBox().oneLinker()
-			.setWidgets( {BaseWidget} );
+		const oRootBox = new RootBox( oDeps );
+		const oLinker = oRootBox.box( 'core' ).oneLinker();
+		const oHelper = oRootBox.box( 'test' ).oneHelper();
+		oLinker.setWidgets( {BaseWidget} );
 
-		oApp.oneCoreBox().oneLinker()
-			.setBeforeNew(
-				['LazyWidget'],
-				() => {
-					oApp.oneCoreBox().oneLinker()
-						.setWidgets( {LazyWidget} )
-				}
-			);
+		oLinker.setBeforeNew(
+			['LazyWidget'],
+			() => {
+				oLinker.setWidgets( {LazyWidget} )
+			}
+		);
 
-		await oApp.addHtml(
+		await oHelper.addHtml(
 			'<div class="base _ _BaseWidget"></div>' +
 			'<div class="lazy _ _LazyWidget"></div>'
 		);
 
-		const oBaseWidget = oApp.widget( '.base', BaseWidget );
-		const oLazyWidget = oApp.widget( '.lazy', LazyWidget );
+		const oBaseWidget = oHelper.widget( '.base', BaseWidget );
+		const oLazyWidget = oHelper.widget( '.lazy', LazyWidget );
 		expect( oBaseWidget instanceof BaseWidget ).toBe( true );
 		expect( oLazyWidget instanceof LazyWidget ).toBe( true );
 
@@ -189,20 +179,13 @@ describe( "Linker", () => {
 	describe( 'link', () => {
 		it( 'not found tag class', async ( fnDone ) => {
 
-			class TestCoreBox extends CoreBox {
-				cLinker = LinkerWithError;
-			}
-
-			class TestApp extends TestMainBox {
-				newCoreBox() {
-					return new TestCoreBox( this );
-				}
-			}
-
-			const oApp = new TestApp();
+			const oDepsMod = oDeps;
+			oDepsMod.core.Linker = LinkerWithError;
+			const oRootBox = new RootBox( oDepsMod );
+			const oHelper = oRootBox.box( 'test' ).oneHelper();
 
 			try {
-				await oApp.addHtml(
+				await oHelper.addHtml(
 					`<div class="_"></div>`
 				);
 				fail();
@@ -210,7 +193,7 @@ describe( "Linker", () => {
 			}
 
 			try {
-				await oApp.addHtml(
+				await oHelper.addHtml(
 					`<div class="_ _UnknownWidget"></div>`
 				);
 				fail();
@@ -218,12 +201,12 @@ describe( "Linker", () => {
 			}
 
 
-			oApp.oneCoreBox().oneLinker().setOpts( {
+			oRootBox.box( 'core' ).oneLinker().setOpts( {
 				TestWidget: {}
 			} );
 
 			try {
-				await oApp.addHtml(
+				await oHelper.addHtml(
 					`<div class="_ _TestWidget"></div>`
 				);
 				fail();
@@ -232,6 +215,24 @@ describe( "Linker", () => {
 
 			fnDone();
 		} );
+
+		it( 'link with self', async ( fnDone ) => {
+
+			class TestWidget extends Widget {
+				run() {
+					fnDone();
+				}
+			}
+
+			const oRootBox = new RootBox( oDeps );
+			const oLinker = oRootBox.box( 'core' ).oneLinker();
+			oLinker.setWidgets( { TestWidget } );
+			const eDiv = document.createElement( 'div' );
+			eDiv.className = '_ _TestWidget'
+			document.body.appendChild( eDiv );
+			oLinker.link( eDiv, true );
+		} );
+
 	} );
 
 	it( 'skipRun', async ( fnDone ) => {
@@ -244,35 +245,33 @@ describe( "Linker", () => {
 			}
 		}
 
-		const oApp = new TestMainBox();
+		const oRootBox = new RootBox( oDeps );
+		const oLinker = oRootBox.box( 'core' ).oneLinker();
+		const oHelper = oRootBox.box( 'test' ).oneHelper();
 
 		// сначала стандартный запуск с run
 		bCheck = false;
-		oApp.oneCoreBox().oneLinker()
-			.setOpts( {
-				Widget: {
-					cWidget: TestWidget,
-					bSkipRun: false
-				}
-			} );
+		oLinker.setOpts( {
+			Widget: {
+				cWidget: TestWidget,
+				bSkipRun: false
+			}
+		} );
 
-		await oApp.addHtml( '<div class="_ _Widget"></div>' );
+		await oHelper.addHtml( '<div class="_ _Widget"></div>' );
 		expect( bCheck ).toBe( true );
 
 		// потом запуск с пропуском run
 		bCheck = false;
-		oApp.oneCoreBox().oneLinker()
-			.setOpts( {
-				Widget: {
-					cWidget: TestWidget,
-					bSkipRun: true
-				}
-			} );
+		oLinker.setOpts( {
+			Widget: {
+				cWidget: TestWidget,
+				bSkipRun: true
+			}
+		} );
 
-		await oApp.addHtml( '<div class="_ _Widget"></div>' );
+		await oHelper.addHtml( '<div class="_ _Widget"></div>' );
 		expect( bCheck ).toBe( false );
-
-
 		fnDone();
 	} );
 } );

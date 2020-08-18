@@ -2,7 +2,7 @@
  * виджет
  * @implements IWidget
  */
-export class CoreWidget{
+export class CoreWidget {
 	__eBl;
 	__sId;
 	__sIndex;
@@ -16,8 +16,8 @@ export class CoreWidget{
 		this.__sId = sBlockId;
 	}
 
-	run(){
-	
+	run() {
+
 	}
 
 	bl() {
@@ -28,36 +28,17 @@ export class CoreWidget{
 		return this.__sId;
 	}
 
-	index() {
-		if( typeof this.__sIndex === 'undefined' ) {
-			this.__sIndex = this._getIndex();
-		}
-		return this.__sIndex;
-	}
-
-	_getIndex() {
-		return null;
-	}
-
 	/**
 	 * поиск элемента виджета
 	 * @param {string} mQuery
 	 * @return {Element|Element[]}
 	 */
 	_el( mQuery ) {
-		if( mQuery === '' ) {
+		if ( mQuery === '' ) {
 			return this.bl();
 		}
 		return this.fnOneEl()
 			.find( this, mQuery );
-	}
-
-	/**
-	 * сброс кеша с найдеными элементами
-	 */
-	_elReset() {
-		this.fnOneEl()
-			.resetCache( this );
 	}
 
 	/**
@@ -69,7 +50,7 @@ export class CoreWidget{
 		const oQuery = this.fnOneLinker()
 			.oneStorage()
 			.query();
-		if( bFromThis ) {
+		if ( bFromThis ) {
 			oQuery.from( this.bl() );
 		}
 		return oQuery;
@@ -82,7 +63,7 @@ export class CoreWidget{
 	 */
 	_on( mContext, sEvent, fnHandler ) {
 		this._context( mContext ).forEach( ( eContext ) => {
-				eContext.addEventListener( sEvent, fnHandler );
+			eContext.addEventListener( sEvent, fnHandler );
 		} );
 	}
 
@@ -98,7 +79,7 @@ export class CoreWidget{
 	}
 
 	_fire( mContext, sEvent, oData ) {
-		const oEvent = new CustomEvent( sEvent, { detail: oData || {} } );
+		const oEvent = new CustomEvent( sEvent, {detail: oData || {}} );
 		this._context( mContext ).forEach( ( eContext ) => {
 			eContext.dispatchEvent( oEvent );
 		} );
@@ -139,9 +120,9 @@ export class CoreWidget{
 	 * @param {string|null} sAttrPrefix
 	 */
 	_attr( mContext, sAttr, sAttrPrefix = null ) {
-		const oAttrs = this._attrs( mContext, [ sAttr ], sAttrPrefix );
+		const oAttrs = this._attrs( mContext, [sAttr], sAttrPrefix );
 		const aVals = Object.values( oAttrs );
-		return aVals.length ? aVals[ 0 ] : null;
+		return aVals.length ? aVals[0] : null;
 	}
 
 	/**
@@ -166,8 +147,8 @@ export class CoreWidget{
 	 */
 	_my( mMap ) {
 		const oAttrs = this._attrs( '', mMap );
-		for( let sAttr in oAttrs ) {
-			this[ sAttr ] = oAttrs[ sAttr ];
+		for ( let sAttr in oAttrs ) {
+			this[sAttr] = oAttrs[sAttr];
 		}
 	}
 
@@ -187,7 +168,7 @@ export class CoreWidget{
 
 	_import( sImportName ) {
 		const fnImport = this.fnOneLinker().getImport( sImportName, this.blockId() );
-		if( !fnImport ) {
+		if ( !fnImport ) {
 			throw new Error( 'not setted import "' + sImportName + '"' );
 		}
 		return fnImport();
@@ -200,19 +181,37 @@ export class CoreWidget{
 	 */
 	_context( mContext ) {
 		let aRet = [];
-		if( typeof mContext === 'string' ) {
+		if ( typeof mContext === 'string' ) {
 			mContext = this._el( mContext );
 		}
 		if ( Array.prototype.isPrototypeOf( mContext ) || NodeList.prototype.isPrototypeOf( mContext ) ) {
 			for ( let i = 0; i < mContext.length; i++ ) {
-				this._context( mContext[ i ] ).forEach( ( eElement ) => {
+				this._context( mContext[i] ).forEach( ( eElement ) => {
 					aRet.push( eElement );
 				} )
 			}
-		} else if( mContext ) {
+		} else if ( mContext ) {
 			aRet.push( mContext );
 		}
 		return aRet;
+	}
+
+	/**
+	 * сброс кеша с найдеными элементами
+	 */
+	_elReset() {
+		this.fnOneEl().resetCache( this );
+	}
+
+	index() {
+		if ( typeof this.__sIndex === 'undefined' ) {
+			this.__sIndex = this._getIndex();
+		}
+		return this.__sIndex;
+	}
+
+	_getIndex() {
+		return null;
 	}
 
 	destructor() {

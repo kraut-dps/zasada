@@ -4,6 +4,8 @@
  */
 export class Attrs{
 
+	newError;
+
 	/**
 	 * @type {object} алиасы методов преобразования типа
 	 */
@@ -104,7 +106,7 @@ export class Attrs{
 			sFrom = sTo;
 		}
 		if( !( sType in this.oCasts ) ) {
-			throw new Error( 'Unknown attr type ' + sMapItem );
+			throw this.newError( 'Unknown attr type ' + sMapItem, 'attrsUnknownType' );
 		}
 		return [ sFrom, sTo, sType ];
 	}

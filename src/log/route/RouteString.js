@@ -4,22 +4,19 @@
  */
 export class RouteString {
 
-	log( oOpts ) {
+	iMaxElementHtml = 100;
+
+	error( oOpts ) {
 		const { sError, sStack, oWidget, sBlockId, eContext } = oOpts;
 		let aMessage = [];
-		if( sError ) {
-			aMessage.push( '"' + sError + '"' );
-		}
+		aMessage.push( '"' + sError + '"' );
 		const sWidget = this._getWidgetStr( sBlockId, oWidget );
-		if( sWidget ) {
-			aMessage.push( 'Widget: ' + sWidget );
-		}
-		if( eContext ) {
-			aMessage.push( 'Element: ' + this._elementToStr( eContext ) );
-		}
-		if( sStack ) {
-			aMessage.push( 'Stack: ' + sStack );
-		}
+		aMessage.push( 'Widget: ' + sWidget );
+
+		aMessage.push( 'Element: ' + this._elementToStr( eContext ) );
+
+		aMessage.push( 'Stack: ' + sStack );
+
 		this._send( { ...oOpts, sWidget, sMessage: aMessage.join( "\n" ) } );
 	}
 
@@ -31,8 +28,8 @@ export class RouteString {
 		console.log( sMessage );
 	}
 
-	_elementToStr( eElement, iMaxLen = 100 ) {
-		let sHtml = eElement.outerHTML.substr( 0, iMaxLen ).trim();
+	_elementToStr( eElement ) {
+		let sHtml = eElement.outerHTML.substr( 0, this.iMaxElementHtml ).trim();
 		const iPos = sHtml.indexOf( '>' );
 		if( iPos === -1 ) {
 			return sHtml + '...';
@@ -42,11 +39,9 @@ export class RouteString {
 	}
 	
 	_getWidgetStr( sBlockId, oWidget ) {
-		let sWidget = '';
-		if( sBlockId ) {
-			sWidget = sBlockId;
-		} else if( oWidget ) {
-			sWidget = oWidget.__sId;
+		let sWidget = sBlockId;
+		if( oWidget ) {
+			sWidget = oWidget.blockId();
 		}
 		return sWidget;
 	}

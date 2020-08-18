@@ -1,0 +1,35 @@
+body{
+	margin: 0 20px 20px;
+}
+*{
+	box-sizing: border-box;
+}
+.fixed{
+	position: fixed;
+	top: 0;
+	left: 50%;
+	width: 50%;
+}
+.block{
+	max-width: calc( 50% - 20px );
+	border: 1px solid darksalmon;
+	margin-top: 20px;
+	padding: 20px;
+}
+.block__element{
+	border: 1px solid lightgreen;
+	padding: 20px;
+	margin-top: 20px
+}
+.btn{
+	padding: 20px;
+	margin-top: 20px;
+	display: block;
+	text-align: left;
+	font-size: 18px;
+	cursor: pointer;
+}
+.header{
+	font-size: 20px;
+	font-weight: bold;
+}

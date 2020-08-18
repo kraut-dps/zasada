@@ -1,64 +1,34 @@
-var oConfig = {
-	mode: 'none',
-	entry: {
-		"1_HelloWorld": __dirname +'/1_HelloWorld/index.js',
-		"2_Elements": __dirname +'/2_Elements/index.js',
-		"3_Attrs": __dirname +'/3_Attrs/index.js'
-	},
-	output: {
-		filename: '[name]/index.js',
-		chunkFilename: '[name].js',
-		path: __dirname + '/build/',
-		publicPath: '/build/',
-	},
-	devServer: {
-		open: true, // open browser
+var fnWebpackMerge = require( 'webpack-merge' ).merge;
+var oWebpackBase = require( '../src/utils/webpackBase.js' );
 
-		// только чтобы правильно хост и порт устанавливался в sockJs http://localhost:8080/sockjs-node/info...
-		openPage: 'http://localhost:8080',
-		public: 'http://0.0.0.0',
-		disableHostCheck: true,
-
-		watchContentBase: true, // HMR для html частей приложения
-
-		contentBase: __dirname,
-
-		overlay: true, // display error overlay
-		stats: "errors-only"
-	},
-	module: {
-		rules: [
-			{
-				test: /\.js$/,
-				use: {
-					loader: 'babel-loader',
-					options: {
-						presets: [
-							[
-								"@babel/preset-env",
-								{
-									"loose": false,
-									"targets": {
-										"ie": "9"
-									}
-								}
-							]
-						],
-						plugins: [
-							"@babel/plugin-proposal-class-properties",
-							"@babel/plugin-proposal-function-bind",
-							"@babel/plugin-proposal-object-rest-spread",
-							"@babel/plugin-syntax-dynamic-import"
-						]
-					}
-				},
+var oConfig = fnWebpackMerge(
+	oWebpackBase,
+	{
+		entry: {
+			"1_HelloWorld": __dirname + '/1_HelloWorld/index.js',
+			"2_Api": __dirname +'/2_Api/index.js',
+			"polyfill-promise": 'zasada/src/utils/polyfillPromise.js',
+		},
+		output: {
+			filename: ( pathData ) => {
+				return pathData.chunk.name === 'polyfill-promise' ? '[name].js' : '[name]/index.js';
 			},
-		]
+			chunkFilename: '[name].js',
+			path: __dirname + '/build/',
+			publicPath: '/build/',
+		},
+		resolve: {
+			alias: {
+				zasada: __dirname + '/..',
+			}
+		},
+		devServer:{
+			contentBase: __dirname,
+		}
 	}
-};
+);
 
 module.exports = ( oEnv, oArgv ) => {
-
 	if (oArgv.mode === 'development') {
 		oConfig.devtool = 'eval-cheap-module-source-map';
 	}

@@ -1,5 +1,5 @@
 interface IPolyfillBox {
-	base(fnCallback) :void;
+	base(fnCallback, fnReject) :void;
 }
 
 interface IAttrs {
@@ -52,7 +52,7 @@ interface IRelQuery {
 
 	typeOf(cTypeOf: any): IRelQuery;
 
-	find( bCanEmpty?: boolean ): (IWidget | IWidget[]);
+	find( bAll?: boolean ): (IWidget | IWidget[]);
 }
 
 interface IWidget {
@@ -123,7 +123,7 @@ interface ILog {
 }
 
 interface ILogger {
-	log( oLog: ILogRaw ): void;
+	error( oLog: ILogRaw ): void;
 }
 
 interface ILogRoute {

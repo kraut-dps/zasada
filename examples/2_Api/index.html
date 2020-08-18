@@ -1,0 +1,41 @@
+<head><link type="text/css" rel="stylesheet" href="style.css"/></head>
+
+<div class="fixed block _ _OtherWidget" data-index="parent">
+	_ _OtherWidget index = parent
+
+	<div class="block block_target _ _TestWidget" data-var1="3.14">
+		_ _TestWidget
+		<div class="block__element _TestWidget-Element" data-var1="0" data-var2='{"json1":4}' data-var3="sub1=1,sub2=2" my-var1="10">_TestWidget-Element</div>
+		<div class="block__element _TestWidget-OtherElement">_TestWidget-OtherElement</div>
+		<div class="block__element _TestWidget-OtherElement">_TestWidget-OtherElement</div>
+		<div class="block _ _OtherWidget" data-index="child">
+			_ _OtherWidget index = child
+		</div>
+	</div>
+
+	<div class="block _ _OtherWidget" data-index="sibling">
+		_ _OtherWidget index = sibling
+	</div>
+</div>
+
+<div class="block _ _ApiWidget" data-var1="3.14">
+	_ _ApiWidget
+	<div class="block__element">
+		<a class="header" name="BlockElement">.blockId(), .bl(), ._el() доступ к блоку, элементу</a>
+		<div class="block__element _ApiWidget-BlockElement"></div>
+	</div>
+	<div class="block__element">
+		<a class="header" name="BlockElement">.blockId(), .bl(), ._el() доступ к блоку, элементу</a>
+		<div class="block__element _ApiWidget-Attr"></div>
+	</div>
+	<div class="block__element">
+		<a class="header" name="BlockElement">.blockId(), .bl(), ._el() доступ к блоку, элементу</a>
+		<div class="block__element _ApiWidget-Event"></div>
+	</div>
+</div>
+
+<div class="block _ _OtherWidget" data-index="parent-sibling">
+	_ _OtherWidget index = parent-sibling
+</div>
+
+<script src="../build/2_Api/index.js"></script>
