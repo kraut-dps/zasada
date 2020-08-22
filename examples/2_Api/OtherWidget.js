@@ -8,6 +8,10 @@ export class OtherWidget extends Widget {
 
 	}
 
+	_getIndex() {
+		return this._attr( '', 'index' );
+	}
+
 	toggle() {
 		this.bActive = !this.bActive;
 		this._mod( '', 'active', this.bActive );

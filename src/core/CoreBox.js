@@ -100,9 +100,9 @@ export class CoreBox extends Box {
 	 */
 	baseNewWidget( eElement, sBlockId, cClass ) {
 		const oWidget = new cClass( eElement, sBlockId );
-		oWidget.fnOneLinker = this.oneLinker;
-		oWidget.fnOneAttrs = this.oneAttrs;
-		oWidget.fnOneEl = this.oneEl;
+		oWidget.oneLinker = this.oneLinker;
+		oWidget.oneAttrs = this.oneAttrs;
+		oWidget.oneEl = this.oneEl;
 		return oWidget;
 	}
 

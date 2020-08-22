@@ -5,12 +5,20 @@
 export class CoreWidget {
 	__eBl;
 	__sId;
-	__sIndex;
+	__sIdx;
 
-	fnOneLinker;
-	fnOneAttrs;
-	fnOneEl;
+	oneLinker;
+	oneAttrs;
 
+	/**
+	 * @type {function(): IEl}
+	 */
+	oneEl;
+
+	/**
+	 * @param {Element} eBlock DOM элемент основного узла виджета
+	 * @param {string} sBlockId строковый инедтификатор типа виджета
+	 */
 	constructor( eBlock, sBlockId ) {
 		this.__eBl = eBlock;
 		this.__sId = sBlockId;
@@ -20,34 +28,48 @@ export class CoreWidget {
 
 	}
 
+	/**
+	 * DOM элемент основного узла виджета
+	 * @return {Element}
+	 */
 	bl() {
 		return this.__eBl;
 	}
 
+	/**
+	 * строковый идентификатор типа виджета
+	 * @return {string}
+	 */
 	blockId() {
 		return this.__sId;
 	}
 
 	/**
 	 * поиск элемента виджета
-	 * @param {string} mQuery
+	 * @param {string|IElQuery} mQuery
 	 * @return {Element|Element[]}
 	 */
 	_el( mQuery ) {
 		if ( mQuery === '' ) {
 			return this.bl();
 		}
-		return this.fnOneEl()
+		return this.oneEl()
 			.find( this, mQuery );
 	}
 
 	/**
 	 * выборка других виджетов
+	 * @example
+	 * .rel().children().typeOf( WidgetClass ).find()
+	 * @example
+	 * .rel().parents().typeOf( WidgetClass ).find()
+	 * @example
+	 * .rel().index( 'index' ).find()
 	 * @param {boolean} bFromThis
 	 * @return {IRelQuery}
 	 */
 	rel( bFromThis = true ) {
-		const oQuery = this.fnOneLinker()
+		const oQuery = this.oneLinker()
 			.oneStorage()
 			.query();
 		if ( bFromThis ) {
@@ -78,21 +100,34 @@ export class CoreWidget {
 		} );
 	}
 
-	_fire( mContext, sEvent, oData ) {
-		const oEvent = new CustomEvent( sEvent, {detail: oData || {}} );
+	/**
+	 * fire CustomEvent
+	 * @param {string|Element|Element[]} mContext
+	 * @param {string} sEvent название события
+	 * @param {any} mData данные события
+	 */
+	_fire( mContext, sEvent, mData ) {
+		const oEvent = new CustomEvent( sEvent, {detail: mData} );
 		this._context( mContext ).forEach( ( eContext ) => {
 			eContext.dispatchEvent( oEvent );
 		} );
 	};
 
-	_fireNative( mContext, sEvent, bBubbles = false ) {
-		const oEvent = document.createEvent( 'HTMLEvents' );
-		oEvent.initEvent( sEvent, bBubbles, false );
-		this._context( mContext ).forEach( ( eContext ) => {
-			eContext.dispatchEvent( oEvent );
-		} );
-	};
-
+	/**
+	 * изменить css класс
+	 * @example
+	 * ._mod( '', 'new_class', true )
+	 *
+	 * @example
+	 * ._mod( '', [ 'new_class1', 'new_class2' ], 'new_class1' )
+	 *
+	 * @example
+	 * ._mod( '', { one: 'new_class1', two: 'new_class2' ], 'one' )
+	 * 
+	 * @param {string|Element|Element[]} mContext
+	 * @param {string|array|object} mMod
+	 * @param {bool|string} mValue
+	 */
 	_mod( mContext, mMod, mValue ) {
 		this._context( mContext ).forEach( ( eContext ) => {
 			switch ( typeof mMod ) {
@@ -121,8 +156,10 @@ export class CoreWidget {
 	 */
 	_attr( mContext, sAttr, sAttrPrefix = null ) {
 		const oAttrs = this._attrs( mContext, [sAttr], sAttrPrefix );
-		const aVals = Object.values( oAttrs );
-		return aVals.length ? aVals[0] : null;
+		for( let sKey in oAttrs ) {
+			return oAttrs[ sKey ];
+		}
+		return null;
 	}
 
 	/**
@@ -132,7 +169,7 @@ export class CoreWidget {
 	 */
 	_attrs( mContext, mMap, sAttrPrefix = null ) {
 		const aElements = this._context( mContext );
-		return this.fnOneAttrs()
+		return this.oneAttrs()
 			.parse( aElements, mMap, sAttrPrefix );
 	}
 
@@ -155,19 +192,19 @@ export class CoreWidget {
 	_link( mContext, bWithSelf ) {
 		const aPromises = [];
 		this._context( mContext ).forEach( ( eContext ) => {
-			aPromises.push( this.fnOneLinker().link( eContext, bWithSelf ) );
+			aPromises.push( this.oneLinker().link( eContext, bWithSelf ) );
 		} );
 		return Promise.all( aPromises );
 	}
 
 	_unlink( mContext, bWithSelf ) {
 		this._context( mContext ).forEach( ( eContext ) => {
-			this.fnOneLinker().unlink( eContext, bWithSelf );
+			this.oneLinker().unlink( eContext, bWithSelf );
 		} );
 	}
 
 	_import( sImportName ) {
-		const fnImport = this.fnOneLinker().getImport( sImportName, this.blockId() );
+		const fnImport = this.oneLinker().getImport( sImportName, this.blockId() );
 		if ( !fnImport ) {
 			throw new Error( 'not setted import "' + sImportName + '"' );
 		}
@@ -200,14 +237,14 @@ export class CoreWidget {
 	 * сброс кеша с найдеными элементами
 	 */
 	_elReset() {
-		this.fnOneEl().resetCache( this );
+		this.oneEl().resetCache( this );
 	}
 
 	index() {
-		if ( typeof this.__sIndex === 'undefined' ) {
-			this.__sIndex = this._getIndex();
+		if ( typeof this.__sIdx === 'undefined' ) {
+			this.__sIdx = this._getIndex();
 		}
-		return this.__sIndex;
+		return this.__sIdx;
 	}
 
 	_getIndex() {

@@ -57,6 +57,7 @@
       "@babel/plugin-transform-runtime": "reuse babel helpers",
       "jasmine-core": "tests, old version for test with polyfills",
       "karma": "tests",
+      "uglifyjs-webpack-plugin": "minify js",
       "istanbul-instrumenter-loader": "coverage",
       "webpack-merge": "merge two webpack configs"
     }
