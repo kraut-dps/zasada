@@ -22,7 +22,7 @@ export class LogBox extends Box{
 		return oLogger;
 	};
 
-	newError( sMessage, sName ) {
+	newError( sMessage, sName = '' ) {
 		const oError = new this.Error( sMessage );
 		oError.name = sName;
 		return oError;

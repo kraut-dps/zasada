@@ -109,7 +109,7 @@ export class Attrs {
 			sFrom = sTo;
 		}
 		if( !( sType in this.oCasts ) ) {
-			throw this.newError( 'Unknown attr type ' + sMapItem, 'attrsUnknownType' );
+			throw this.newError( 'Unknown attr cast ' + sMapItem, 'unknown-attr-cast' );
 		}
 		return [ sFrom, sTo, sType ];
 	}

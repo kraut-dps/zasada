@@ -53,7 +53,7 @@ export class Logger {
 
 	_getErrorStr( mError ) {
 		if( mError instanceof this.Error ) {
-			return mError.message + ' https://github.com/kraut-dps/zasada/#' + mError.name;
+			return mError.message + ( mError.name ?  ' https://github.com/kraut-dps/zasada/#' + mError.name : '' );
 		} else if( typeof mError === 'string' ) {
 			return mError;
 		} else {

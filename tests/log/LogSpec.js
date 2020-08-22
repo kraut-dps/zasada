@@ -10,6 +10,7 @@ class ErrorWidget extends Widget {
 	static TYPE_ERROR = 1;
 	static TYPE_COMPAT = 2;
 	static TYPE_STRING = 3;
+	static TYPE_REL_FROM_BAD = 4;
 
 	iType = ErrorWidget.TYPE_ERROR;
 
@@ -24,6 +25,8 @@ class ErrorWidget extends Widget {
 				throw { message: 'error', sourceURL: 'sourceURL', line: 'line' };
 			case ErrorWidget.TYPE_STRING:
 				throw 'error';
+			case ErrorWidget.TYPE_REL_FROM_BAD:
+				this.rel().from( 'bad' ).find();
 		}
 	}
 }
@@ -105,6 +108,17 @@ describe( "Routes", () => {
 			const s100Len = "1".repeat(100);
 			await oHelper.addHtml(
 				`<div class="_ _UndefinedWidget" data="${s100Len}"></div>`,
+			);
+		} );
+
+		it( 'Error without name', async ( fnDone ) => {
+			oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new RouteString() };
+			window.console = { log: ( sMessage ) => {
+				expect(sMessage.indexOf('#') !== -1).toBe(false);
+				fnDone();
+			} };
+			await oHelper.addHtml(
+				`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_REL_FROM_BAD}"></div>`,
 			);
 		} );
 	} );

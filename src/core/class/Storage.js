@@ -117,6 +117,10 @@ export class Storage {
 			aBlockIds = this._getBlockIdsByWidgetClass( cTypeOf );
 		}
 
+		if( eFrom && !(eFrom instanceof Element) ) {
+			throw this.newError( '.rel typeof eFrom !== Element' );
+		}
+
 		if ( aIndex.length ) {
 			let oWidget, aRet = [];
 			for ( let i = 0; i < aIndex.length; i++ ) {
@@ -136,7 +140,7 @@ export class Storage {
 		} else {
 
 			// ситуация, когда даже в DOM идти не надо, нужен тот же элемент что запросили
-			if ( bOnlyFirst && bWithFrom ) {
+			if ( bOnlyFirst && bWithFrom && !sCssSel ) {
 				let aRet = this._widgetsFromMap( [ eFrom ], aBlockIds, cTypeOf, bOnlyFirst );
 				if ( aRet.length ) {
 					return aRet;

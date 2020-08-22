@@ -90,16 +90,20 @@ describe( "Widget", () => {
 
 		oLinker.setWidgets( { TestWidget } );
 		await oHelper.addHtml(
-			'<div class="widget1 _ _TestWidget"></div>' +
-				'<div class="widget2 _ _TestWidget"></div>'
+			`<div class="widget1 _ _TestWidget">
+				<div class="widget2 _ _TestWidget"></div>
+				<div class="widget3 _ _TestWidget _TestWidget-Element"></div>
+			</div>`
 		);
 
 		const oWidget1 = oHelper.widget( '.widget1', TestWidget );
 		const oWidget2 = oHelper.widget( '.widget2', TestWidget );
+		const oWidget3 = oHelper.widget( '.widget3', TestWidget );
 
 		// тут только coverage rel false, остальное отдельно в RelQuery тестируется
-		expect( oWidget1.rel( false ).onlyFirst().cssSel('.widget1').find() ).toEqual( oWidget1 );
-		expect( oWidget1.rel( false ).onlyFirst().cssSel('.widget2').find() ).toEqual( oWidget2 );
+		expect( oWidget1.rel().cssSel('.widget1').find() ).toEqual( oWidget1 );
+		expect( oWidget1.rel().cssSel('.widget2').find() ).toEqual( oWidget2 );
+		expect( oWidget1.rel( 'Element' ).find() ).toEqual( oWidget3 );
 	} );
 
 	it( "._on() ._off() ._fire()", async () => {
@@ -133,36 +137,36 @@ describe( "Widget", () => {
 
 	} );
 
-	it( "._fireNative()", async () => {
-
-		class TestWidget extends Widget {
-
-		}
-
-		oLinker.setWidgets( { TestWidget } );
-		await oHelper.addHtml(
-			'<div class="widget _ _TestWidget">' +
-				'<div class="_TestWidget-El"></div>' +
-			'</div>'
-		);
-
-		const oWidget = oHelper.widget( '.widget', TestWidget );
-		let fnOnSpy = jasmine.createSpy('spy' );
-
-		oWidget._on( '', 'click', fnOnSpy );
-
-		expect( fnOnSpy.calls.count() ).toEqual(0 );
-
-		oWidget._fireNative( 'El', 'click' );
-		expect( fnOnSpy.calls.count() ).toEqual(0 );
-
-		// хоть и кликаем по элементу, в самом блоке тоже отдается, потому что bubles = true
-		oWidget._fireNative( 'El', 'click', true );
-		oWidget._fireNative( 'El', 'click', true );
-
-		expect( fnOnSpy.calls.count() ).toEqual(2 );
-
-	} );
+	// it( "._fireNative()", async () => {
+	//
+	// 	class TestWidget extends Widget {
+	//
+	// 	}
+	//
+	// 	oLinker.setWidgets( { TestWidget } );
+	// 	await oHelper.addHtml(
+	// 		'<div class="widget _ _TestWidget">' +
+	// 			'<div class="_TestWidget-El"></div>' +
+	// 		'</div>'
+	// 	);
+	//
+	// 	const oWidget = oHelper.widget( '.widget', TestWidget );
+	// 	let fnOnSpy = jasmine.createSpy('spy' );
+	//
+	// 	oWidget._on( '', 'click', fnOnSpy );
+	//
+	// 	expect( fnOnSpy.calls.count() ).toEqual(0 );
+	//
+	// 	oWidget._fireNative( 'El', 'click' );
+	// 	expect( fnOnSpy.calls.count() ).toEqual(0 );
+	//
+	// 	// хоть и кликаем по элементу, в самом блоке тоже отдается, потому что bubles = true
+	// 	oWidget._fireNative( 'El', 'click', true );
+	// 	oWidget._fireNative( 'El', 'click', true );
+	//
+	// 	expect( fnOnSpy.calls.count() ).toEqual(2 );
+	//
+	// } );
 
 	it( ".attr() .attrs() .my()", async () => {
 

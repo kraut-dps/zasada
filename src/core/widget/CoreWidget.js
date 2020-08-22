@@ -61,21 +61,21 @@ export class CoreWidget {
 	 * выборка других виджетов
 	 * @example
 	 * .rel().children().typeOf( WidgetClass ).find()
+	 *
 	 * @example
 	 * .rel().parents().typeOf( WidgetClass ).find()
+	 *
 	 * @example
 	 * .rel().index( 'index' ).find()
-	 * @param {boolean} bFromThis
+	 *
+	 * @param {string|Element|Element[]} mContext
 	 * @return {IRelQuery}
 	 */
-	rel( bFromThis = true ) {
-		const oQuery = this.oneLinker()
+	rel( mContext = '' ) {
+		return this.oneLinker()
 			.oneStorage()
-			.query();
-		if ( bFromThis ) {
-			oQuery.from( this.bl() );
-		}
-		return oQuery;
+			.query()
+			.from( this._context( mContext )[0] )
 	}
 
 	/**
@@ -150,7 +150,15 @@ export class CoreWidget {
 	}
 
 	/**
-	 * @param mContext
+	 * получить значение DOM Element атрибута
+	 *
+	 * @example
+	 * ._attr( '', 'var' )
+	 *
+	 * @example
+	 * ._attr( '', 'i:var' ) // with integer cast i - int, b - bool, ... {@link Attrs.oCasts}
+	 *
+	 * @param {string|Element|Element[]} mContext
 	 * @param {string} sAttr
 	 * @param {string|null} sAttrPrefix
 	 */
@@ -163,7 +171,12 @@ export class CoreWidget {
 	}
 
 	/**
-	 * @param mContext
+	 * получить значения DOM Element атрибутов
+	 *
+	 * @example
+	 * ._attrs( '', { key1: 'i:attr1', key2: 'b:attr2' } ) // cast i - int, b - bool, ... {@link Attrs.oCasts}
+	 *
+	 * @param {string|Element|Element[]} mContext
 	 * @param {array[]|string[]|object} mMap
 	 * @param {string|null} sAttrPrefix
 	 */
@@ -174,12 +187,10 @@ export class CoreWidget {
 	}
 
 	/**
-	 * i: _toInt,
-	 * b: _toBool,
-	 * f: _toFloat,
-	 * mod: _toMod,
-	 * js: _toJson,
-	 * as: _toArrayOfString
+	 * получить значения DOM Element атрибутов и поместить их в свойства виджета
+	 *
+	 * @example
+	 * ._my( { prop1: 'i:attr1', prop2: 'b:attr2' } ) // cast i - int, b - bool, ... {@link Attrs.oCasts}
 	 * @param {array|object} mMap
 	 */
 	_my( mMap ) {
@@ -189,6 +200,12 @@ export class CoreWidget {
 		}
 	}
 
+	/**
+	 * запустить привязку виджетов к контексту
+	 * @param {string|Element|Element[]} mContext
+	 * @param {boolean} bWithSelf включая DOM элемент контекста?
+	 * @return {Promise<any[]>}
+	 */
 	_link( mContext, bWithSelf ) {
 		const aPromises = [];
 		this._context( mContext ).forEach( ( eContext ) => {
@@ -197,12 +214,22 @@ export class CoreWidget {
 		return Promise.all( aPromises );
 	}
 
+	/**
+	 * отвязать виджеты от контекста
+	 * @param {string|Element|Element[]} mContext
+	 * @param {boolean} bWithSelf включая DOM элемент контекста?
+	 */
 	_unlink( mContext, bWithSelf ) {
 		this._context( mContext ).forEach( ( eContext ) => {
 			this.oneLinker().unlink( eContext, bWithSelf );
 		} );
 	}
 
+	/**
+	 * достать promise с импортом из глобального хранилища
+	 * @param {string} sImportName
+	 * @return {Promise<any[]>}
+	 */
 	_import( sImportName ) {
 		const fnImport = this.oneLinker().getImport( sImportName, this.blockId() );
 		if ( !fnImport ) {
@@ -214,7 +241,6 @@ export class CoreWidget {
 	/**
 	 * @param {string|string[]|Element|Element[]} mContext
 	 * @return {Element[]}
-	 * @private
 	 */
 	_context( mContext ) {
 		let aRet = [];

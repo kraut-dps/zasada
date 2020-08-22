@@ -66,7 +66,7 @@ interface IWidget {
 
 	run(): void;
 
-	rel(bFromThis?: boolean): IRelQuery;
+	rel( mContext?: (string | Element| Element[]) ): IRelQuery;
 }
 
 interface IWidgetConstructor {
