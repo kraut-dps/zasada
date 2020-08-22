@@ -150,7 +150,7 @@ export class Storage {
 
 	_canEmptyCheck( aRet, oRelQuery ) {
 		if( !oRelQuery.bCanEmpty && !aRet.length ) {
-			throw this.newError( 'Empty relation result', 'rel-empty' );
+			throw this.newError( 'Relation not found', 'rel-not-found' );
 		}
 		return aRet;
 	}

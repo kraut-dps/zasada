@@ -21,7 +21,7 @@ oLinker.setWidgets( { MyWidget } ); // not executed
 // ...
 ```
 
-## No Widget Prop
+## No widget prop
 Попытка присвоить значение несуществующему свойству класса виджета.
 ```javascript
 // ...
@@ -38,5 +38,41 @@ oLinker.setOpts( {
     }
 } );
 // ...
-//...
+```
+
+## Element not found
+Не найден элемент. Если отсутствие элемента штатная ситуация - нужно добавить "?".
+```html
+<div class="_ _MyWidget">
+    <div class="_MyWidget-Element">
+</div>
+```
+```javascript
+// ...
+class MyWidget extends Widget {
+    run() {
+        this._el( 'Element' ); // DOM Element ok 
+        this._el( 'NotFoundElement' ); // error
+        this._el( 'NotFoundElement?' ); // null ok
+    }
+}
+// ...
+```
+
+## Rel not found
+Не найден зависящий виджет. Если отсутствие виджета штатная ситуация, нужно добавить вызов canEmpty( true ).
+```html
+<div class="_ _MyWidget"></div>
+<div class="_ _OtherWidget"></div>
+```
+```javascript
+// ...
+class MyWidget extends Widget {
+    run() {
+        this.rel().typeOf( OtherWidget ).find(); // object OtherWidget ok 
+        this.rel().children().typeOf( OtherWidget ).find(); // error
+        this.rel().children().typeOf( OtherWidget ).canEmpty().find(); // null ok
+    }
+}
+// ...
 ```
