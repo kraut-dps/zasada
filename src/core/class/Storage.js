@@ -1,6 +1,6 @@
 /**
  * хранилище виджетов
- * @implements {IStorage}
+ * @implements IStorage
  */
 export class Storage {
 
@@ -10,7 +10,7 @@ export class Storage {
 	oneDom;
 
 	/**
-	 * @type {function( function(): IStorage ): IRelQuery}
+	 * @type {function( function(): Storage ): IRelQuery}
 	 */
 	newQuery;
 
@@ -98,7 +98,7 @@ export class Storage {
 
 	/**
 	 * @param {IRelQuery} oRelQuery
-	 * @return {Widget[]}
+	 * @return {IWidget[]}
 	 */
 	find( oRelQuery ) {
 
@@ -150,7 +150,7 @@ export class Storage {
 
 	_canEmptyCheck( aRet, oRelQuery ) {
 		if( !oRelQuery.bCanEmpty && !aRet.length ) {
-			throw this.newError( 'empty result', 'storageFindEmpty' );
+			throw this.newError( 'Empty relation result', 'rel-empty' );
 		}
 		return aRet;
 	}
@@ -219,7 +219,7 @@ export class Storage {
 				break;
 			case 0:
 			default:
-				aMatches = oDom.children( document, sSel, 0, false );
+				aMatches = oDom.children( document.body, sSel, false, false );
 				if ( !bWithSelf ) {
 					aMatches = aMatches.filter( ( eMatch ) => {
 						return eMatch !== eContext;

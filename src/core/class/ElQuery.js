@@ -61,7 +61,7 @@ export class ElQuery {
 				iIndex++;
 			}
 		} catch( e ) {}
-		throw this.newError( 'bad el: ' + aQuery.join( '' ), 'elQueryParse' );
+		throw this.newError( 'Bad el query "' + aQuery.join( '' ) + '"', 'element-query-parse' );
 	}
 
 	key() {
@@ -70,7 +70,7 @@ export class ElQuery {
 
 	/**
 	 * @param {string} sId
-	 * @return {IElQuery}
+	 * @return {IElQuery|this}
 	 */
 	id( sId ) {
 		this.sId = sId;
@@ -80,7 +80,7 @@ export class ElQuery {
 
 	/**
 	 * @param {boolean} bWithFrom
-	 * @return {IElQuery}
+	 * @return {IElQuery|this}
 	 */
 	withFrom( bWithFrom ) {
 		this.bWithFrom = bWithFrom;
@@ -89,7 +89,7 @@ export class ElQuery {
 	
 	/**
 	 * @param {boolean} bCanEmpty
-	 * @return {IElQuery}
+	 * @return {IElQuery|this}
 	 */
 	canEmpty( bCanEmpty ) {
 		this.bCanEmpty = bCanEmpty;
@@ -98,7 +98,7 @@ export class ElQuery {
 	
 	/**
 	 * @param {boolean} bOnlyFirst
-	 * @return {IElQuery}
+	 * @return {IElQuery|this}
 	 */
 	onlyFirst( bOnlyFirst ) {
 		this.bOnlyFirst = bOnlyFirst;
@@ -107,7 +107,7 @@ export class ElQuery {
 
 	/**
 	 * @param {boolean} bNoCache
-	 * @return {IElQuery}
+	 * @return {IElQuery|this}
 	 */
 	noCache( bNoCache ) {
 		this.bNoCache = bNoCache;

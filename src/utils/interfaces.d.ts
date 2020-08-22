@@ -58,7 +58,7 @@ interface IRelQuery {
 interface IWidget {
 	bl(): Element;
 
-	blId(): string
+	blockId(): string
 
 	destructor(): void;
 
@@ -103,7 +103,7 @@ interface ILinker {
 	setOpts( oOpts: ILinkerOpts ): void;
 	setWidgets(oClasses: ILinkerClasses ): void;
 	setBeforeNew( aBlockIds: string[], fnBeforeNew: ( object ) => void ): void;
-	link( eContext: Element, bWithSelf?: boolean ): Promise<boolean>;
+	link( eContext: Element, bWithSelf?: boolean ): Promise<any[]>;
 	unlink( eContext: Element, bWithSelf? : boolean ): void;
 }
 
@@ -129,3 +129,11 @@ interface ILogger {
 interface ILogRoute {
 	log( oOpts: ILog ): void;
 }
+
+interface IError extends Error{
+}
+
+declare var IError: {
+	prototype: IError;
+	new(sMessage: string, sType: string): IError;
+};

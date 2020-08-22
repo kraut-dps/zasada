@@ -44,7 +44,7 @@ export class Linker {
 
 	/**
 	 * установка опций виджетов
-	 * @param {object} oOpts
+	 * @param {ILinkerOpts} oOpts
 	 */
 	setOpts( oOpts ) {
 		for ( let sBlockId in oOpts ) {
@@ -57,7 +57,7 @@ export class Linker {
 
 	/**
 	 * установка классов виджетов
-	 * @param {object} oClasses
+	 * @param {ILinkerClasses} oClasses
 	 */
 	setWidgets( oClasses ) {
 		for ( let sBlockId in oClasses ) {
@@ -100,20 +100,20 @@ export class Linker {
 		let aModelContexts, eModelContext, sBlockId, aBlockIds, i, aPromises = [];
 		const oDom = this.oneDom();
 
-		aModelContexts = oDom.children( eContext, oDom.sel(), bWithSelf, 0 );
+		aModelContexts = oDom.children( eContext, oDom.sel(), bWithSelf, false );
 		for ( i = 0; i < aModelContexts.length; i++ ) {
 			eModelContext = aModelContexts[ i ];
 			sBlockId = '';
 			try {
 				aBlockIds = oDom.parseBlockIds( eModelContext );
 				if ( !aBlockIds.length ) {
-					throw this.newError( "not set _blockId in tag class", 'linkerNoBlockId' );
+					throw this.newError( 'Not found _blockId in tag class', 'not-found-blockid' );
 				}
 				for ( let j = 0; j < aBlockIds.length; j++ ) {
 					try {
 						sBlockId = aBlockIds[ j ];
 						if ( !this._oOpts[ sBlockId ] ) {
-							throw this.newError( "not widget config", 'noWidgetConfig' );
+							throw this.newError( 'No widget "' + sBlockId + '" opts', 'no-widget-opts' );
 						}
 						aPromises.push( this.widget( eModelContext, sBlockId ) );
 					} catch ( oError ) {
@@ -147,7 +147,7 @@ export class Linker {
 			.then( () => {
 				const { cWidget, oProps, fnAfterNew } = this.fnDeepKey( [ 'cWidget', 'oProps', 'fnAfterNew' ], oCustomOpts, this._oOpts[ sBlockId ] );
 				if ( !cWidget ) {
-					throw this.newError( "not set widget class", 'noWidgetClass' );
+					throw this.newError( 'Not set widget class "' + sBlockId + '"', 'no-widget-class' );
 				}
 				oNewWidget = this.newWidget( eContext, sBlockId, cWidget );
 				this._setProps( oNewWidget, oProps );
@@ -179,7 +179,7 @@ export class Linker {
 		}
 		for ( let sPropName in oProps ) {
 			if ( !( sPropName in oWidget ) ) {
-				throw this.newError( 'no widget property "' + oWidget.blockId() + '.' + sPropName + '"', 'noProp'  );
+				throw this.newError( 'No widget property "' + oWidget.blockId() + '.' + sPropName + '"', 'no-widget-prop'  );
 			}
 			oWidget[ sPropName ] = oProps[ sPropName ];
 		}

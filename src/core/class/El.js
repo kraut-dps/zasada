@@ -5,10 +5,13 @@
 export class El{
 
 	/**
-	 * @type {function( string ): IElQuery}
+	 * @type {function( sQuery: string ): IElQuery}
 	 */
 	newElQuery;
 
+	/**
+	 * @type {function( sMessage: string, sType: string ): IError}
+	 */
 	newError;
 
 	/**
@@ -54,7 +57,7 @@ export class El{
 
 		if( aElements.length === 0 ) {
 			if( !oElQuery.bCanEmpty ) {
-				throw this.newError( 'find required "_' + oWidget.blockId() + '-' + mQuery + '" not found', 'elEmpty' );
+				throw this.newError( 'Element "_' + oWidget.blockId() + '-' + mQuery + '" not found', 'element-not-found' );
 			} else {
 				return oElQuery.bOnlyFirst ? null : [];
 			}

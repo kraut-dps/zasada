@@ -1,6 +1,9 @@
 import { Box } from "zasada/src/utils/Box.js";
 export class CoreBox extends Box {
 
+	/**
+	 * @type {function(new:Attrs)}
+	 */
 	Attrs;
 	Dom;
 	El;
@@ -14,6 +17,10 @@ export class CoreBox extends Box {
 	deepKey;
 	mergeDeep;
 	oneLogger;
+
+	/**
+	 * @type function( sMessage: string, sType: string ) :IError
+	 */
 	newError;
 
 	/**
@@ -60,7 +67,7 @@ export class CoreBox extends Box {
 	}
 
 	/**
-	 * @type {function(): Attrs}
+	 * @type {function(): IAttrs}
 	 */
 	oneAttrs() {
 		return this.one( this.newAttrs );
