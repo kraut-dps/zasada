@@ -21,7 +21,7 @@ export class RelQuery{
 	
 	/**
 	 * @param {string|string[]} mBlockId
-	 * @return IRelQuery
+	 * @return {IRelQuery|this}
 	 */
 	blockId( mBlockId ) {
 		if( typeof mBlockId === 'string' ) {
@@ -35,7 +35,7 @@ export class RelQuery{
 	/**
 	 * @param {Element|null} eFrom
 	 * @param {boolean|null} bWithFrom
-	 * @return {IRelQuery}
+	 * @return {IRelQuery|this}
 	 */
 	parents( eFrom = null, bWithFrom = null ) {
 		if( eFrom !== null ) {
@@ -51,7 +51,7 @@ export class RelQuery{
 	/**
 	 * @param {Element|null} eFrom
 	 * @param {boolean|null} bWithFrom
-	 * @return {IRelQuery}
+	 * @return {IRelQuery|this}
 	 */
 	children( eFrom = null, bWithFrom = null ) {
 		if( eFrom !== null ) {
@@ -66,7 +66,7 @@ export class RelQuery{
 	
 	/**
 	 * @param {Element} eFrom
-	 * @return {IRelQuery}
+	 * @return {IRelQuery|this}
 	 */
 	from( eFrom ) {
 		this.eFrom = eFrom;
@@ -75,7 +75,7 @@ export class RelQuery{
 	
 	/**
 	 * @param {boolean} bWithFrom
-	 * @return {IRelQuery}
+	 * @return {IRelQuery|this}
 	 */
 	withFrom( bWithFrom = true ) {
 		this.bWithFrom = bWithFrom;
@@ -84,7 +84,7 @@ export class RelQuery{
 	
 	/**
 	 * @param {string} sCssSel
-	 * @return {IRelQuery}
+	 * @return {IRelQuery|this}
 	 */
 	cssSel( sCssSel ) {
 		this.sCssSel = sCssSel;
@@ -93,7 +93,7 @@ export class RelQuery{
 	
 	/**
 	 * @param {string|string[]} mIndex
-	 * @return {IRelQuery}
+	 * @return {IRelQuery|this}
 	 */
 	index( mIndex ) {
 		if( typeof mIndex === 'string' ) {
@@ -106,7 +106,7 @@ export class RelQuery{
 	
 	/**
 	 * @param {boolean} bCanEmpty
-	 * @return {IRelQuery}
+	 * @return {IRelQuery|this}
 	 */
 	canEmpty( bCanEmpty = true ) {
 		this.bCanEmpty = bCanEmpty;
@@ -115,7 +115,7 @@ export class RelQuery{
 	
 	/**
 	 * @param {boolean} bOnlyFirst
-	 * @return {IRelQuery}
+	 * @return {IRelQuery|this}
 	 */
 	onlyFirst( bOnlyFirst = true ) {
 		this.bOnlyFirst = bOnlyFirst;
@@ -124,7 +124,7 @@ export class RelQuery{
 	
 	/**
 	 * @param {function} cTypeOf
-	 * @return {IRelQuery}
+	 * @return {IRelQuery|this}
 	 */
 	typeOf( cTypeOf ) {
 		this.cTypeOf = cTypeOf;
@@ -133,7 +133,7 @@ export class RelQuery{
 	
 	/**
 	 * @param {boolean|null} bAll
-	 * @return {Widget|Widget[]}
+	 * @return {IWidget|IWidget[]}
 	 */
 	find( bAll = null ) {
 		if( bAll !== null ) {

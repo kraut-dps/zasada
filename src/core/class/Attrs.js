@@ -2,8 +2,11 @@
  * разбор значений и конвертация типов из атрибутов Element
  * @implements IAttrs
  */
-export class Attrs{
+export class Attrs {
 
+	/**
+	 * @type function( sMessage: string, sType: string ) :IError
+	 */
 	newError;
 
 	/**
@@ -33,7 +36,7 @@ export class Attrs{
 	 * @type {string} тип по умолчанию
 	 */
 	sType = 's';
-	
+
 	/**
 	 * @type {string} разделитель название X значение для mod типа
 	 */
@@ -110,7 +113,7 @@ export class Attrs{
 		}
 		return [ sFrom, sTo, sType ];
 	}
-	
+
 	_toStr( sValue ) {
 		return sValue.trim();
 	}
@@ -124,7 +127,7 @@ export class Attrs{
 		}
 		return !!sValue;
 	}
-	
+
 	_toInt( sValue ) {
 		const mVar = parseInt( sValue );
 		if( isNaN( mVar ) ) {
@@ -171,7 +174,7 @@ export class Attrs{
 		}
 		return oRet;
 	}
-	
+
 	_toJson( sValue ) {
 		return JSON.parse( sValue );
 	}

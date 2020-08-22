@@ -26,8 +26,7 @@ export class Polyfills{
 			fnResolve();
 		} else {
 			const eScript = document.createElement( "script" );
-			const sUrl = this.sPromiseUrl;
-			eScript.src = sUrl;
+			eScript.src = this.sPromiseUrl;
 			eScript.type = 'text/javascript';
 			eScript.onload = fnResolve;
 			eScript.onerror = fnReject;

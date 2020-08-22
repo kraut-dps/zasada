@@ -48,7 +48,7 @@ export class Dom {
 	parents( eContext, sSel, bWithSelf, bOnlyFirst ) {
 		let aRet = [];
 		if( !bWithSelf ) {
-			eContext = eContext.parentNode;
+			eContext = eContext.parentElement;
 			if( !eContext ) {
 				return [];
 			}
@@ -63,7 +63,7 @@ export class Dom {
 		} else {
 			while( eClosest ) {
 				aRet.push( eClosest );
-				eClosest = eClosest.parentNode.closest( sSel );
+				eClosest = eClosest.parentElement.closest( sSel );
 			}
 			return aRet;
 		}
