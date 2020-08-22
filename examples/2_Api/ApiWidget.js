@@ -1,5 +1,6 @@
 import {Widget} from "zasada/src";
 import {TestWidget} from "./TestWidget.js";
+import {OtherWidget} from "./OtherWidget.js";
 
 export class ApiWidget extends Widget {
 
@@ -71,6 +72,55 @@ export class ApiWidget extends Widget {
 					console.log( this.bl() );
 				},
 			],
+			Mod: [
+				function () {
+					// добавить css класс блоку
+					this._mod( '', 'active', true );
+				},
+				function () {
+					// добавить css класс блоку, убрать другие конфликтующие
+					this._mod( '', [ 'active', 'active2', 'active3' ], 'active2' );
+				},
+				function () {
+					// добавить css класс блоку, убрать другие конфликтующие, по алиасам
+					this._mod( '', {one:"active",two:"active2",three:"active3"}, "three" );
+				},
+			],
+			Rel: [
+				function () {
+					// доступ к предку по типу
+					const oOtherWidget = this.rel()
+						.parents()
+						.typeOf( OtherWidget )
+						.find();
+					oOtherWidget.toggle();
+				},
+				function () {
+					// доступ к потомку по типу
+					const oOtherWidget = this.rel()
+						.children()
+						.typeOf( OtherWidget )
+						.find();
+					oOtherWidget.toggle();
+				},
+				function () {
+					// доступ по индексу
+					const oOtherWidget = this.rel()
+						.index( 'sibling' )
+						.find();
+					oOtherWidget.toggle();
+				},
+				function () {
+					// доступ к нескольким виджетам
+					this.rel()
+						.typeOf( OtherWidget )
+						.onlyFirst( false )
+						.find()
+						.forEach( ( oOtherWidget ) => {
+							oOtherWidget.toggle();
+						} );
+				},
+			],
 			Event: [
 				function () {
 					// кастомный обработчик событий установим, создадим событие, уберем
@@ -81,7 +131,7 @@ export class ApiWidget extends Widget {
 					this._fire( '', 'customEvent', {eventVar: '123'} );
 					this._off( '', 'customEvent', fnHandler );
 				},
-			]
+			],
 		};
 
 		for( let sName in oCode ) {
@@ -107,6 +157,8 @@ export class ApiWidget extends Widget {
 		sBody = sBody.replace( /_this(\d)?\./g, 'this.' );
 		sBody = sBody.replace( /\n+/g, "\n" );
 		sBody = sBody.replace( /\n/g, "<br/>" );
+		// чтобы покрасивше выводилось название виджета, а не webpack закорючки
+		sBody = sBody.replace( /\([^\(]+OtherWidget[^\)]+\)/, "(OtherWidget)" );
 		return sBody;
 	}
 }
