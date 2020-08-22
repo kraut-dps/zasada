@@ -1,5 +1,5 @@
 var fnWebpackMerge = require( 'webpack-merge' ).merge;
-var oWebpackBase = require( '../src/utils/webpackBase.js' );
+var oWebpackBase = require( 'zasada/src/utils/webpackBase.js' );
 
 var oConfig = fnWebpackMerge(
 	oWebpackBase,
