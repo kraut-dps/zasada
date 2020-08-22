@@ -1,4 +1,4 @@
-import {Widget} from "zasada/src";
+import {Widget} from "zasada/src/index.js";
 import {TestWidget} from "./TestWidget.js";
 import {OtherWidget} from "./OtherWidget.js";
 

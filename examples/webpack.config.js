@@ -7,7 +7,7 @@ var oConfig = fnWebpackMerge(
 		entry: {
 			"1_HelloWorld": __dirname + '/1_HelloWorld/index.js',
 			"2_Api": __dirname +'/2_Api/index.js',
-			"polyfill-promise": __dirname + '/../src/utils/polyfillPromise.js',
+			"polyfill-promise": 'zasada/src/utils/polyfillPromise.js',
 		},
 		output: {
 			filename: ( pathData ) => {
@@ -16,11 +16,6 @@ var oConfig = fnWebpackMerge(
 			chunkFilename: '[name].js',
 			path: __dirname + '/build/',
 			publicPath: '/build/',
-		},
-		resolve: {
-			alias: {
-				zasada: __dirname + '/..',
-			}
 		},
 		devServer:{
 			contentBase: __dirname,
