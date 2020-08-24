@@ -118,7 +118,7 @@ export class Storage {
 		}
 
 		if( eFrom && !(eFrom instanceof Element) ) {
-			throw this.newError( '.rel typeof eFrom !== Element' );
+			throw this.newError( { message: '.rel typeof eFrom !== Element' } );
 		}
 
 		if ( aIndex.length ) {
@@ -154,7 +154,7 @@ export class Storage {
 
 	_canEmptyCheck( aRet, oRelQuery ) {
 		if( !oRelQuery.bCanEmpty && !aRet.length ) {
-			throw this.newError( 'Relation not found', 'rel-not-found' );
+			throw this.newError( { message: 'Relation not found', name: 'rel-not-found' } );
 		}
 		return aRet;
 	}
