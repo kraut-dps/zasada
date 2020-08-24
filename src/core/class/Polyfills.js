@@ -1,3 +1,4 @@
+import {importExt} from "zasada/src/utils/importExt.js";
 /**
  * @implements IPolyfillBox
  */
@@ -25,13 +26,7 @@ export class Polyfills{
 		if ( window.Promise ) {
 			fnResolve();
 		} else {
-			const eScript = document.createElement( "script" );
-			eScript.src = this.sPromiseUrl;
-			eScript.type = 'text/javascript';
-			eScript.onload = fnResolve;
-			eScript.onerror = fnReject;
-			eScript.async = true;
-			document.body.appendChild( eScript );
+			importExt( this.sPromiseUrl, fnResolve, fnReject );
 		}
 	}
 
