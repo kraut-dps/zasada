@@ -1,6 +1,6 @@
 import oDeps from "zasada/src/deps.js";
-import {TestBox} from "zasada/tests/_support/TestBox.js";
-import {Helper} from "zasada/tests/_support/Helper.js";
+import {TestBox} from "zasada/src/test/TestBox.js";
+import {Helper} from "zasada/src/test/Helper.js";
 
 oDeps.core.mergeDeep(
 	oDeps,
@@ -14,15 +14,15 @@ oDeps.core.mergeDeep(
 		},
 		core:{
 			oPolyfills: {
-				// pProto: () => {
-				// 	return import( /* webpackIgnore: true */ '/base/node_modules/proto-polyfill/index.js' );
-				// },
-				// pWeakMap: () => {
-				// 	return import( /* webpackIgnore: true */ '/base/node_modules/weakmap-polyfill/weakmap-polyfill.js' );
-				// },
-				// pClassList: () => {
-				// 	return import( /* webpackIgnore: true */ '/base/node_modules/classlist-polyfill/src/index.js' );
-				// }
+				pProto: () => {
+					return import( /* webpackIgnore: true */ '/base/node_modules/proto-polyfill/index.js' );
+				},
+				pWeakMap: () => {
+					return import( /* webpackIgnore: true */ '/base/node_modules/weakmap-polyfill/weakmap-polyfill.js' );
+				},
+				pClassList: () => {
+					return import( /* webpackIgnore: true */ '/base/node_modules/classlist-polyfill/src/index.js' );
+				}
 			}
 		},
 		log: {
