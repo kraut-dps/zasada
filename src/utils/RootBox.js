@@ -9,6 +9,8 @@ export class RootBox extends Box {
 
 	_oOne = {};
 
+	_aPrefix = [ 'one', 'new' ];
+
 	constructor( oDeps ) {
 		super();
 		this.oDeps = oDeps;
@@ -25,7 +27,7 @@ export class RootBox extends Box {
 				}
 
 				// если функция, выполняем ее из контекста Root
-				if( typeof oDeps[ sDep ] === 'function' ) {
+				if( typeof oDeps[ sDep ] === 'function' && this._aPrefix.indexOf( sDep.substr( 0, 3 ) ) !== -1 ) {
 					oBox[sDep] = oDeps[sDep].bind( this );
 					continue;
 				}
