@@ -179,7 +179,10 @@ export class Linker {
 			} )
 			.then( () => {
 				const { bSkipRun } = this.fnDeepKey( ['bSkipRun'], oCustomOpts, this._oOpts[ sBlockId ] );
-				return !bSkipRun ? oNewWidget.run() : false;
+				if( !bSkipRun ) {
+					oNewWidget.run();
+				}
+				return oNewWidget;
 			} )
 			.catch( ( mError ) => {
 				this._error( this.newError( {
