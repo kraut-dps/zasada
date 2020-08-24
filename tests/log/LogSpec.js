@@ -20,11 +20,11 @@ class ErrorWidget extends Widget {
 
 		switch( this.iType ) {
 			case ErrorWidget.TYPE_ERROR:
-				throw new Error( 'error' );
+				throw new Error( 'error origin' );
 			case ErrorWidget.TYPE_COMPAT:
-				throw { message: 'error', sourceURL: 'sourceURL', line: 'line' };
+				throw { message: 'error object', sourceURL: 'sourceURL', line: 'line' };
 			case ErrorWidget.TYPE_STRING:
-				throw 'error';
+				throw 'error string';
 			case ErrorWidget.TYPE_REL_FROM_BAD:
 				this.rel().from( 'bad' ).find();
 		}
@@ -35,7 +35,7 @@ class ErrorWidget extends Widget {
  * @implements ILogRoute
  */
 class TestRouteString extends RouteString {
-	_send( ...aArgs ) {
+	_send( ...aArgs) {
 		fnSendSpy( ...aArgs );
 	}
 }
@@ -56,7 +56,9 @@ describe( "Routes", () => {
 		oRootBox = new RootBox( oDeps );
 		const oCoreBox = oRootBox.box( 'core' );
 		oCoreBox.polyfills( () => {
-			//oRootBox.box( 'log' ).oneLogger().pMapStack = null;
+			// чтобы не заморачиваться на задержку обработки stackMap
+			oRootBox.box( 'log' ).oneLogger().pMapStack = null;
+
 			oCoreBox.oneLinker().setWidgets( { ErrorWidget } );
 			oHelper = oRootBox.box( 'test' ).oneHelper();
 			fnDone();
@@ -87,7 +89,7 @@ describe( "Routes", () => {
 			);
 
 			expect( fnSendSpy.calls.count() ).toEqual(1);
-			expect( fnSendSpy.calls.mostRecent().args[0][ 'sError' ]).toEqual('error' );
+			expect( fnSendSpy.calls.mostRecent().args[1][ 'sMessage' ] ).toEqual('error origin' );
 
 		} );
 
@@ -131,18 +133,6 @@ describe( "Routes", () => {
 
 		afterAll( () => {
 			window.console = oOriginConsole;
-		} );
-
-		it( 'base', async () => {
-
-			oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new TestRouteConsole()};
-
-			await oHelper.addHtml(
-				`<div class="_ _ErrorWidget"></div>`,
-			);
-
-			expect( fnSendSpy.calls.count() ).toEqual( 1 );
-			expect( fnSendSpy.calls.mostRecent().args[0][1] ).toEqual( 'error' );
 		} );
 
 		it( 'no blockId and widget', async ( fnDone ) => {
@@ -202,21 +192,21 @@ describe( "Routes", () => {
 		);
 
 		expect( fnSendSpy.calls.count() ).toEqual(1);
-		expect( fnSendSpy.calls.mostRecent().args[0][ 1 ]).toEqual('error' );
+		expect( fnSendSpy.calls.mostRecent().args[1][ 'sMessage' ]).toEqual('error object' );
 
 		await oHelper.addHtml(
 			`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_ERROR}"></div>`,
 		);
 
 		expect( fnSendSpy.calls.count() ).toEqual(2);
-		expect( fnSendSpy.calls.mostRecent().args[0][ 1 ]).toEqual('error' );
+		expect( fnSendSpy.calls.mostRecent().args[1][ 'sMessage' ]).toEqual('error origin' );
 
 		await oHelper.addHtml(
 			`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_STRING}"></div>`,
 		);
 
 		expect( fnSendSpy.calls.count() ).toEqual(3);
-		expect( fnSendSpy.calls.mostRecent().args[0][ 1 ]).toEqual('error' );
+		expect( fnSendSpy.calls.mostRecent().args[1][ 'sMessage' ]).toEqual('error string' );
 
 	} );
 
@@ -229,8 +219,7 @@ describe( "Routes", () => {
 		};
 		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteString() };
 
-		fnSendSpy.and.callFake( ( oSend ) => {
-			expect( oSend[ 'sStack' ].indexOf( 'at' ) !== -1 ).toEqual(true );
+		fnSendSpy.and.callFake( ( sMessage ) => {
 			oRootBox.box( 'log' ).oneLogger().pMapStack = oDeps.log.pMapStack;
 			fnDone();
 		} );
@@ -257,9 +246,10 @@ describe( "Routes", () => {
 	it( "MapStack", async ( fnDone ) => {
 
 		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteString() };
+		oRootBox.box( 'log' ).oneLogger().pMapStack = oRootBox.box( 'log' ).pMapStack;
 
-		fnSendSpy.and.callFake( ( oSend ) => {
-			expect( oSend[ 'sError' ] ).toEqual('error' );
+		fnSendSpy.and.callFake( ( sMessage, oData ) => {
+			expect( oData.sMessage ).toEqual( 'error origin' );
 			fnDone();
 		} );
 

@@ -16,6 +16,11 @@ export class CoreWidget {
 	oneEl;
 
 	/**
+	 * @type {function( oError: object ): IError}
+	 */
+	newError;
+
+	/**
 	 * @param {Element} eBlock DOM элемент основного узла виджета
 	 * @param {string} sBlockId строковый инедтификатор типа виджета
 	 */
@@ -85,7 +90,7 @@ export class CoreWidget {
 	 */
 	_on( mContext, sEvent, fnHandler ) {
 		this._context( mContext ).forEach( ( eContext ) => {
-			eContext.addEventListener( sEvent, fnHandler );
+			eContext.addEventListener( sEvent, this._wrapError( fnHandler ) );
 		} );
 	}
 
@@ -96,7 +101,7 @@ export class CoreWidget {
 	 */
 	_off( mContext, sEvent, fnHandler ) {
 		this._context( mContext ).forEach( ( eContext ) => {
-			eContext.removeEventListener( sEvent, fnHandler );
+			eContext.removeEventListener( sEvent, this._wrapError( fnHandler ) );
 		} );
 	}
 
@@ -264,6 +269,20 @@ export class CoreWidget {
 	 */
 	_elReset() {
 		this.oneEl().resetCache( this );
+	}
+
+	_wrapError( fnHandler ) {
+		if( !fnHandler._tryCatch) {
+			const oWidget = this;
+			fnHandler._tryCatch = function () {
+				try {
+					return fnHandler.apply( this, arguments );
+				} catch ( e ) {
+					throw oWidget.newError( { mOrigin: e, oWidget } );
+				}
+			};
+		}
+		return fnHandler._tryCatch;
 	}
 
 	index() {

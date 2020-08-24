@@ -5,7 +5,7 @@
 export class Attrs {
 
 	/**
-	 * @type function( sMessage: string, sType: string ) :IError
+	 * @type function( oError: object ) :IError
 	 */
 	newError;
 
@@ -109,7 +109,7 @@ export class Attrs {
 			sFrom = sTo;
 		}
 		if( !( sType in this.oCasts ) ) {
-			throw this.newError( 'Unknown attr cast ' + sMapItem, 'unknown-attr-cast' );
+			throw this.newError( { message: 'Unknown attr cast ' + sMapItem, name: 'unknown-attr-cast' } );
 		}
 		return [ sFrom, sTo, sType ];
 	}

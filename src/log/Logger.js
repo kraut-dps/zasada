@@ -5,7 +5,7 @@ export class Logger {
 
 	oRouteTypes;
 
-	Error;
+	newError;
 
 	oRoutes = null;
 
@@ -18,28 +18,19 @@ export class Logger {
 	/**
 	 * возникновение ошибки
 	 */
-	error( oLog ) {
-		this._getStack( oLog.mError, ( sStack ) => {
-			const sError = this._getErrorStr( oLog.mError );
+	error( mError ) {
+		const oError = this.newError( { mOrigin: mError } );
+		this._getMapStack( oError.stackOrigin(), ( sStackMapped ) => {
+			oError.sStackMapped = sStackMapped;
 			const oRoutes = this._getRoutes();
 			for( let sRoute in oRoutes ) {
 				const oRoute = oRoutes[ sRoute ];
-				oRoute.error( { ...oLog, sError, sStack } );
+				oRoute.error( oError );
 			}
 		} );
 	}
 
-	_getStack( mError, fnDone ) {
-
-		let sStack = '';
-		if( mError.stack ) {
-			sStack = mError.stack;
-		} else if( mError.sourceURL ) {
-			sStack = mError.message + "\n@" + mError.sourceURL + ':' + mError.line + ":1";
-		} else {
-			fnDone( sStack );
-			return;
-		}
+	_getMapStack( sStack, fnDone ) {
 		try {
 			this.pMapStack().then( ( oLib ) => {
 				oLib.mapStackTrace( sStack, ( aMappedStack ) => {
@@ -48,16 +39,6 @@ export class Logger {
 			} )
 		} catch( e ) {
 			fnDone( sStack );
-		}
-	}
-
-	_getErrorStr( mError ) {
-		if( mError instanceof this.Error ) {
-			return mError.message + ( mError.name ?  ' https://github.com/kraut-dps/zasada/#' + mError.name : '' );
-		} else if( typeof mError === 'string' ) {
-			return mError;
-		} else {
-			return mError.message;
 		}
 	}
 

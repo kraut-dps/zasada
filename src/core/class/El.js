@@ -10,7 +10,7 @@ export class El{
 	newElQuery;
 
 	/**
-	 * @type {function( sMessage: string, sType: string ): IError}
+	 * @type {function( oError: object ): IError}
 	 */
 	newError;
 
@@ -57,7 +57,7 @@ export class El{
 
 		if( aElements.length === 0 ) {
 			if( !oElQuery.bCanEmpty ) {
-				throw this.newError( 'Element "_' + oWidget.blockId() + '-' + mQuery + '" not found', 'element-not-found' );
+				throw this.newError( { message: 'Element "_' + oWidget.blockId() + '-' + mQuery + '" not found', name: 'element-not-found' } );
 			} else {
 				return oElQuery.bOnlyFirst ? null : [];
 			}

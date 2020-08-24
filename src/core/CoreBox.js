@@ -19,7 +19,7 @@ export class CoreBox extends Box {
 	oneLogger;
 
 	/**
-	 * @type function( sMessage: string, sType: string ) :IError
+	 * @type function( oError: object ) :IError
 	 */
 	newError;
 
@@ -103,6 +103,7 @@ export class CoreBox extends Box {
 		oWidget.oneLinker = this.oneLinker;
 		oWidget.oneAttrs = this.oneAttrs;
 		oWidget.oneEl = this.oneEl;
+		oWidget.newError = this.newError;
 		return oWidget;
 	}
 

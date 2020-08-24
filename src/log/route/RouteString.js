@@ -6,25 +6,29 @@ export class RouteString {
 
 	iMaxElementHtml = 100;
 
-	error( oOpts ) {
-		const { sError, sStack, oWidget, sBlockId, eContext } = oOpts;
-		let aMessage = [];
-		aMessage.push( '"' + sError + '"' );
-		const sWidget = this._getWidgetStr( sBlockId, oWidget );
+	error( oError ) {
+		let aMessage = [], oData = oError.data();
+		aMessage.push( oData.sMessage );
+		const sWidget = this._getWidgetStr( oData.sBlockId, oData.oWidget );
 		aMessage.push( 'Widget: ' + sWidget );
 
-		aMessage.push( 'Element: ' + this._elementToStr( eContext ) );
+		aMessage.push( 'Element: ' + this._elementToStr( oData.eContext ) );
 
-		aMessage.push( 'Stack: ' + sStack );
+		aMessage.push( 'Stack: ' + oData.sStackMapped );
 
-		this._send( { ...oOpts, sWidget, sMessage: aMessage.join( "\n" ) } );
+		if( oData.mOrigin ) {
+			aMessage.push( 'Origin: ' + oData.mOrigin );
+		}
+
+		this._send( aMessage.join( "\n" ), oData );
 	}
 
 	/**
 	 * redefine me
-	 * @param {Object} oOpts
+	 * @param {string} sMessage
+	 * @param {object} oData
 	 */
-	_send( { sMessage } ) {
+	_send( sMessage, oData ) {
 		console.log( sMessage );
 	}
 

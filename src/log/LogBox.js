@@ -17,14 +17,24 @@ export class LogBox extends Box{
 	newLogger() {
 		const oLogger = new this.Logger();
 		oLogger.oRouteTypes = this.oRouteTypes;
-		oLogger.Error = this.Error;
-		oLogger.fnAsyncOneMapStack = this.pMapStack;
+		oLogger.newError = this.newError;
+		oLogger.pMapStack = this.pMapStack;
 		return oLogger;
 	};
 
-	newError( sMessage, sName = '' ) {
-		const oError = new this.Error( sMessage );
-		oError.name = sName;
+	newError( oProps ) {
+		let oError;
+		if( oProps.mOrigin && oProps.mOrigin instanceof this.Error ) {
+			oError = oProps.mOrigin;
+			delete oProps.mOrigin;
+		} else {
+			oError = new this.Error();
+		}
+		for( let sKey in oProps ) {
+			if( sKey in oError ) {
+				oError[ sKey ] = oProps[ sKey ];
+			}
+		}
 		return oError;
 	}
 }

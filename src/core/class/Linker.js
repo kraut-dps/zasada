@@ -107,21 +107,31 @@ export class Linker {
 			try {
 				aBlockIds = oDom.parseBlockIds( eModelContext );
 				if ( !aBlockIds.length ) {
-					throw this.newError( 'Not found _blockId in tag class', 'not-found-blockid' );
+					throw this.newError( {
+						message: 'Not found _blockId in tag class',
+						name: 'not-found-blockid',
+						eContext: eModelContext,
+						sBlockId
+					} );
 				}
 				for ( let j = 0; j < aBlockIds.length; j++ ) {
 					try {
 						sBlockId = aBlockIds[ j ];
 						if ( !this._oOpts[ sBlockId ] ) {
-							throw this.newError( 'No widget "' + sBlockId + '" opts', 'no-widget-opts' );
+							throw this.newError( {
+								message: 'No widget "' + sBlockId + '" opts',
+								name: 'no-widget-opts',
+								eContext: eModelContext,
+								sBlockId
+							} );
 						}
 						aPromises.push( this.widget( eModelContext, sBlockId ) );
 					} catch ( oError ) {
-						this._error( oError, eModelContext, sBlockId );
+						this._error( oError );
 					}
 				}
 			} catch ( oError ) {
-				this._error( oError, eModelContext, sBlockId );
+				this._error( oError );
 			}
 		}
 		return Promise.all( aPromises );
@@ -147,7 +157,10 @@ export class Linker {
 			.then( () => {
 				const { cWidget, oProps, fnAfterNew } = this.fnDeepKey( [ 'cWidget', 'oProps', 'fnAfterNew' ], oCustomOpts, this._oOpts[ sBlockId ] );
 				if ( !cWidget ) {
-					throw this.newError( 'Not set widget class "' + sBlockId + '"', 'no-widget-class' );
+					throw this.newError( {
+						message: 'Not set widget class "' + sBlockId + '"',
+						name: 'no-widget-class'
+					} );
 				}
 				oNewWidget = this.newWidget( eContext, sBlockId, cWidget );
 				this._setProps( oNewWidget, oProps );
@@ -169,7 +182,12 @@ export class Linker {
 				return !bSkipRun ? oNewWidget.run() : false;
 			} )
 			.catch( ( mError ) => {
-				this._error( mError, eContext, sBlockId, oNewWidget );
+				this._error( this.newError( {
+					mOrigin: mError,
+					oWidget: oNewWidget,
+					sBlockId,
+					eContext
+				} ) );
 			} );
 	}
 
@@ -179,13 +197,16 @@ export class Linker {
 		}
 		for ( let sPropName in oProps ) {
 			if ( !( sPropName in oWidget ) ) {
-				throw this.newError( 'No widget property "' + oWidget.blockId() + '.' + sPropName + '"', 'no-widget-prop'  );
+				throw this.newError( {
+					message: 'No widget property "' + oWidget.blockId() + '.' + sPropName + '"',
+					name: 'no-widget-prop'
+				} );
 			}
 			oWidget[ sPropName ] = oProps[ sPropName ];
 		}
 	}
 
-	_error( mError, eContext, sBlockId, oWidget ) {
-		this.oneLogger().error( { mError, eContext, sBlockId, oWidget } );
+	_error( oError ) {
+		this.oneLogger().error( oError );
 	}
 }
