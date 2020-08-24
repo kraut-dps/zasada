@@ -223,7 +223,8 @@ export class Storage {
 				break;
 			case 0:
 			default:
-				aMatches = oDom.children( document.body, sSel, false, false );
+				// к body тегу тоже могут быть привяазаны виджеты
+				aMatches = oDom.children( document.body, sSel, true, false );
 				if ( !bWithSelf ) {
 					aMatches = aMatches.filter( ( eMatch ) => {
 						return eMatch !== eContext;
