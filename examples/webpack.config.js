@@ -17,6 +17,11 @@ var oConfig = fnWebpackMerge(
 			path: __dirname + '/build/',
 			publicPath: '/build/',
 		},
+		//resolve:{
+		//	alias: {
+		//		zasada: __dirname + '/..'
+		//	}
+		//},
 		devServer:{
 			contentBase: __dirname,
 		}

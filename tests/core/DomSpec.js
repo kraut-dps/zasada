@@ -16,7 +16,7 @@ describe( "Dom", () => {
 	beforeAll( ( fnDone ) => {
 		const oRoot = new RootBox( oDeps );
 		const oCoreBox = oRoot.box( 'core' );
-		oCoreBox.polyfills( () => {
+		oCoreBox.init( () => {
 			oDom = oCoreBox.oneDom();
 			oHelper = oRoot.box( 'test' ).oneHelper();
 			fnDone();

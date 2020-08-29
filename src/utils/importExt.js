@@ -1,4 +1,7 @@
-export function importExt( sUrl, fnResolve, fnReject ) {
+export function importExt( sUrl, fnResolve ) {
+	const fnReject = () => {
+		throw new Error( 'error load "' + sUrl + '"' );
+	};
 	const hExecutor = ( fnResolve, fnReject ) => {
 		const eScript = document.createElement( "script" );
 		eScript.src = sUrl;

@@ -35,7 +35,7 @@ export class CoreBox extends Box {
 		oLinker.newError = this.newError;
 		oLinker.oneStorage = this.oneStorage;
 		oLinker.oneDom = this.oneDom;
-		oLinker.oneLogger = this.oneLogger;
+		//oLinker.oneLogger = this.oneLogger;
 		oLinker.fnMergeDeep = this.mergeDeep;
 		oLinker.fnDeepKey = this.deepKey;
 		oLinker.fnAssertUndefProps = this._assertUndefProps;
@@ -117,12 +117,46 @@ export class CoreBox extends Box {
 		return oElQuery;
 	}
 
-	polyfills( fnCallback, fnReject ) {
+	/**
+	 * @param {function( ILinker )} fnCallback
+	 * @param fnReject
+	 */
+	init( fnCallback ) {
+		// загрузим полифилы если надо
+		this.polyfills( () => {
+
+				// глобальный перехват ошибок
+				this.errorHandlers();
+
+				// передача объекта Linker для удобства
+				fnCallback( this.oneLinker() );
+			}
+		);
+	}
+
+	polyfills( fnResolve ) {
 		const oPolyfills = new this.Polyfills();
 		for( let sPolyfill in this.oPolyfills ) {
 			oPolyfills[ sPolyfill ] = this.oPolyfills[ sPolyfill ];
 		}
 		this._assertUndefProps( oPolyfills );
-		oPolyfills.base( fnCallback, fnReject );
+		oPolyfills.base( fnResolve );
+	}
+
+	errorHandlers() {
+		// глобальный перехват ошибок
+		window.onerror = ( message, sourceURL, line, column, error ) => {
+			//if( !error ) {
+			//	error = this.newError( { mOrigin: { message, sourceURL, line, column } } );
+			//}
+			this.oneLogger().error( error );
+			return true;
+		};
+		window.onunhandledrejection = ( event ) => {
+			this.oneLogger().error( event.reason );
+			try {
+				event.preventDefault();
+			}catch(e){}
+		};
 	}
 }

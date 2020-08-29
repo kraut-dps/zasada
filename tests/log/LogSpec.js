@@ -2,6 +2,7 @@ import { RouteString } from "zasada/src/log/route/RouteString.js";
 import { RouteConsole } from "zasada/src/log/route/RouteConsole.js";
 import oDeps from "zasada/tests/_support/deps.js";
 import {RootBox, Widget} from "zasada/src/index.js";
+import { Error as CustomError } from "zasada/src/log/Error.js";
 
 let oRootBox, oHelper, oOriginConsole, fnSendSpy = jasmine.createSpy('spy');
 
@@ -55,7 +56,7 @@ describe( "Routes", () => {
 	beforeAll( ( fnDone ) => {
 		oRootBox = new RootBox( oDeps );
 		const oCoreBox = oRootBox.box( 'core' );
-		oCoreBox.polyfills( () => {
+		oCoreBox.init( () => {
 			// чтобы не заморачиваться на задержку обработки stackMap
 			oRootBox.box( 'log' ).oneLogger().pMapStack = null;
 
@@ -67,6 +68,7 @@ describe( "Routes", () => {
 
 	beforeEach( () => {
 		fnSendSpy.calls.reset();
+		oRootBox.box( 'log' ).oneLogger().oRoutes = null;
 	} );
 
 
@@ -80,17 +82,18 @@ describe( "Routes", () => {
 			window.console = oOriginConsole;
 		} );
 
-		it( "base", async () => {
+		it( "base", async ( fnDone ) => {
 
 			oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteString() };
+
+			fnSendSpy.and.callFake( ( sMessage, oData ) => {
+				expect( oData.sMessage ).toEqual( 'error origin' );
+				fnDone();
+			} );
 
 			await oHelper.addHtml(
 				`<div class="_ _ErrorWidget"></div>`,
 			);
-
-			expect( fnSendSpy.calls.count() ).toEqual(1);
-			expect( fnSendSpy.calls.mostRecent().args[1][ 'sMessage' ] ).toEqual('error origin' );
-
 		} );
 
 		it( 'undefined widget', async ( fnDone ) => {
@@ -182,32 +185,58 @@ describe( "Routes", () => {
 
 	} );
 
-	it( "types", async () => {
+	it( "type compat", async ( fnDone ) => {
 
 		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteConsole() };
 
+		fnSendSpy.and.callFake( ( sMessage, oData ) => {
+			expect( oData.sMessage ).toEqual( 'error object' );
+			fnDone();
+		} );
 
 		await oHelper.addHtml(
 			`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_COMPAT}"></div>`,
 		);
+	} );
 
-		expect( fnSendSpy.calls.count() ).toEqual(1);
-		expect( fnSendSpy.calls.mostRecent().args[1][ 'sMessage' ]).toEqual('error object' );
+	it( "type pure error", async ( fnDone ) => {
+
+		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteConsole() };
+
+		fnSendSpy.and.callFake( ( sMessage, oData ) => {
+			expect( oData.sMessage ).toEqual( 'error custom origin' );
+			fnDone();
+		} );
+
+		throw new CustomError( 'error custom origin' );
+	} );
+
+	it( "type error", async ( fnDone ) => {
+
+		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteConsole() };
+
+		fnSendSpy.and.callFake( ( sMessage, oData ) => {
+			expect( oData.sMessage ).toEqual( 'error origin' );
+			fnDone();
+		} );
 
 		await oHelper.addHtml(
 			`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_ERROR}"></div>`,
 		);
+	} );
 
-		expect( fnSendSpy.calls.count() ).toEqual(2);
-		expect( fnSendSpy.calls.mostRecent().args[1][ 'sMessage' ]).toEqual('error origin' );
+	it( "type string", async ( fnDone ) => {
+
+		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteConsole() };
+
+		fnSendSpy.and.callFake( ( sMessage, oData ) => {
+			expect( oData.sMessage ).toEqual( 'error string' );
+			fnDone();
+		} );
 
 		await oHelper.addHtml(
 			`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_STRING}"></div>`,
 		);
-
-		expect( fnSendSpy.calls.count() ).toEqual(3);
-		expect( fnSendSpy.calls.mostRecent().args[1][ 'sMessage' ]).toEqual('error string' );
-
 	} );
 
 	it( "mapStack lib error", async ( fnDone ) => {

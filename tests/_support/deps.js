@@ -6,24 +6,24 @@ oDeps.core.mergeDeep(
 	oDeps,
 	{
 		test: {
-			Box: TestBox,
-			Helper,
-			oneLinker: function() {
-				return this.box( 'core' ).oneLinker();
+			_Box: TestBox,
+			_fnRel: ( oRoot, oBox ) => {
+				oBox.oneLinker = oRoot.box( 'core' ).oneLinker;
 			},
+			Helper
 		},
 		core:{
-			oPolyfills: {
-				pProto: () => {
-					return import( /* webpackIgnore: true */ '/base/node_modules/proto-polyfill/index.js' );
-				},
-				pWeakMap: () => {
-					return import( /* webpackIgnore: true */ '/base/node_modules/weakmap-polyfill/weakmap-polyfill.js' );
-				},
-				pClassList: () => {
-					return import( /* webpackIgnore: true */ '/base/node_modules/classlist-polyfill/src/index.js' );
-				}
-			}
+			// 	oPolyfills: {
+			// 		pProto: () => {
+			// 			return import( /* webpackIgnore: true */ '/base/node_modules/proto-polyfill/index.js' );
+			// 		},
+			// 		pWeakMap: () => {
+			// 			return import( /* webpackIgnore: true */ '/base/node_modules/weakmap-polyfill/weakmap-polyfill.js' );
+			// 		},
+			// 		pClassList: () => {
+			// 			return import( /* webpackIgnore: true */ '/base/node_modules/classlist-polyfill/src/index.js' );
+			// 		}
+			// 	}
 		},
 		log: {
 			// pMapStack: () => {

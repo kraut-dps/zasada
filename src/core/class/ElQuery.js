@@ -61,7 +61,7 @@ export class ElQuery {
 				iIndex++;
 			}
 		} catch( e ) {}
-		throw this.newError( { message: 'Bad el query "' + aQuery.join( '' ) + '"', name: 'element-query-parse' } );
+		throw this.newError( { message: 'Bad el query "' + aQuery.join( '' ) + '"', sHelp: 'element-query-parse' } );
 	}
 
 	key() {

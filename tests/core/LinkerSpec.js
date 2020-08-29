@@ -1,18 +1,19 @@
 import oDeps from "zasada/tests/_support/deps.js";
 import {RootBox, Widget} from "zasada/src/index.js";
+import {RouteString} from "zasada/src/log/route/RouteString.js";
 
-class LinkerWithError extends oDeps.core.Linker {
-	_error( mError, eContext, sBlockId, oWidget ) {
-		throw mError;
-	}
-}
-
+let oHelper, oLinker;
 
 describe( "Linker", () => {
 
 	beforeAll( ( fnDone ) => {
 		const oRoot = new RootBox( oDeps );
-		oRoot.box( 'core' ).polyfills( fnDone );
+		oRoot.box( 'core' ).init( ( oLinkerReal ) => {
+			oLinker = oLinkerReal;
+			oHelper = oRoot.box( 'test' ).oneHelper();
+			fnDone();
+		} );
+
 	} );
 
 	describe( 'props', () => {
@@ -112,35 +113,6 @@ describe( "Linker", () => {
 			const oWidget = oHelper.widget( '.widget', TestWidget );
 			expect( oWidget.oStruct ).toEqual( {sKey1: 1, sKey2: 2} );
 		} );
-
-		it( "undefined", async ( fnDone ) => {
-
-			const oDepsMod = oDeps;
-			oDepsMod.core.Linker = LinkerWithError;
-			const oRootBox = new RootBox( oDepsMod );
-			const oLinker = oRootBox.box( 'core' ).oneLinker();
-			const oHelper = oRootBox.box( 'test' ).oneHelper();
-
-			class TestWidget extends Widget {
-				sProp1;
-			}
-
-			oLinker.setOpts( {
-				TestWidget: {
-					cWidget: TestWidget,
-					oProps: {
-						sProp3: 3,
-					}
-				}
-			} );
-			await oHelper.addHtml(
-				'<div class="widget _ _TestWidget"></div>'
-			).then( () => {
-				fail();
-			} )
-			.catch( fnDone );
-
-		} );
 	} );
 
 	it( 'setBeforeNew', async ( fnDone ) => {
@@ -177,43 +149,73 @@ describe( "Linker", () => {
 	} );
 
 	describe( 'link', () => {
-		it( 'not found tag class', async ( fnDone ) => {
 
-			const oDepsMod = oDeps;
-			oDepsMod.core.Linker = LinkerWithError;
-			const oRootBox = new RootBox( oDepsMod );
-			const oHelper = oRootBox.box( 'test' ).oneHelper();
+		it( 'not-found-blockid', async ( fnDone ) => {
+			window.onerror = ( message, sourceURL, line, column, error ) => {
+				if( error && error.sHelp === 'not-found-blockid' ) {
+					fnDone();
+					return true;
+				}
+			}
+			await oHelper.addHtml(
+				`<div class="_"></div>`
+			);
+		} );
 
-			try {
-				await oHelper.addHtml(
-					`<div class="_"></div>`
-				);
-				fail();
-			} catch ( e ) {
+		it( 'no-widget-opts', async ( fnDone ) => {
+			window.onerror = ( message, sourceURL, line, column, error ) => {
+				if( error && error.sHelp === 'no-widget-opts' ) {
+					fnDone();
+					return true;
+				}
+			}
+			await oHelper.addHtml(
+				`<div class="_ _UnknownWidget"></div>`
+			);
+		} );
+
+		it( 'no-widget-class', async ( fnDone ) => {
+
+			window.onunhandledrejection = ( event ) => {
+				if( event.reason && event.reason.sHelp === 'no-widget-class' ) {
+					fnDone();
+					return true;
+				}
 			}
 
-			try {
-				await oHelper.addHtml(
-					`<div class="_ _UnknownWidget"></div>`
-				);
-				fail();
-			} catch ( e ) {
-			}
-
-
-			oRootBox.box( 'core' ).oneLinker().setOpts( {
+			oLinker.setOpts( {
 				TestWidget: {}
 			} );
 
-			try {
-				await oHelper.addHtml(
-					`<div class="_ _TestWidget"></div>`
-				);
-				fail();
-			} catch ( e ) {
+			await oHelper.addHtml(
+				`<div class="_ _TestWidget"></div>`
+			);
+		} );
+
+		it( "no-widget-prop", async ( fnDone ) => {
+
+			window.onunhandledrejection = ( event ) => {
+				if( event.reason && event.reason.sHelp === 'no-widget-prop' ) {
+					fnDone();
+					return true;
+				}
 			}
 
-			fnDone();
+			class TestWidget extends Widget {
+				sProp1;
+			}
+
+			oLinker.setOpts( {
+				TestWidget: {
+					cWidget: TestWidget,
+					oProps: {
+						sProp3: 3,
+					}
+				}
+			} );
+			await oHelper.addHtml(
+				'<div class="widget _ _TestWidget"></div>'
+			);
 		} );
 
 		it( 'link with self', async ( fnDone ) => {

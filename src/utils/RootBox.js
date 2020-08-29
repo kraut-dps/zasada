@@ -5,36 +5,29 @@ export class RootBox extends Box {
 	/**
 	 * @type {{}} объект для хранения зависимостей
 	 */
-	oDeps = {};
+	oOpts = {};
 
 	_oOne = {};
 
-	_aPrefix = [ 'one', 'new' ];
-
-	constructor( oDeps ) {
+	constructor( oOpts ) {
 		super();
-		this.oDeps = oDeps;
+		this.oOpts = oOpts;
 	}
 
 	box( sName ) {
 		if ( !this._oOne[sName] ) {
-			const oDeps = this.oDeps[sName];
-			const oBox = new oDeps.Box();
-			for ( let sDep in oDeps ) {
+			const { _Box, _fnRel, ...oDeps } = this.oOpts[sName];
 
-				if ( sDep === 'Box' ) {
-					continue;
-				}
+			const oBox = new _Box();
 
-				// если функция, выполняем ее из контекста Root
-				if( typeof oDeps[ sDep ] === 'function' && this._aPrefix.indexOf( sDep.substr( 0, 3 ) ) !== -1 ) {
-					oBox[sDep] = oDeps[sDep].bind( this );
-					continue;
-				}
+			Object.assign( oBox, oDeps );
 
-				oBox[sDep] = oDeps[sDep];
+			if( _fnRel ) {
+				_fnRel( this, oBox );
 			}
+
 			this._assertUndefProps( oBox );
+
 			this._oOne[sName] = oBox;
 		}
 		return this._oOne[sName];

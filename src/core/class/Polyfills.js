@@ -10,23 +10,22 @@ export class Polyfills{
 	pWeakMap;
 	pClassList;
 
-	base( fnCallback, fnReject ) {
+	base( fnCallback ) {
 		this.Promise( () => {
 			Promise.all( [
 				this.ObjectProto(),
 				this.Mozilla(), // Object.assign, CustomEvent, Element.prototype.matches, Element.prototype.closest
 				this.WeakMap(),
 				this.ElementClassList()
-			] ).then( fnCallback )
-			.catch( fnReject );
-		}, fnReject );
+			] ).then( fnCallback );
+		} );
 	}
 
-	Promise( fnResolve, fnReject ) {
+	Promise( fnResolve ) {
 		if ( window.Promise ) {
 			fnResolve();
 		} else {
-			importExt( this.sPromiseUrl, fnResolve, fnReject );
+			importExt( this.sPromiseUrl, fnResolve );
 		}
 	}
 

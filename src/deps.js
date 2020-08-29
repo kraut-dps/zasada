@@ -15,12 +15,14 @@ import {Logger} from "zasada/src/log/Logger.js";
 import {Error} from "zasada/src/log/Error.js";
 import {RouteConsole} from "zasada/src/log/route/RouteConsole.js";
 
-
-
 export default {
-
 	core: {
-		Box: CoreBox,
+		_Box: CoreBox,
+		_fnRel: ( oRoot, oBox ) => {
+			const oLogBox = oRoot.box( 'log' );
+			oBox.oneLogger = oLogBox.oneLogger;
+			oBox.newError = oLogBox.newError;
+		},
 		Attrs,
 		Dom,
 		El,
@@ -31,12 +33,6 @@ export default {
 		Storage,
 		deepKey,
 		mergeDeep,
-		oneLogger: function() {
-			return this.box( 'log' ).oneLogger();
-		},
-		newError: function( ...aArgs ) {
-			return this.box( 'log' ).newError( ...aArgs );
-		},
 		oPolyfills: {
 			sPromiseUrl: __webpack_public_path__ + '/polyfill-promise.js',
 			pProto: () => import( /* webpackChunkName: "polyfill-proto" */ "proto-polyfill" ),
@@ -47,7 +43,7 @@ export default {
 	},
 
 	log: {
-		Box: LogBox,
+		_Box: LogBox,
 		Logger,
 		Error,
 		oRouteTypes: {

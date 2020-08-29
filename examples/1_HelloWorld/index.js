@@ -8,11 +8,7 @@ class HelloWorld extends Widget {
 }
 
 const oRootBox = new RootBox( oDeps );
-const oCoreBox = oRootBox.box( 'core' );
-oCoreBox.polyfills( () => {
-	const oLinker = oCoreBox.oneLinker();
-	oLinker.setWidgets( {
-		HelloWorld
-	} );
+oRootBox.box( 'core' ).init( ( oLinker ) => {
+	oLinker.setWidgets( { HelloWorld } );
 	oLinker.link( document );
 } );

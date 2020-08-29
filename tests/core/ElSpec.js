@@ -10,7 +10,7 @@ describe( "El", () => {
 	beforeAll( ( fnDone ) => {
 		const oRootBox = new RootBox( oDeps );
 		oCoreBox = oRootBox.box( 'core' );
-		oCoreBox.polyfills( () => {
+		oCoreBox.init( () => {
 			oCoreBox.oneLinker().setWidgets( { WidgetTest } );
 			oEl = oCoreBox.oneEl();
 			oHelper = oRootBox.box( 'test' ).oneHelper();

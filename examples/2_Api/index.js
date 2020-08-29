@@ -7,9 +7,7 @@ import {OtherWidget} from "./OtherWidget.js";
 
 
 const oRootBox = new RootBox( oDeps );
-const oCoreBox = oRootBox.box( 'core' );
-oCoreBox.polyfills( () => {
-	const oLinker = oCoreBox.oneLinker();
+oRootBox.box( 'core' ).init( ( oLinker ) => {
 	oLinker.setWidgets( {
 		ApiWidget,
 		TestWidget,

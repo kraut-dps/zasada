@@ -27,9 +27,8 @@ describe( "Attrs", () => {
 
 	beforeAll( ( fnDone ) => {
 		const oRoot = new RootBox( oDeps );
-		const oCoreBox = oRoot.box( 'core' );
-		oCoreBox.polyfills( () => {
-			oAttrs = oCoreBox.oneAttrs();
+		oRoot.box( 'core' ).init( () => {
+			oAttrs = oRoot.box( 'core' ).oneAttrs();
 			fnDone();
 		} );
 	} );

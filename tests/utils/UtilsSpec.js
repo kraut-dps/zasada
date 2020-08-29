@@ -1,5 +1,6 @@
 import { deepKey } from "zasada/src/utils/deepKey.js";
 import { mergeDeep } from "zasada/src/utils/mergeDeep.js";
+import { importExt } from "zasada/src/utils/importExt.js";
 
 describe( "Utils", () => {
 
@@ -44,5 +45,11 @@ describe( "Utils", () => {
 			{ prop1: { prop11: { prop111: 20 } } }
 		);
 
+	} );
+
+	it( "importExt", ( fnDone ) => {
+
+		importExt( "/bad404" )
+			.catch( fnDone );
 	} );
 } );

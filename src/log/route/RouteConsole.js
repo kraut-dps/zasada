@@ -36,6 +36,9 @@ export class RouteConsole {
 		if( oData.mOrigin ) {
 			aMessage.push( 'Origin: %O' );
 			aVars.push( oData.mOrigin );
+		} else {
+			aMessage.push( 'Stack: %s' );
+			aVars.push( oData.sStack );
 		}
 
 		this._send( [ aMessage.join( "\n" ), ...aVars ], oData )

@@ -22,11 +22,6 @@ export class Linker {
 	oneDom;
 
 	/**
-	 * @type {function(): ILogger}
-	 */
-	oneLogger;
-
-	/**
 	 * @type {function( oTarget: object|*, oSource: object|* ): void }
 	 */
 	fnMergeDeep;
@@ -109,7 +104,7 @@ export class Linker {
 				if ( !aBlockIds.length ) {
 					throw this.newError( {
 						message: 'Not found _blockId in tag class',
-						name: 'not-found-blockid',
+						sHelp: 'not-found-blockid',
 						eContext: eModelContext,
 						sBlockId
 					} );
@@ -120,18 +115,18 @@ export class Linker {
 						if ( !this._oOpts[ sBlockId ] ) {
 							throw this.newError( {
 								message: 'No widget "' + sBlockId + '" opts',
-								name: 'no-widget-opts',
+								sHelp: 'no-widget-opts',
 								eContext: eModelContext,
 								sBlockId
 							} );
 						}
 						aPromises.push( this.widget( eModelContext, sBlockId ) );
 					} catch ( oError ) {
-						this._error( oError );
+						setTimeout( () => { throw oError; } );
 					}
 				}
 			} catch ( oError ) {
-				this._error( oError );
+				setTimeout( () => { throw oError; } );
 			}
 		}
 		return Promise.all( aPromises );
@@ -159,7 +154,7 @@ export class Linker {
 				if ( !cWidget ) {
 					throw this.newError( {
 						message: 'Not set widget class "' + sBlockId + '"',
-						name: 'no-widget-class'
+						sHelp: 'no-widget-class'
 					} );
 				}
 				oNewWidget = this.newWidget( eContext, sBlockId, cWidget );
@@ -185,12 +180,15 @@ export class Linker {
 				return oNewWidget;
 			} )
 			.catch( ( mError ) => {
-				this._error( this.newError( {
+				const oData = {
 					mOrigin: mError,
-					oWidget: oNewWidget,
 					sBlockId,
 					eContext
-				} ) );
+				};
+				if( oNewWidget ) {
+					oData.oWidget = oNewWidget;
+				}
+				throw this.newError( oData );
 			} );
 	}
 
@@ -202,14 +200,10 @@ export class Linker {
 			if ( !( sPropName in oWidget ) ) {
 				throw this.newError( {
 					message: 'No widget property "' + oWidget.blockId() + '.' + sPropName + '"',
-					name: 'no-widget-prop'
+					sHelp: 'no-widget-prop'
 				} );
 			}
 			oWidget[ sPropName ] = oProps[ sPropName ];
 		}
-	}
-
-	_error( oError ) {
-		this.oneLogger().error( oError );
 	}
 }

@@ -30,11 +30,12 @@ export class LogBox extends Box{
 		} else {
 			oError = new this.Error();
 		}
-		for( let sKey in oProps ) {
-			if( sKey in oError ) {
-				oError[ sKey ] = oProps[ sKey ];
-			}
-		}
+		Object.assign( oError, oProps );
+		//for( let sKey in oProps ) {
+			//if( sKey in oError ) {
+				//oError[ sKey ] = oProps[ sKey ];
+			//}
+		//}
 		return oError;
 	}
 }

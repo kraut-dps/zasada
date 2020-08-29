@@ -37,17 +37,15 @@ describe( "Polyfills", () => {
 		// почистим window от нормальных реализаций, чтобы загрузились полифилы
 		window.Promise = null;
 
+		window.onerror = ( message, sourceURL, line, column, error ) => {
+			window.Promise = cOriginPromise;
+			fnDone();
+		}
+
 		const oRoot = new RootBox( oDeps );
 
 		// подставим кривой урл с Promise polyfill, проверим срабатываение ошибки
 		oRoot.box( 'core' ).oPolyfills.sPromiseUrl = '/badUrl.js';
-		oRoot.box( 'core' ).polyfills(
-			fail,
-			() => {
-				window.Promise = cOriginPromise;
-				fnDone();
-			}
-
-		);
+		oRoot.box( 'core' ).init( fail );
 	} );
 } );

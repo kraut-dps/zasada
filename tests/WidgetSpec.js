@@ -7,7 +7,7 @@ describe( "Widget", () => {
 
 	beforeAll( ( fnDone ) => {
 		const oRootBox = new RootBox( oDeps );
-		oRootBox.box( 'core' ).polyfills( () => {
+		oRootBox.box( 'core' ).init( () => {
 			oHelper = oRootBox.box( 'test' ).oneHelper();
 			oLinker = oRootBox.box( 'core' ).oneLinker();
 			fnDone();

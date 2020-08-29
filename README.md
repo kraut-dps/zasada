@@ -147,20 +147,3 @@ class MyWidget extends Widget {
     }
 }
 ```
-
-### Unknown attr cast
-Не найдено определение преобразования типа данных.
-```html
-<div class="_ _MyWidget" data-var="3.14"></div>
-```
-```javascript
-class MyWidget extends Widget {
-    iVar;
-    fVar;
-    run() {
-        this._my( { var: 'i:iVar' } ); // this.iVar = 3; ok 
-        this._my( { var: 'f:iVar' } ); // this.fVar = 3.14; ok
-        this._my( { var: 'undefCast:iVar' } ); // error
-    }
-}
-```

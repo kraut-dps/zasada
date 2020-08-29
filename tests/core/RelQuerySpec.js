@@ -23,7 +23,7 @@ describe( "RelQuery", () => {
 
 	beforeAll( ( fnDone ) => {
 		const oRoot = new RootBox( oDeps );
-		oRoot.box( 'core' ).polyfills( () => {
+		oRoot.box( 'core' ).init( () => {
 			oRoot.box( 'core' ).oneLinker().setWidgets( { Widget } );
 			oStorage = oRoot.box( 'core' ).oneStorage();
 			oHelper = oRoot.box( 'test' ).newHelper();

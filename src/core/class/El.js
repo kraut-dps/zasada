@@ -57,7 +57,7 @@ export class El{
 
 		if( aElements.length === 0 ) {
 			if( !oElQuery.bCanEmpty ) {
-				throw this.newError( { message: 'Element "_' + oWidget.blockId() + '-' + mQuery + '" not found', name: 'element-not-found' } );
+				throw this.newError( { message: 'Element "_' + oWidget.blockId() + '-' + mQuery + '" not found', sHelp: 'element-not-found' } );
 			} else {
 				return oElQuery.bOnlyFirst ? null : [];
 			}
