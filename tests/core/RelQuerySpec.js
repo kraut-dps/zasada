@@ -1,5 +1,6 @@
-import oDeps from "zasada/tests/_support/deps.js";
-import {RootBox, Widget as WidgetBase} from "zasada/src/index.js";
+import oDeps from "./../_support/deps.js";
+import {RootBox} from "di-box";
+import {Widget as WidgetBase} from "./../../src/index.js";
 
 /**
  *  @type {IStorage}

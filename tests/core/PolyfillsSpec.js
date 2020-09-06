@@ -1,5 +1,6 @@
-import oDeps from "zasada/tests/_support/deps.js";
-import {RootBox, Widget} from "zasada/src/index.js";
+import oDeps from "./../_support/deps.js";
+import {RootBox} from "di-box";
+import {Widget} from "./../../src/index.js";
 
 describe( "Polyfills", () => {
 

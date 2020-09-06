@@ -25,6 +25,7 @@ export class Helper{
 		return this.oneLinker().oneStorage()
 			.query()
 			.from( eFrom )
+			//.cssSel( sSelector )
 			.onlyFirst( true )
 			.typeOf( cWidget )
 			.find();

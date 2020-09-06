@@ -1,6 +1,6 @@
-import oDeps from "zasada/tests/_support/deps.js";
-import {RootBox, Widget} from "zasada/src/index.js";
-import {RouteString} from "zasada/src/log/route/RouteString.js";
+import oDeps from "./../_support/deps.js";
+import {RootBox} from "di-box";
+import {Widget} from "./../../src/index.js";
 
 let oHelper, oLinker;
 

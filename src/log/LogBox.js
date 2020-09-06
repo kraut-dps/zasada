@@ -1,4 +1,4 @@
-import {Box} from "zasada/src/utils/Box.js";
+import {Box} from "di-box";
 
 export class LogBox extends Box{
 

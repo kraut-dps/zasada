@@ -1,4 +1,5 @@
-import {RootBox, Widget} from "zasada/src/index.js";
+import {RootBox} from "di-box";
+import {Widget} from "zasada/src/index.js";
 import oDeps from "zasada/src/deps.js";
 
 class HelloWorld extends Widget {

@@ -1,5 +1,5 @@
-import {RootBox} from "zasada/src/index.js";
-import oDeps from "zasada/src/deps.js";
+import oDeps from "./_support/deps.js";
+import {RootBox} from "di-box";
 
 describe( "CoreBox", () => {
 

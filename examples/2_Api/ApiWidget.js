@@ -86,6 +86,12 @@ export class ApiWidget extends Widget {
 					this._mod( '', {one:"active",two:"active2",three:"active3"}, "three" );
 				},
 			],
+			Html: [
+				function () {
+					// новый html для элемента Element
+					this._html( 'Element', '<div class="_ _OtherWidget"></div>' );
+				},
+			],
 			Rel: [
 				function () {
 					// доступ к предку по типу

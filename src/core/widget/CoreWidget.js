@@ -231,6 +231,60 @@ export class CoreWidget {
 	}
 
 	/**
+	 * @param {string|Element|Element[]} mContext
+	 * @param {string} sHtml
+	 * @param {null|string} sInsertPosition beforebegin | afterbegin | beforeend | afterend for Element.insertAdjacentHTML
+	 * @return {Promise<any[]>}
+	 * @private
+	 */
+	_html( mContext, sHtml, sInsertPosition = null ) {
+		const aPromises = [];
+
+		this._context( mContext ).forEach( ( eContext ) => {
+			if( !sInsertPosition ) {
+				// самый простой вариант, заменяем innerHTML
+				this._unlink( eContext, false );
+				eContext.innerHTML = sHtml;
+				let pPromise = this._link( eContext, false );
+				aPromises.push( pPromise );
+				return;
+			}
+
+			let bBefore = sInsertPosition === 'beforebegin' || sInsertPosition === 'beforeend';
+			const sMarkComment = '__mark__';
+			const sMarkHtml = '<!--' + sMarkComment + '-->';
+			const sHtmlWithMark = ( bBefore ? sMarkHtml : '' ) + sHtml + ( !bBefore ? sMarkHtml : '' );
+			eContext.insertAdjacentHTML( sInsertPosition, sHtmlWithMark );
+			let eContextItem;
+			const fnNext = ( eContextItem ) => {
+				return bBefore ? eContextItem.previousSibling : eContextItem.nextSibling;
+			}
+			switch( sInsertPosition ) {
+				case 'afterbegin':
+					eContextItem = eContext.firstChild;
+					break;
+				case 'beforeend':
+					eContextItem = eContext.lastChild;
+					break;
+				default:
+					eContextItem = fnNext( eContext );
+			}
+
+			do {
+				if( eContextItem.nodeType === 1 ) {
+					// DOM Element link
+					aPromises.push( this._link( eContextItem, true ) );
+				} else if( eContextItem.nodeType === 8 && eContextItem.textContent.trim() === sMarkComment ) {
+					// DOM comment with mark remove
+					eContextItem.parentNode.removeChild( eContextItem );
+					break;
+				}
+			} while ( ( eContextItem = fnNext( eContextItem ) ) )
+		} );
+		return Promise.all( aPromises );
+	}
+
+	/**
 	 * достать promise с импортом из глобального хранилища
 	 * @param {string} sImportName
 	 * @return {Promise<any[]>}
@@ -271,6 +325,11 @@ export class CoreWidget {
 		this.oneEl().resetCache( this );
 	}
 
+	/**
+	 * возможность обернуть обработчик, чтобы обогатить Error, добавить в него объект виджета
+	 * @param {function} fnHandler
+	 * @return {function}
+	 */
 	_wrapError( fnHandler ) {
 		if( !fnHandler._tryCatch) {
 			const oWidget = this;

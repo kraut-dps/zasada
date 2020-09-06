@@ -1,8 +1,10 @@
-import { RouteString } from "zasada/src/log/route/RouteString.js";
-import { RouteConsole } from "zasada/src/log/route/RouteConsole.js";
-import oDeps from "zasada/tests/_support/deps.js";
-import {RootBox, Widget} from "zasada/src/index.js";
-import { Error as CustomError } from "zasada/src/log/Error.js";
+import oDeps from "./../_support/deps.js";
+import {RootBox} from "di-box";
+import {Widget} from "./../../src/index.js";
+import { RouteString } from "./../../src/log/route/RouteString.js";
+import { RouteConsole } from "./../../src/log/route/RouteConsole.js";
+
+import { Error as CustomError } from "./../../src/log/Error.js";
 
 let oRootBox, oHelper, oOriginConsole, fnSendSpy = jasmine.createSpy('spy');
 

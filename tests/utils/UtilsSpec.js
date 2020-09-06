@@ -1,6 +1,6 @@
-import { deepKey } from "zasada/src/utils/deepKey.js";
-import { mergeDeep } from "zasada/src/utils/mergeDeep.js";
-import { importExt } from "zasada/src/utils/importExt.js";
+import { deepKey } from "./../../src/utils/deepKey.js";
+import { mergeDeep } from "./../../src/utils/mergeDeep.js";
+import { importExt } from "./../../src/utils/importExt.js";
 
 describe( "Utils", () => {
 

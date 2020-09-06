@@ -1,4 +1,4 @@
-import { Box } from "zasada/src/utils/Box.js";
+import { Box } from "di-box";
 export class CoreBox extends Box {
 
 	/**
@@ -38,7 +38,7 @@ export class CoreBox extends Box {
 		//oLinker.oneLogger = this.oneLogger;
 		oLinker.fnMergeDeep = this.mergeDeep;
 		oLinker.fnDeepKey = this.deepKey;
-		oLinker.fnAssertUndefProps = this._assertUndefProps;
+		oLinker.fnAssertUndefProps = this._initCheck;
 		return oLinker;
 	}
 
@@ -139,7 +139,7 @@ export class CoreBox extends Box {
 		for( let sPolyfill in this.oPolyfills ) {
 			oPolyfills[ sPolyfill ] = this.oPolyfills[ sPolyfill ];
 		}
-		this._assertUndefProps( oPolyfills );
+		this._initCheck( oPolyfills );
 		oPolyfills.base( fnResolve );
 	}
 

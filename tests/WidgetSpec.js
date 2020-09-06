@@ -1,5 +1,6 @@
-import oDeps from "zasada/tests/_support/deps.js";
-import {RootBox, Widget} from "zasada/src/index.js";
+import oDeps from "./_support/deps.js";
+import {RootBox} from "di-box";
+import {Widget} from "./../src/index.js";
 
 let oHelper, oLinker;
 
@@ -265,5 +266,111 @@ describe( "Widget", () => {
 			oWidget._import( 'fnUndefined' );
 			fail();
 		} catch( e ) {}
+	} );
+
+	it( "._html()", async ( fnDone ) => {
+
+		class TestWidget extends Widget {}
+
+		oLinker.setWidgets( { TestWidget } );
+		await oHelper.addHtml( `<div class="widget1 _ _TestWidget"></div>
+			<div class="widget2 _ _TestWidget">
+				<div class="widget4 _ _TestWidget"></div>
+			</div>
+			<div class="widget3 _ _TestWidget"></div>` );
+
+		const oWidget1 = oHelper.widget( '.widget1', TestWidget );
+		const oWidget2 = oHelper.widget( '.widget2', TestWidget );
+		const oWidget3 = oHelper.widget( '.widget3', TestWidget );
+
+		// widget4 exists
+		expect( oWidget2.rel().typeOf( TestWidget ).cssSel( '.widget4' ).canEmpty().find() !== null ).toEqual( true );
+
+		// widget4 replace widget5
+		await oWidget2._html( '', '<div class="widget5 _ _TestWidget"></div>' );
+
+		// widget6 beforebegin
+		await oWidget2._html( '', '<div class="widget6 _ _TestWidget"></div>', 'beforebegin' );
+
+		// widget7 afterbegin
+		await oWidget2._html( '', '<div class="widget7 _ _TestWidget"></div>', 'afterbegin' );
+
+		// widget8 beforeend
+		await oWidget2._html( '', '<div class="widget8 _ _TestWidget"></div>', 'beforeend' );
+
+		// widget9 afterend
+		await oWidget2._html( '', '<div class="widget9 _ _TestWidget"></div>', 'afterend' );
+
+		const oWidget5 = oHelper.widget( '.widget5', TestWidget );
+		const oWidget6 = oHelper.widget( '.widget6', TestWidget );
+		const oWidget7 = oHelper.widget( '.widget7', TestWidget );
+		const oWidget8 = oHelper.widget( '.widget8', TestWidget );
+		const oWidget9 = oHelper.widget( '.widget9', TestWidget );
+
+		// widget4 not exists
+		expect( oWidget2.rel().typeOf( TestWidget ).cssSel( '.widget4' ).canEmpty().find() !== null ).toEqual( false );
+
+		// widget1 next widget6
+		expect( oWidget1.bl().nextElementSibling === oWidget6.bl() ).toEqual( true );
+
+		// widget6 next widget2
+		expect( oWidget6.bl().nextElementSibling === oWidget2.bl() ).toEqual( true );
+
+		// widget7 firstChild of widget2
+		expect( oWidget2.bl().firstElementChild === oWidget7.bl() ).toEqual( true );
+
+		// widget7 next widget5
+		expect( oWidget7.bl().nextElementSibling === oWidget5.bl() ).toEqual( true );
+
+		// widget7 next widget5
+		expect( oWidget5.bl().nextElementSibling === oWidget8.bl() ).toEqual( true );
+
+		// widget8 lastChild of widget2
+		expect( oWidget2.bl().lastElementChild === oWidget8.bl() ).toEqual( true );
+
+		// widget2 next widget9
+		expect( oWidget2.bl().nextElementSibling === oWidget9.bl() ).toEqual( true );
+
+		// widget9 next widget3
+		expect( oWidget9.bl().nextElementSibling === oWidget3.bl() ).toEqual( true );
+
+		// widget10 and widget11 afterend
+		await oWidget2._html( '', '<div class="widget10 _ _TestWidget"></div>text<div class="widget11 _ _TestWidget"></div>', 'afterend' );
+
+		const oWidget10 = oHelper.widget( '.widget10', TestWidget );
+		const oWidget11 = oHelper.widget( '.widget11', TestWidget );
+
+		// widget2 next widget10
+		expect( oWidget2.bl().nextElementSibling === oWidget10.bl() ).toEqual( true );
+
+		// widget10 next widget11
+		expect( oWidget10.bl().nextElementSibling === oWidget11.bl() ).toEqual( true );
+
+		// text afterend
+		await oWidget2._html( '', 'text', 'afterend' );
+
+		fnDone();
+	} );
+
+	it( "._wrapError()", async () => {
+		class TestWidget extends Widget {}
+
+		oLinker.setWidgets( { TestWidget } );
+		await oHelper.addHtml( `<div class="widget _ _TestWidget"></div>` );
+
+		const oWidget = oHelper.widget( '.widget', TestWidget );
+
+		let fn = () => {
+			throw new Error( 12 );
+		};
+
+		fn = oWidget._wrapError( fn );
+
+		try {
+			fn();
+			fail();
+		} catch( e ) {
+			expect( e.oWidget ).toEqual( oWidget );
+		}
 	} );
 } );

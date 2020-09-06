@@ -1,5 +1,5 @@
-import oDeps from "zasada/tests/_support/deps.js";
-import {RootBox} from "zasada/src/index.js";
+import oDeps from "./../_support/deps.js";
+import {RootBox} from "di-box";
 
 let oAttrs, eBase;
 

@@ -1,4 +1,4 @@
-import {RootBox} from "zasada/src/index.js";
+import {RootBox} from "di-box";
 import oDeps from "zasada/src/deps.js";
 
 import {ApiWidget} from "./ApiWidget.js";
