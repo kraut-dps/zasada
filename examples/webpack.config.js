@@ -7,6 +7,7 @@ var oConfig = fnWebpackMerge(
 		entry: {
 			"1_HelloWorld": __dirname + '/1_HelloWorld/index.js',
 			"2_Api": __dirname +'/2_Api/index.js',
+			"3_LinkerApi": __dirname +'/3_LinkerApi/index.js',
 			"polyfill-promise": 'zasada/src/utils/polyfillPromise.js',
 		},
 		output: {

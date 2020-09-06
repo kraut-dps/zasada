@@ -4,9 +4,7 @@ export class OtherWidget extends Widget {
 
 	bActive = false;
 
-	run() {
-		this.bl().insertAdjacentHTML( "afterbegin", '_ _OtherWidget index = "' + this.index() + '"' );
-	}
+	run() {}
 
 	_getIndex() {
 		return this._attr( '', 'index' );

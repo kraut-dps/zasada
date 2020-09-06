@@ -231,16 +231,17 @@ export class CoreWidget {
 	}
 
 	/**
+	 * обертка Element.innerHTML и Element.insertAdjacentHTML для динамического изменения HTML
 	 * @param {string|Element|Element[]} mContext
 	 * @param {string} sHtml
 	 * @param {null|string} sInsertPosition beforebegin | afterbegin | beforeend | afterend for Element.insertAdjacentHTML
 	 * @return {Promise<any[]>}
-	 * @private
 	 */
 	_html( mContext, sHtml, sInsertPosition = null ) {
 		const aPromises = [];
 
 		this._context( mContext ).forEach( ( eContext ) => {
+
 			if( !sInsertPosition ) {
 				// самый простой вариант, заменяем innerHTML
 				this._unlink( eContext, false );
@@ -250,10 +251,14 @@ export class CoreWidget {
 				return;
 			}
 
+			// специальная метка, чтобы разобраться, какой новый узел, а какой старый
+			// после вставки, проходимся по всем новым узлам, выполняем по ним _link
+			// доходим до метки, удаляем ее и останавливаемся
 			let bBefore = sInsertPosition === 'beforebegin' || sInsertPosition === 'beforeend';
 			const sMarkComment = '__mark__';
 			const sMarkHtml = '<!--' + sMarkComment + '-->';
 			const sHtmlWithMark = ( bBefore ? sMarkHtml : '' ) + sHtml + ( !bBefore ? sMarkHtml : '' );
+
 			eContext.insertAdjacentHTML( sInsertPosition, sHtmlWithMark );
 			let eContextItem;
 			const fnNext = ( eContextItem ) => {

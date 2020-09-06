@@ -1,0 +1,46 @@
+<style>
+	.example{
+		padding-top: 20px;
+		width: 100%;
+		display: flex;
+	}
+	.example__btn{
+		text-align: left;
+		white-space: pre;
+		cursor: pointer;
+	}
+	.example__area{
+		padding: 20px;
+		border: 1px solid brown;
+		width: 100%;
+	}
+</style>
+
+<div class="example propsExample">
+	<button class="example__btn"></button>
+	<div class="example__area _ _WidgetWithProps"></div>
+</div>
+
+<div class="example skipRunExample">
+	<button class="example__btn"></button>
+	<div class="example__area _ _WidgetSkipRun">
+		<div class="_ _WidgetRunner">клик выполнит WidgetSkipRun.run()</div>
+	</div>
+</div>
+
+<div class="importExample">
+	<div class="btn"></div>
+	<div class="_ _WidgetWithImport"></div>
+</div>
+
+<div class="importAliasExample">
+	<div class="btn"></div>
+	<div class="_ _WidgetWithImportAlias"></div>
+</div>
+
+<div class="lazyExample">
+	<div class="btn"></div>
+	<div class="_ _WidgetLazy1 _WidgetLazy2"></div>
+</div>
+<script src="examples.js"></script>
+<script src="../build/3_LinkerApi/index.js"></script>

@@ -1,48 +1,48 @@
 <head><link type="text/css" rel="stylesheet" href="style.css"/></head>
 
-<div class="fixed block _ _OtherWidget" data-index="parent">
-	<div class="block block_target _ _TestWidget" data-var1="3.14">
-		_ _TestWidget
-		<div class="block__element _TestWidget-Element" data-var1="0" data-var2='{"json1":4}' data-var3="sub1=1,sub2=2" my-var1="10">_TestWidget-Element</div>
-		<div class="block__element _TestWidget-OtherElement">_TestWidget-OtherElement</div>
-		<div class="block__element _TestWidget-OtherElement">_TestWidget-OtherElement</div>
-		<div class="block _ _OtherWidget" data-index="child">
+<div class="fixed">
+	<div class="block block_oth _ _OtherWidget" data-index="parent">
+		<div class="block block_target _ _TestWidget" data-var1="3.14">
+			<div class="block__element _TestWidget-Element" data-var1="0" data-var2='{"json1":4}' data-var3="sub1=1,sub2=2" my-var1="10"></div>
+			<div class="block__element _TestWidget-OtherElement"></div>
+			<div class="block__element _TestWidget-OtherElement"></div>
+			<div class="block block_oth _ _OtherWidget" data-index="child">
+			</div>
+		</div>
+
+		<div class="block block_oth _ _OtherWidget" data-index="sibling">
 		</div>
 	</div>
-
-	<div class="block _ _OtherWidget" data-index="sibling">
-	</div>
 </div>
 
-<div class="block part _ _ApiWidget" data-var1="3.14">
-	_ _ApiWidget
-	<div class="block__element">
+<div class="part _ _ApiWidget">
+	<div>
 		<a class="header" name="BlockElement">.blockId(), .bl(), ._el() доступ к блоку, элементу</a>
-		<div class="block__element _ApiWidget-BlockElement"></div>
+		<div class="_ApiWidget-BlockElement"></div>
 	</div>
-	<div class="block__element">
-		<a class="header" name="Attr">.blockId(), .bl(), ._el() доступ к блоку, элементу</a>
-		<div class="block__element _ApiWidget-Attr"></div>
+	<div>
+		<a class="header" name="Attr">._attr(), ._attrs(), ._my() доступ к атрибутам блока и элементов</a>
+		<div class="_ApiWidget-Attr"></div>
 	</div>
-	<div class="block__element">
-		<a class="header" name="Mod">.mod() модификация css class атрибута</a>
-		<div class="block__element _ApiWidget-Mod"></div>
+	<div>
+		<a class="header" name="Mod">._mod() модификация css class</a>
+		<div class="_ApiWidget-Mod"></div>
 	</div>
-	<div class="block__element">
-		<a class="header" name="Html">.html() замена / вставка html кода</a>
-		<div class="block__element _ApiWidget-Html"></div>
+	<div>
+		<a class="header" name="BlockElement">._on(), ._off(), ._fire() обработка событий</a>
+		<div class="_ApiWidget-Event"></div>
 	</div>
-	<div class="block__element">
+	<div>
+		<a class="header" name="Html">._html() замена / вставка html кода</a>
+		<div class="_ApiWidget-Html"></div>
+	</div>
+	<div>
 		<a class="header" name="BlockElement">.rel() доступ к другим виджетам</a>
-		<div class="block__element _ApiWidget-Rel"></div>
-	</div>
-	<div class="block__element">
-		<a class="header" name="BlockElement">.blockId(), .bl(), ._el() доступ к блоку, элементу</a>
-		<div class="block__element _ApiWidget-Event"></div>
+		<div class="_ApiWidget-Rel"></div>
 	</div>
 </div>
 
-<div class="block part _ _OtherWidget" data-index="parent-sibling">
+<div class="block block_oth part _ _OtherWidget" data-index="parent-sibling">
 </div>
 
 <script src="../build/2_Api/index.js"></script>

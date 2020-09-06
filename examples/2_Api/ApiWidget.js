@@ -9,26 +9,26 @@ export class ApiWidget extends Widget {
 		const oCode = {
 			BlockElement: [
 				function () {
-					// клик по такой кнопке выполняет этот код в контексте виджета TestWidget =>
+					// клик по такой кнопке выполняет этот код в контексте виджета TestWidget
 					// .blockId() возвращает строку с названием блока
 					alert( this.blockId() );
 				},
 				function () {
 					// .bl() возвращает DOM Element блок к которому привязан виджет
-					this.bl().style.borderWidth = '5px';
+					this.bl().style.borderWidth = '6px';
 				},
 				function () {
 					// ._el() вощвращает DOM Element с элементом виджета
-					this._el( 'Element' ).style.borderWidth = '5px';
+					this._el( 'Element' ).style.borderWidth = '6px';
 				},
 				function () {
-					// ._el() с аргументом "" возвращает блок
+					// ._el() с аргументом "" возвращает блок, см. консоль
 					console.log( this._el( "" ) === this.bl() );
 				},
 				function () {
 					// добавление "[]" возвращает массив элементов
 					this._el( "OtherElement[]" ).forEach( ( eElement ) => {
-						eElement.style.borderWidth = '5px';
+						eElement.style.borderWidth = '6px';
 					} )
 				},
 				function () {
@@ -74,27 +74,44 @@ export class ApiWidget extends Widget {
 			],
 			Mod: [
 				function () {
-					// добавить css класс блоку
+					// добавить css класс "active" блоку
 					this._mod( '', 'active', true );
 				},
 				function () {
-					// добавить css класс блоку, убрать другие конфликтующие
+					// добавить css класс "active2" блоку, убрать другие конфликтующие "active", "active3"
 					this._mod( '', [ 'active', 'active2', 'active3' ], 'active2' );
 				},
 				function () {
-					// добавить css класс блоку, убрать другие конфликтующие, по алиасам
+					// добавить css класс блоку "active3", убрать другие конфликтующие, по алиасам "active", "active2"
 					this._mod( '', {one:"active",two:"active2",three:"active3"}, "three" );
 				},
 			],
 			Html: [
 				function () {
-					// новый html для элемента Element
-					this._html( 'Element', '<div class="_ _OtherWidget"></div>' );
+					// замена html внутри Element ( innerHTML )
+					this._html( 'Element', '<div class="block block_oth _ _OtherWidget" data-index="Element innerHTML"></div>' );
 				},
+				function () {
+					// вставка html beforebegin ( insertAdjacentHTML )
+					this._html( '', '<div class="block block_oth _ _OtherWidget" data-index="beforebegin"></div>', 'beforebegin' );
+				},
+				function () {
+					// вставка html afterbegin ( insertAdjacentHTML )
+					this._html( '', '<div class="block block_oth _ _OtherWidget" data-index="afterbegin"></div>', 'afterbegin' );
+				},
+				function () {
+					// вставка html beforeend ( insertAdjacentHTML )
+					this._html( '', '<div class="block block_oth _ _OtherWidget" data-index="beforeend"></div>', 'beforeend' );
+				},
+				function () {
+					// вставка html afterend ( insertAdjacentHTML )
+					this._html( '', '<div class="block block_oth _ _OtherWidget" data-index="afterend"></div>', 'afterend' );
+				},
+
 			],
 			Rel: [
 				function () {
-					// доступ к предку по типу
+					// доступ к предку по типу .parents()
 					const oOtherWidget = this.rel()
 						.parents()
 						.typeOf( OtherWidget )
@@ -102,7 +119,7 @@ export class ApiWidget extends Widget {
 					oOtherWidget.toggle();
 				},
 				function () {
-					// доступ к потомку по типу
+					// доступ к потомку по типу .children()
 					const oOtherWidget = this.rel()
 						.children()
 						.typeOf( OtherWidget )
@@ -110,18 +127,17 @@ export class ApiWidget extends Widget {
 					oOtherWidget.toggle();
 				},
 				function () {
-					// доступ по индексу
+					// доступ по индексу .index()
 					const oOtherWidget = this.rel()
 						.index( 'sibling' )
 						.find();
 					oOtherWidget.toggle();
 				},
 				function () {
-					// доступ к нескольким виджетам
+					// доступ к нескольким виджетам .find( bAll = true )
 					this.rel()
 						.typeOf( OtherWidget )
-						.onlyFirst( false )
-						.find()
+						.find( true )
 						.forEach( ( oOtherWidget ) => {
 							oOtherWidget.toggle();
 						} );
@@ -144,7 +160,7 @@ export class ApiWidget extends Widget {
 			oCode[ sName ].forEach( ( fn ) => {
 				const eBtn = document.createElement( 'button' );
 				eBtn.className = 'btn';
-				eBtn.innerHTML = this._fnBody( fn );
+				eBtn.innerText = this._fnBody( fn );
 				this._el( sName ).appendChild( eBtn );
 				this._on( eBtn, 'click', () => {
 					const oTestWidget = this.rel().typeOf( TestWidget ).find();
@@ -162,9 +178,9 @@ export class ApiWidget extends Widget {
 		sBody = sBody.trim();
 		sBody = sBody.replace( /_this(\d)?\./g, 'this.' );
 		sBody = sBody.replace( /\n+/g, "\n" );
-		sBody = sBody.replace( /\n/g, "<br/>" );
+		//sBody = sBody.replace( /\n/g, "<br/>" );
 		// чтобы покрасивше выводилось название виджета, а не webpack закорючки
-		sBody = sBody.replace( /\([^\(]+OtherWidget[^\)]+\)/, "(OtherWidget)" );
+		sBody = sBody.replace( /typeOf\([^\(]+OtherWidget[^\)]+\)/, "typeOf(OtherWidget)" );
 		return sBody;
 	}
 }

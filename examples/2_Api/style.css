@@ -5,9 +5,11 @@ body{
 	box-sizing: border-box;
 }
 .fixed{
-	position: fixed;
+	position: fixed !important;
 	top: 0;
 	left: 50%;
+	overflow-y: auto;
+	height: 100%;
 }
 .part{
 	max-width: calc( 50% - 20px );
@@ -17,11 +19,48 @@ body{
 	margin-top: 20px;
 	padding: 20px;
 	white-space: nowrap;
+	position: relative;
+	min-width: 450px;
+}
+.block_oth{
+	border: 1px solid slateblue;
+}
+.block:before, .block_oth:after{
+	position: absolute;
+	padding: 5px;
+	top: -10px;
+	background: #fff;
+}
+.block:before{
+	left: 5px;
+	content: attr(class);
+	border: 1px solid darksalmon;
+}
+.block_oth:before{
+	border: 1px solid slateblue;
+}
+.block_oth:after{
+	right: 5px;
+	content: "index = " attr( data-index );
+	border: 1px solid slateblue;
 }
 .block__element{
 	border: 1px solid lightgreen;
 	padding: 20px;
-	margin-top: 20px
+	margin-top: 20px;
+	position: relative;
+}
+.block__element:before{
+	position: absolute;
+	top: -10px;
+	left: 5px;
+	padding: 5px;
+	content: attr( class );
+	background: #fff;
+	border: 1px solid lightgreen;
+}
+.block_target {
+	border-width: 3px;
 }
 .btn{
 	padding: 20px;
@@ -35,6 +74,8 @@ body{
 .header{
 	font-size: 20px;
 	font-weight: bold;
+	padding-top: 20px;
+	display: block;
 }
 .active{
 	border-width: 5px;
