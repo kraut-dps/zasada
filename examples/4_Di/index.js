@@ -2,7 +2,7 @@ import {RootBox} from "di-box";
 import oDeps from "zasada/src/deps.js";
 import {Example as ExampleBase} from "../Example.js";
 import {Widget} from "zasada/src/index.js";
-import {importExt} from "zasada/src/utils/importExt.js";
+import {RouteString} from "zasada/src/log/route/RouteString.js";
 
 const oRootBox = new RootBox( oDeps );
 oRootBox.box( 'core' ).init( ( oLinker ) => {
@@ -11,8 +11,7 @@ oRootBox.box( 'core' ).init( ( oLinker ) => {
 		_exampleExec( fnExample ) {
 
 			// кастомные аргументы в вызове кода примера
-			fnExample( oLinker, Widget, importExt );
-			oLinker.link( this._el( 'Area' ) );
+			fnExample( RootBox, oDeps, Widget, this._el( 'Area' ), RouteString );
 		}
 	}
 	oLinker.setWidgets( { Example } );
