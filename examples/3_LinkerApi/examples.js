@@ -1,5 +1,6 @@
 window.oExamples = {
 	propsExample: {
+		sTitle: "Установка свойств виджетов",
 		sHtml: '<div class="block _ _WidgetWithProps"></div>',
 		aExamples: [
 			function( oLinker, Widget ) {
@@ -31,6 +32,7 @@ window.oExamples = {
 		]
 	},
 	skipRunExample: {
+		sTitle: "Отключение выполннения метода .run() у виджета",
 		sHtml: '<div class="block _ _WidgetSkipRun"></div><div class="block _ _WidgetRunner"></div>',
 		aExamples: [
 			function( oLinker, Widget ) {
@@ -63,6 +65,7 @@ window.oExamples = {
 		]
 	},
 	importExample: {
+		sTitle: ".setImports() установка методов импорта внешних ресурсов",
 		sHtml: '<div class="block _ _WidgetImport1"></div><div class="block _ _WidgetImport2"></div><div class="block _ _WidgetImport3"></div>',
 		aExamples: [
 			function( oLinker, Widget, importExt ) {
@@ -115,6 +118,7 @@ window.oExamples = {
 		]
 	},
 	lazyExample: {
+		sTitle: '.setBeforeNew() загрузка кода виджетов "по запросу" lazy',
 		sHtml: '<div class="block _ _LazyExample"></div>',
 		aExamples: [
 			function( oLinker, Widget ) {

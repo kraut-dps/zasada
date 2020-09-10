@@ -65,7 +65,7 @@ export class Storage {
 	drop( eContext, bWithSelf ) {
 
 		// найдем элементы DOM
-		const aBlocks = this._findBlocks( eContext, 1, bWithSelf ), aWidgets = [];
+		const aBlocks = this._findBlocks( eContext, 'child', bWithSelf ), aWidgets = [];
 
 		let eBlock, oWidgets, i;
 		for ( i = 0; i < aBlocks.length; i++ ) {
@@ -105,7 +105,7 @@ export class Storage {
 		let {
 			eFrom,
 			bWithFrom,
-			iWay,
+			sWay,
 			bOnlyFirst,
 			cTypeOf,
 			aBlockIds,
@@ -128,7 +128,7 @@ export class Storage {
 				for ( let j = 0; j < aBlockIds.length; j++ ) {
 					oWidget = this._getWidgetByIndex( aBlockIds[ j ], sIndex );
 					if ( oWidget &&
-						this.checkWidget( oWidget, cTypeOf, eFrom, iWay, bWithFrom, [ sIndex ], sCssSel ) ) {
+						this.checkWidget( oWidget, cTypeOf, eFrom, sWay, bWithFrom, [ sIndex ], sCssSel ) ) {
 						aRet.push( oWidget );
 						if ( bOnlyFirst ) {
 							return aRet;
@@ -147,7 +147,7 @@ export class Storage {
 				}
 			}
 
-			let aBlocks = this._findBlocks( eFrom, iWay, bWithFrom, aBlockIds, sCssSel );
+			let aBlocks = this._findBlocks( eFrom, sWay, bWithFrom, aBlockIds, sCssSel );
 			return this._canEmptyCheck( this._widgetsFromMap( aBlocks, aBlockIds, cTypeOf, bOnlyFirst ), oRelQuery );
 		}
 	}
@@ -160,7 +160,7 @@ export class Storage {
 	}
 
 	reindex( eContext, bWithSelf = false ) {
-		const aBlocks = this._findBlocks( eContext, 1, bWithSelf );
+		const aBlocks = this._findBlocks( eContext, 'child', bWithSelf );
 		for ( let i = 0; i < aBlocks.length; i++ ) {
 			let oWidgets = this._oMap.get( aBlocks[ i ] );
 			for ( let sBlockId in oWidgets ) {
@@ -192,14 +192,14 @@ export class Storage {
 	/**
 	 * непосредственно метод поиска элементов в DOM
 	 * @param {Element} eContext откуда начинаем
-	 * @param {int} iDir направление
+	 * @param {int} sWay направление
 	 * @param {boolean} bWithSelf захватываем eContext в выборку?
 	 * @param {string[]} aBlockIds массив названий виджетов
 	 * @param {string} sSelector дополнительный фильтрующий селектор
 	 * @return {Element[]}
 	 * @private
 	 */
-	_findBlocks( eContext, iDir, bWithSelf, aBlockIds = [], sSelector = '' ) {
+	_findBlocks( eContext, sWay, bWithSelf, aBlockIds = [], sSelector = '' ) {
 		const oDom = this.oneDom();
 
 		// соберем все нужные css селекторы в одну строку
@@ -214,14 +214,22 @@ export class Storage {
 		const sSel = aSel.join( ',' );
 
 		// в зависимости от направления поищем элементы
-		switch ( iDir ) {
-			case -1:
+		switch ( sWay ) {
+			case 'parent':
 				aMatches = oDom.parents( eContext, sSel, bWithSelf, false );
 				break;
-			case 1:
+			case 'child':
 				aMatches = oDom.children( eContext, sSel, bWithSelf, false );
 				break;
-			case 0:
+			case 'prev':
+				aMatches = oDom.prevs( eContext, sSel, bWithSelf, false );
+				break;
+			case 'next':
+				aMatches = oDom.nexts( eContext, sSel, bWithSelf, false );
+				break;
+			//case 'self':
+			//	aMatches = [ eContext ];
+			//	break;
 			default:
 				// к body тегу тоже могут быть привяазаны виджеты
 				aMatches = oDom.children( document.body, sSel, true, false );
@@ -271,7 +279,7 @@ export class Storage {
 		return null;
 	}
 
-	checkWidget( oWidget, cWidget, eContext, iWay, bWithSelf, aIndex, sSelector ) {
+	checkWidget( oWidget, cWidget, eContext, sWay, bWithSelf, aIndex, sSelector ) {
 		// если понадобится, можно добавить
 		//if ( cWidget && !oWidget instanceof cWidget ) {
 		//	return false;
@@ -287,15 +295,33 @@ export class Storage {
 		if ( bWithSelf && eBlock === eContext ) {
 			return true;
 		}
-		switch ( iWay ) {
-			case -1:
+		switch ( sWay ) {
+			case 'parent':
 				return eBlock.contains( eContext );
-			case 1:
+			case 'child':
 				return eContext.contains( eBlock );
-			case 0:
+			case 'next':
+				let eNext = eContext;
+				while( ( eNext = eNext.nextElementSibling ) ) {
+					if( eNext === eBlock ) {
+						return true;
+					}
+				}
+				break;
+			case 'prev':
+				let ePrev = eContext;
+				while( ( ePrev = ePrev.previousElementSibling ) ) {
+					if( ePrev === eBlock ) {
+						return true;
+					}
+				}
+				break;
+			case 'self':
+				return eBlock === eContext;
 			default:
 				return true;
 		}
+		return false;
 	}
 
 	/**

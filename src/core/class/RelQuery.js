@@ -3,11 +3,17 @@
  * @implements IRelQuery
  */
 export class RelQuery{
-	
+
 	_fnStorage;
 	eFrom = null;
 	bWithFrom = true;
-	iWay = 0;
+
+	/**
+	 * all, child, parent, next, prev, self
+	 * @type {string}
+	 */
+	sWay = 'all';
+
 	bOnlyFirst = true;
 	cTypeOf = null;
 	aBlockIds = null;
@@ -32,38 +38,31 @@ export class RelQuery{
 		return this;
 	}
 	
-	/**
-	 * @param {Element|null} eFrom
-	 * @param {boolean|null} bWithFrom
-	 * @return {IRelQuery|this}
-	 */
-	parents( eFrom = null, bWithFrom = null ) {
-		if( eFrom !== null ) {
-			this.from( eFrom );
-		}
-		if( bWithFrom !== null ) {
-			this.withFrom( bWithFrom );
-		}
-		this.iWay = -1;
+	parent() {
+		this.sWay = 'parent';
 		return this;
 	}
-	
-	/**
-	 * @param {Element|null} eFrom
-	 * @param {boolean|null} bWithFrom
-	 * @return {IRelQuery|this}
-	 */
-	children( eFrom = null, bWithFrom = null ) {
-		if( eFrom !== null ) {
-			this.from( eFrom );
-		}
-		if( bWithFrom !== null ) {
-			this.withFrom( bWithFrom );
-		}
-		this.iWay = 1;
+
+	child() {
+		this.sWay = 'child';
 		return this;
 	}
-	
+
+	next() {
+		this.sWay = 'next';
+		return this;
+	}
+
+	prev() {
+		this.sWay = 'prev';
+		return this;
+	}
+
+	self() {
+		this.sWay = 'self';
+		return this;
+	}
+
 	/**
 	 * @param {Element} eFrom
 	 * @return {IRelQuery|this}

@@ -104,7 +104,28 @@ describe( "Dom", () => {
 			expect( aIds ).toEqual( [] );
 		} );
 	} );
-	
+
+	describe( ".prevs() .nexts()", () => {
+		beforeAll( async() => {
+			oHelper.addHtml(
+				`<div id="prev" class="all"></div>
+					<div id="base" class="all"></div>
+				  <div id="next" class="all"></div>`
+			);
+			eBase = oHelper.element( '#base' );
+		} );
+
+		it( "nexts", () => {
+			aNodes = oDom.nexts( eBase, '.all', 0, 1 );
+			aIds = fnGetIds( aNodes );
+			expect( aIds ).toEqual( ['next'] );
+		} );
+		it( "prevs", () => {
+			aNodes = oDom.prevs( eBase, '.all', 0, 1 );
+			aIds = fnGetIds( aNodes );
+			expect( aIds ).toEqual( ['prev'] );
+		} );
+	} );
 	
 	describe( ".parseBlockIds()", () => {
 		beforeAll( async() => {

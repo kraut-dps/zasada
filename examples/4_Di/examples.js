@@ -1,5 +1,6 @@
 window.oExamples = {
 	customMarkupExample: {
+		sTitle: "Кастомная разметка виджетов, подмена класса Dom",
 		sHtml: `<div class="block" b="Block">
 	<div class="block__element" e="Block-Element"></div>
 		</div>`,
@@ -55,6 +56,7 @@ window.oExamples = {
 	},
 
 	customErrorRouteExample: {
+		sTitle: "Кастомный вывод ошибок",
 		sHtml: `<div class="block _ _ErrorWidget"></div>`,
 		aExamples: [
 			function( RootBox, oDeps, Widget, eContext, RouteString ) {

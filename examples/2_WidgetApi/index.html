@@ -1,48 +1,10 @@
-<head><link type="text/css" rel="stylesheet" href="style.css"/></head>
+<head><link type="text/css" rel="stylesheet" href="../style.css"/></head>
+<body>
+	<a class="index" href="../index.html">Examples index</a>
+	<div class="examples"></div>
 
-<div class="fixed">
-	<div class="block block_oth _ _OtherWidget" data-index="parent">
-		<div class="block block_target _ _TestWidget" data-var1="3.14">
-			<div class="block__element _TestWidget-Element" data-var1="0" data-var2='{"json1":4}' data-var3="sub1=1,sub2=2" my-var1="10"></div>
-			<div class="block__element _TestWidget-OtherElement"></div>
-			<div class="block__element _TestWidget-OtherElement"></div>
-			<div class="block block_oth _ _OtherWidget" data-index="child">
-			</div>
-		</div>
+	<!-- сами примеры без webpack, чтобы сохранить исходный код, и отобразить на кнопках -->
+	<script src="examples.js"></script>
 
-		<div class="block block_oth _ _OtherWidget" data-index="sibling">
-		</div>
-	</div>
-</div>
-
-<div class="part _ _ApiWidget">
-	<div>
-		<a class="header" name="BlockElement">.blockId(), .bl(), ._el() доступ к блоку, элементу</a>
-		<div class="_ApiWidget-BlockElement"></div>
-	</div>
-	<div>
-		<a class="header" name="Attr">._attr(), ._attrs(), ._my() доступ к атрибутам блока и элементов</a>
-		<div class="_ApiWidget-Attr"></div>
-	</div>
-	<div>
-		<a class="header" name="Mod">._mod() модификация css class</a>
-		<div class="_ApiWidget-Mod"></div>
-	</div>
-	<div>
-		<a class="header" name="BlockElement">._on(), ._off(), ._fire() обработка событий</a>
-		<div class="_ApiWidget-Event"></div>
-	</div>
-	<div>
-		<a class="header" name="Html">._html() замена / вставка html кода</a>
-		<div class="_ApiWidget-Html"></div>
-	</div>
-	<div>
-		<a class="header" name="BlockElement">.rel() доступ к другим виджетам</a>
-		<div class="_ApiWidget-Rel"></div>
-	</div>
-</div>
-
-<div class="block block_oth part _ _OtherWidget" data-index="parent-sibling">
-</div>
-
-<script src="../build/2_Api/index.js"></script>
+	<script src="../build/2_WidgetApi/index.js"></script>
+</body>

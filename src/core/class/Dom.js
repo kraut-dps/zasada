@@ -69,6 +69,35 @@ export class Dom {
 		}
 	}
 
+	nexts( eContext, sSel, bWithSelf, bOnlyFirst ) {
+		return this._loop( eContext, sSel, bWithSelf, bOnlyFirst, 'nextElementSibling' );
+	}
+
+	prevs( eContext, sSel, bWithSelf, bOnlyFirst ) {
+		return this._loop( eContext, sSel, bWithSelf, bOnlyFirst, 'previousElementSibling' );
+	}
+
+	_loop( eContext, sSel, bWithSelf, bOnlyFirst, sPropName ) {
+		let aRet = [];
+		if( !bWithSelf ) {
+			eContext = eContext[ sPropName ];
+		}
+
+		do {
+			if( !eContext ) {
+				break;
+			}
+			if( eContext.matches( sSel ) ) {
+				aRet.push( eContext );
+				if( bOnlyFirst ) {
+					return aRet;
+				}
+			}
+		} while ( ( eContext = eContext[ sPropName ] ) );
+		return aRet;
+	}
+
+
 	/**
 	 * по переданому DOM Element определяем id виджетов
 	 * @param {Element} eContext

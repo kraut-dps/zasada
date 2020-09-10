@@ -107,6 +107,47 @@ describe( "Widget", () => {
 		expect( oWidget1.rel( 'Element' ).find() ).toEqual( oWidget3 );
 	} );
 
+	it( ".rel() prev next", async () => {
+
+		class TestWidget extends Widget {
+			_getIndex() {
+				return this.bl().getAttribute( 'data-index' );
+			}
+		}
+
+		class TestWidget2 extends Widget {
+			_getIndex() {
+				return this.bl().getAttribute( 'data-index' );
+			}
+		}
+
+		oLinker.setWidgets( { TestWidget, TestWidget2 } );
+		await oHelper.addHtml(
+			`<div class="widget1 _ _TestWidget" data-index="widget1"></div>
+				<div class="widget2 _ _TestWidget2" data-index="widget2"></div>
+				<div class="widget3 _ _TestWidget" data-index="widget3"></div>
+				<div class="widget4 _ _TestWidget2 _TestWidget" data-index="widget4"></div>
+			`
+		);
+
+		const oWidget1 = oHelper.widget( '.widget1', TestWidget );
+		const oWidget2 = oHelper.widget( '.widget2', TestWidget2 );
+		const oWidget3 = oHelper.widget( '.widget3', TestWidget );
+		const oWidget42 = oHelper.widget( '.widget4', TestWidget2 );
+		const oWidget41 = oHelper.widget( '.widget4', TestWidget );
+
+		expect( oWidget1.rel().next().typeOf( TestWidget2 ).find( true ) ).toEqual( [ oWidget2, oWidget42 ] );
+		expect( oWidget2.rel().prev().typeOf( TestWidget ).find( true ) ).toEqual( [ oWidget1 ] );
+		expect( oWidget1.rel().prev().withFrom( false ).typeOf( TestWidget ).canEmpty().find() ).toEqual( null );
+		expect( oWidget42.rel().self().typeOf( TestWidget ).find() ).toEqual( oWidget41 );
+		expect( oWidget1.rel().next().typeOf( TestWidget ).index( 'widget3' ).find() ).toEqual( oWidget3 );
+		expect( oWidget3.rel().next().typeOf( TestWidget ).canEmpty().index( 'widget1' ).find() ).toEqual( null );
+		expect( oWidget41.rel().prev().typeOf( TestWidget2 ).index( 'widget4' ).find() ).toEqual( oWidget42 );
+		expect( oWidget41.rel().prev().typeOf( TestWidget ).index( 'widget1' ).find() ).toEqual( oWidget1 );
+		expect( oWidget1.rel().prev().typeOf( TestWidget ).canEmpty().index( 'widget4' ).find() ).toEqual( null );
+		expect( oWidget1.rel().self().canEmpty().index( 'widget4' ).find() ).toEqual( null );
+	} );
+
 	it( "._on() ._off() ._fire()", async () => {
 
 		class TestWidget extends Widget {

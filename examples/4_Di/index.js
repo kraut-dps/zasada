@@ -8,6 +8,9 @@ const oRootBox = new RootBox( oDeps );
 oRootBox.box( 'core' ).init( ( oLinker ) => {
 
 	class Example extends ExampleBase {
+
+		bSkipLinkArea = true;
+
 		_exampleExec( fnExample ) {
 
 			// кастомные аргументы в вызове кода примера

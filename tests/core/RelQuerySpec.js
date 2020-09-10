@@ -115,7 +115,9 @@ describe( "RelQuery", () => {
 
 			expect(
 				oStorage.query()
-					.children( eBase, false )
+					.child()
+					.from( eBase )
+					.withFrom( false )
 					.typeOf( Widget )
 					.blockId( 'child' )
 					.find()
@@ -124,7 +126,7 @@ describe( "RelQuery", () => {
 			expect(
 				oStorage.query()
 					.from( eBase )
-					.children()
+					.child()
 					.typeOf( Widget )
 					.blockId( 'child' )
 					.find()
@@ -132,7 +134,9 @@ describe( "RelQuery", () => {
 			
 			expect(
 				oStorage.query()
-					.parents( eBase, false )
+					.parent()
+					.from( eBase )
+					.withFrom( false )
 					.typeOf( Widget )
 					.find( true )
 			).toEqual( [ oParentWidget, oSupParentWidget ] );
@@ -165,7 +169,9 @@ describe( "RelQuery", () => {
 
 			expect(
 				oStorage.query()
-					.children( eBase, false )
+					.child()
+					.from( eBase )
+					.withFrom( false )
 					.typeOf( Widget )
 					.blockId( [ 'child', 'subchild' ] )
 					.index( [ 'subchild' ] )
@@ -174,14 +180,18 @@ describe( "RelQuery", () => {
 
 			expect(
 				oStorage.query()
-					.children( eBase, false )
+					.child()
+					.from( eBase )
+					.withFrom( false )
 					.index( [ 'subchild' ] )
 					.find( true )
 			).toEqual( [ oSubChildWidget ] );
 
 			expect(
 				oStorage.query()
-					.parents( eBase, false )
+					.parent()
+					.from( eBase )
+					.withFrom( false )
 					.typeOf( Widget )
 					.blockId( [ 'child', 'subchild' ] )
 					.index( 'subchild' )
@@ -191,8 +201,8 @@ describe( "RelQuery", () => {
 
 			expect(
 				oStorage.query()
+					.parent()
 					.from( eBase )
-					.parents()
 					.typeOf( Widget )
 					.blockId( [ 'child', 'subchild' ] )
 					.index( 'subchild' )

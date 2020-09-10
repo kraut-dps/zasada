@@ -5,6 +5,8 @@ import {Widget} from "zasada/src";
  */
 export class Example extends Widget {
 
+	bSkipLinkArea = false;
+
 	_sName;
 
 	run() {
@@ -16,6 +18,9 @@ export class Example extends Widget {
 		// html примера
 		this._el( 'Area' ).innerHTML = oExample.sHtml;
 
+		// html примера
+		this._el( 'Title' ).textContent = oExample.sTitle;
+
 		// кнопки
 		oExample.aExamples.forEach( ( fnExample ) => {
 			const eBtn = document.createElement( 'button' );
@@ -25,7 +30,11 @@ export class Example extends Widget {
 				this._exampleExec( fnExample, this._el( 'Area' ) );
 			} );
 			this._el( 'Btns' ).appendChild( eBtn );
-		} )
+		} );
+
+		if( !this.bSkipLinkArea ) {
+			this._link( 'Area', false );
+		}
 	}
 
 	_exampleExec( fnExample, eContext ) {
@@ -47,8 +56,11 @@ export class Example extends Widget {
 			// для каждого примера отдельный макет
 			let sHtmlExample =
 				`<div class="example _ _Example" data-name="${sExample}">
-	<div class="_Example-Btns"></div>
-	<div class="example__area _Example-Area"></div>
+	<div class="example__title _Example-Title"></div>
+	<div class="example__body">
+		<div class="_Example-Btns"></div>
+		<div class="example__area _Example-Area"></div>
+	</div>
 </div>`;
 			sHtml += sHtmlExample;
 		}
