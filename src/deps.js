@@ -14,7 +14,6 @@ import {LogBox} from "./log/LogBox.js";
 import {Logger} from "./log/Logger.js";
 import {Error} from "./log/Error.js";
 import {RouteConsole} from "./log/route/RouteConsole.js";
-import {fnRel} from "di-box";
 
 export default {
 	core: {
@@ -29,8 +28,8 @@ export default {
 		Storage,
 		deepKey,
 		mergeDeep,
-		oneLogger: fnRel( 'log' ),
-		newError: fnRel( 'log' ),
+		"&oneLogger": "log",
+		"&newError": "log",
 		oPolyfills: {
 			sPromiseUrl: __webpack_public_path__ + '/polyfill-promise.js',
 			pProto: () => import( /* webpackChunkName: "polyfill-proto" */ "proto-polyfill" ),
