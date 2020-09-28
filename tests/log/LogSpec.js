@@ -210,7 +210,9 @@ describe( "Routes", () => {
 			fnDone();
 		} );
 
-		throw new CustomError( 'error custom origin' );
+		const oError = new CustomError();
+		oError.message =  'error custom origin';
+		throw oError;
 	} );
 
 	it( "type error", async ( fnDone ) => {
@@ -239,6 +241,17 @@ describe( "Routes", () => {
 		await oHelper.addHtml(
 			`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_STRING}"></div>`,
 		);
+	} );
+
+	it( "type string fake", async ( fnDone ) => {
+
+		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteConsole() };
+
+		fnSendSpy.and.callFake( ( sMessage, oData ) => {
+			expect( oData.sMessage ).toEqual( 'error string' );
+			fnDone();
+		} );
+		window.onerror( 'error string' );
 	} );
 
 	it( "mapStack lib error", async ( fnDone ) => {

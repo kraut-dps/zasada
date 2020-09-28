@@ -148,9 +148,9 @@ export class CoreBox extends Box {
 	errorHandlers() {
 		// глобальный перехват ошибок
 		window.onerror = ( message, sourceURL, line, column, error ) => {
-			//if( !error ) {
-			//	error = this.newError( { mOrigin: { message, sourceURL, line, column } } );
-			//}
+			if( !error ) {
+				error = this.newError( { mOrigin: { message, sourceURL, line, column } } );
+			}
 			this.oneLogger().error( error );
 			return true;
 		};

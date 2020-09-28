@@ -1,4 +1,4 @@
-class CustomError extends window.Error {
+class CustomError {
 
 	/**
 	 * @type {string} error help code
@@ -39,9 +39,6 @@ class CustomError extends window.Error {
 			} else if( mOrigin.sourceURL ) {
 				sStack = mOrigin.message + "\n@" + mOrigin.sourceURL + ':' + mOrigin.line + ":" + ( mOrigin.column || 1 );
 			}
-		}
-		if( !sStack && this.stack ) {
-			sStack = this.stack;
 		}
 		return sStack;
 	}

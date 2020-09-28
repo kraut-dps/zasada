@@ -336,7 +336,7 @@ export class CoreWidget {
 	 * @return {function}
 	 */
 	_wrapError( fnHandler ) {
-		if( !fnHandler._tryCatch) {
+		/*if( !fnHandler._tryCatch) {
 			const oWidget = this;
 			fnHandler._tryCatch = function () {
 				try {
@@ -346,7 +346,23 @@ export class CoreWidget {
 				}
 			};
 		}
-		return fnHandler._tryCatch;
+		return fnHandler._tryCatch;*/
+		if( !this._oWrapHandlers ) {
+			this._oWrapHandlers = new WeakMap();
+		}
+		let fnHandlerWrapped = this._oWrapHandlers.get( fnHandler );
+		if( !fnHandlerWrapped ) {
+			const oWidget = this;
+			fnHandlerWrapped = function( ...aArgs ) {
+				try {
+					return fnHandler( ...aArgs );
+				} catch ( e ) {
+					throw oWidget.newError( { mOrigin: e, oWidget } );
+				}
+			};
+			this._oWrapHandlers.set( fnHandler, fnHandlerWrapped );
+		}
+		return fnHandlerWrapped;
 	}
 
 	index() {
