@@ -27,6 +27,11 @@ export class Storage {
 	_oWidgetBlockIds;
 
 	/**
+	 * @type {object} { sEventName: { oRelQuery: RelQuery, fnHandler: function() } )
+	 */
+	_oEventFns = {};
+
+	/**
 	 * @type {Object} sBlockId: { sIndex => oWidget }
 	 */
 	_oIndex = {};
@@ -42,6 +47,8 @@ export class Storage {
 	 * @param {IWidget} oWidget
 	 */
 	add( oWidget ) {
+
+		this._fire( 'add', oWidget );
 
 		this.addBlockIdWidgetClassRel( oWidget.constructor, oWidget.blockId() );
 
@@ -82,6 +89,9 @@ export class Storage {
 
 			for ( let sBlockId in oWidgets ) {
 				aWidgets.push( oWidgets[ sBlockId ] );
+
+				// тут еще подумать, подходящее ли место для события
+				this._fire( 'drop', oWidgets[ sBlockId ] );
 			}
 
 			this._dropFromIndex( oWidgets );
@@ -92,9 +102,9 @@ export class Storage {
 	/**
 	 * @return {IRelQuery}
 	 */
-	query() {
-		return this.newQuery( () => this );
-	}
+	//query() {
+	//	return this.newQuery( () => this );
+	//}
 
 	/**
 	 * @param {IRelQuery} oRelQuery
@@ -111,7 +121,7 @@ export class Storage {
 			aBlockIds,
 			aIndex,
 			sCssSel
-		} = oRelQuery;
+		} = oRelQuery.getQuery();
 
 		if ( aBlockIds === null ) {
 			aBlockIds = this._getBlockIdsByWidgetClass( cTypeOf );
@@ -122,17 +132,14 @@ export class Storage {
 		}
 
 		if ( aIndex.length ) {
-			let oWidget, aRet = [];
-			for ( let i = 0; i < aIndex.length; i++ ) {
-				let sIndex = aIndex[ i ];
-				for ( let j = 0; j < aBlockIds.length; j++ ) {
-					oWidget = this._getWidgetByIndex( aBlockIds[ j ], sIndex );
-					if ( oWidget &&
-						this.checkWidget( oWidget, cTypeOf, eFrom, sWay, bWithFrom, [ sIndex ], sCssSel ) ) {
-						aRet.push( oWidget );
-						if ( bOnlyFirst ) {
-							return aRet;
-						}
+			let aRet = [];
+			let aWidgets = this._getWidgetsByIndex( aBlockIds, aIndex );
+			for( let i = 0; i < aWidgets.length; i++ ) {
+				let oWidget = aWidgets[ i ];
+				if ( this.checkWidget( oWidget, oRelQuery ) ) {
+					aRet.push( oWidget );
+					if ( bOnlyFirst ) {
+						return aRet;
 					}
 				}
 			}
@@ -152,9 +159,40 @@ export class Storage {
 		}
 	}
 
+	on( oRelQuery, sEvent, fnHandler ) {
+		if( !this._oEventFns[ sEvent ] ) {
+			this._oEventFns[ sEvent ] = [];
+		}
+		this._oEventFns[ sEvent ].push( { oRelQuery, fnHandler } );
+	}
+	off( oRelQuery, sEvent, fnHandler ) {
+		let iIndex = -1;
+		for( let i = 0; i < this._oEventFns[ sEvent ].length; i++ ) {
+			let oItem = this._oEventFns[sEvent][ i ];
+			if( oItem.fnHandler === fnHandler && oItem.oRelQuery === oRelQuery ) {
+				iIndex = i;
+				break;
+			}
+		}
+		if( iIndex >= 0 ) {
+			this._oEventFns[sEvent].splice( iIndex, 1 );
+		}
+	}
+	_fire( sEvent, oWidget ) {
+		if( !this._oEventFns[ sEvent ] ) {
+			return;
+		}
+		this._oEventFns[ sEvent ].forEach( ( { oRelQuery, fnHandler } ) => {
+			if( this.checkWidget( oWidget, oRelQuery ) ) {
+				fnHandler( { oWidget, sEvent } );
+			}
+		} );
+	}
+
 	_canEmptyCheck( aRet, oRelQuery ) {
-		if( !oRelQuery.bCanEmpty && !aRet.length ) {
-			throw this.newError( { message: 'Relation not found', sHelp: 'rel-not-found' } );
+		const oQuery = oRelQuery.getQuery();
+		if( !oQuery.bCanEmpty && !aRet.length ) {
+			throw this.newError( { message: 'Relation not found ' + JSON.stringify( oQuery ), sHelp: 'rel-not-found', oWidget: oRelQuery.getWidget() } );
 		}
 		return aRet;
 	}
@@ -272,36 +310,46 @@ export class Storage {
 		}
 	}
 
-	_getWidgetByIndex( sBlockId, sIndex ) {
-		if ( this._oIndex[ sBlockId ] && this._oIndex[ sBlockId ][ sIndex ] ) {
-			return this._oIndex[ sBlockId ][ sIndex ];
+	_getWidgetsByIndex( aBlockIds, aIndex ) {
+
+		let aRet = [];
+		for ( let i = 0; i < aIndex.length; i++ ) {
+			let sIndex = aIndex[i];
+			for ( let j = 0; j < aBlockIds.length; j++ ) {
+				let sBlockId = aBlockIds[ j ];
+				if ( this._oIndex[ sBlockId ] && this._oIndex[ sBlockId ][ sIndex ] ) {
+					aRet.push( this._oIndex[ sBlockId ][ sIndex ] );
+				}
+			}
 		}
-		return null;
+		return aRet;
 	}
 
-	checkWidget( oWidget, cWidget, eContext, sWay, bWithSelf, aIndex, sSelector ) {
-		// если понадобится, можно добавить
-		//if ( cWidget && !oWidget instanceof cWidget ) {
-		//	return false;
-		//}
-		//if ( aIndex.length && ( !oWidget.index() || aIndex.indexOf( oWidget.index() ) === -1 ) ) {
-		//	return false;
-		//}
+	checkWidget( oWidget, oRelQuery ) {
+
+		if ( oRelQuery.cTypeOf && !(oWidget instanceof oRelQuery.cTypeOf) ) {
+			return false;
+		}
+		if ( oRelQuery.aIndex.length && ( !oWidget.index() || oRelQuery.aIndex.indexOf( oWidget.index() ) === -1 ) ) {
+			return false;
+		}
 		const eBlock = oWidget.bl();
-		if ( sSelector && !eBlock.matches( sSelector ) ) {
+		if ( oRelQuery.sCssSel && !eBlock.matches( oRelQuery.sCssSel ) ) {
 			return false;
 		}
 
-		if ( bWithSelf && eBlock === eContext ) {
+		const eFrom = oRelQuery.eFrom;
+		if ( oRelQuery.bWithFrom && eBlock === eFrom ) {
 			return true;
 		}
-		switch ( sWay ) {
+
+		switch ( oRelQuery.sWay ) {
 			case 'parent':
-				return eBlock.contains( eContext );
+				return eBlock.contains( eFrom );
 			case 'child':
-				return eContext.contains( eBlock );
+				return eFrom.contains( eBlock );
 			case 'next':
-				let eNext = eContext;
+				let eNext = eFrom;
 				while( ( eNext = eNext.nextElementSibling ) ) {
 					if( eNext === eBlock ) {
 						return true;
@@ -309,7 +357,7 @@ export class Storage {
 				}
 				break;
 			case 'prev':
-				let ePrev = eContext;
+				let ePrev = eFrom;
 				while( ( ePrev = ePrev.previousElementSibling ) ) {
 					if( ePrev === eBlock ) {
 						return true;
@@ -317,7 +365,7 @@ export class Storage {
 				}
 				break;
 			case 'self':
-				return eBlock === eContext;
+				return eBlock === eFrom;
 			default:
 				return true;
 		}

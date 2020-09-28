@@ -11,6 +11,8 @@ export class Linker {
 
 	newError;
 
+	newRelQuery;
+
 	/**
 	 * @type {function(): IStorage}
 	 */

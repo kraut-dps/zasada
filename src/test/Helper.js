@@ -22,8 +22,7 @@ export class Helper{
 
 	widget( sSelector, cWidget ) {
 		const eFrom = this.element( sSelector );
-		return this.oneLinker().oneStorage()
-			.query()
+		return this.oneLinker().newRelQuery()
 			.from( eFrom )
 			//.cssSel( sSelector )
 			.onlyFirst( true )

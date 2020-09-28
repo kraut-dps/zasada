@@ -78,8 +78,8 @@ export class CoreWidget {
 	 */
 	rel( mContext = '' ) {
 		return this.oneLinker()
-			.oneStorage()
-			.query()
+			.newRelQuery()
+			.widget( this )
 			.from( this._context( mContext )[0] )
 	}
 

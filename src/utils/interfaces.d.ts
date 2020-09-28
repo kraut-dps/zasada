@@ -11,6 +11,10 @@ interface IDom {
 
 	parents(eContext: Element, sSel: string, bWithSelf: boolean, bOnlyFirst: boolean): Element[];
 
+	nexts(eContext: Element, sSel: string, bWithSelf: boolean, bOnlyFirst: boolean): Element[];
+
+	prevs(eContext: Element, sSel: string, bWithSelf: boolean, bOnlyFirst: boolean): Element[];
+
 	parseBlockIds(eContext: Element): string[];
 
 	sel(sBlockId?: string, sElementId?: string): string;
@@ -20,6 +24,8 @@ interface IEl {
 	find( oWidget: IWidget, mQuery: (string|IElQuery )): Element[]|Element|null;
 
 	parse( sEl: string): IElQuery;
+
+	resetCache( oWidget: IWidget ): void;
 }
 
 interface IElQuery {
@@ -32,9 +38,15 @@ interface IRelQuery {
 
 	blockId(aBlockIds: string[]): IRelQuery;
 
-	parents(eFrom?: Element, bWithFrom?: boolean): IRelQuery;
+	parent(): IRelQuery;
 
-	children(eFrom?: Element, bWithFrom?: boolean): IRelQuery;
+	child(): IRelQuery;
+
+	next(): IRelQuery;
+
+	prev(): IRelQuery;
+
+	self(): IRelQuery;
 
 	from(eFrom?: Element): IRelQuery;
 
@@ -53,6 +65,16 @@ interface IRelQuery {
 	typeOf(cTypeOf: any): IRelQuery;
 
 	find( bAll?: boolean ): (IWidget | IWidget[]);
+
+	getQuery(): object;
+
+	onAdd( fnHandler: ( { oWidget: IWidget, sEvent: string } ) => void ): IRelQuery;
+
+	onDrop( fnHandler: ( { oWidget: IWidget, sEvent: string } ) => void ): IRelQuery;
+
+	getWidget(): IWidget;
+
+	widget( oWidget: IWidget ): IRelQuery;
 }
 
 interface IWidget {
@@ -79,7 +101,7 @@ interface IStorage {
 
 	drop(eContext: Element, bWithSelf: boolean): void;
 
-	query(): IRelQuery;
+	//query(): IRelQuery;
 
 	find(oRelQuery: IRelQuery): IWidget[];
 }
@@ -103,8 +125,10 @@ interface ILinker {
 	setOpts( oOpts: ILinkerOpts ): void;
 	setWidgets(oClasses: ILinkerClasses ): void;
 	setBeforeNew( aBlockIds: string[], fnBeforeNew: ( object ) => void ): void;
+	setImports( oDynamicImports: object ): void;
 	link( eContext: Element, bWithSelf?: boolean ): Promise<any[]>;
 	unlink( eContext: Element, bWithSelf? : boolean ): void;
+	widget( eContext: Element, sBlockId : string ): Promise<any[]>;
 }
 
 interface ILogRaw {

@@ -194,6 +194,21 @@ function ( OtherWidget ) {
 		} );
 
 },
+function ( OtherWidget ) {
+	// поиск несуществующего виджета выдаст ошибку
+	this.rel()
+		.typeOf( OtherWidget )
+		.index( 'badIndex' )
+		.find();
+},
+function ( OtherWidget ) {
+	// но вызов .canEmpty() уберет ошибку
+	this.rel()
+		.typeOf( OtherWidget )
+		.index( 'badIndex' )
+		.canEmpty()
+		.find();
+},
 		]
 	},
 	Event: {

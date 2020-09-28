@@ -31,11 +31,11 @@ export class CoreBox extends Box {
 	}
 	newLinker () {
 		const oLinker = new this.Linker();
+		oLinker.newRelQuery = this.newRelQuery;
 		oLinker.newWidget = this.baseNewWidget;
 		oLinker.newError = this.newError;
 		oLinker.oneStorage = this.oneStorage;
 		oLinker.oneDom = this.oneDom;
-		//oLinker.oneLogger = this.oneLogger;
 		oLinker.fnMergeDeep = this.mergeDeep;
 		oLinker.fnDeepKey = this.deepKey;
 		oLinker.fnAssertUndefProps = this._initCheck;
@@ -107,8 +107,10 @@ export class CoreBox extends Box {
 		return oWidget;
 	}
 
-	newRelQuery( fnStorage ) {
-		return new this.RelQuery( fnStorage );
+	newRelQuery() {
+		const oRelQuery = new this.RelQuery();
+		oRelQuery.oneStorage = this.oneStorage;
+		return oRelQuery;
 	};
 
 	newElQuery( sEl ) {

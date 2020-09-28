@@ -148,6 +148,147 @@ describe( "Widget", () => {
 		expect( oWidget1.rel().self().canEmpty().index( 'widget4' ).find() ).toEqual( null );
 	} );
 
+	it( ".rel().onAdd()", async ( fnDone ) => {
+
+		let fnAddGlobalSpy = jasmine.createSpy('spy' );
+		let fnAddSpy = jasmine.createSpy('spy' );
+		let fnDropSpy = jasmine.createSpy('spy' );
+
+		class TestWidget extends Widget {
+			dropAll() {
+				this._unlink( '' );
+				this.bl().innerHTML = '';
+			}
+			addItem() {
+				return this._html( '', '<div class="_ _TestItem"></div>' );
+			}
+		}
+
+		class TestArray extends Widget {
+			run() {
+				this.rel().child().typeOf( TestItem )
+					.onAdd( () => {
+						fnAddSpy();
+					} )
+					.onDrop( () => {
+						fnDropSpy();
+					} )
+			}
+
+			addItem() {
+				return this._html( '', '<div class="_ _TestItem"></div>' );
+			}
+
+			dropItem() {
+				this._unlink( '' );
+				return this.bl().innerHTML = '';
+			}
+		}
+
+		class TestItem extends Widget {
+		}
+
+		oLinker.setWidgets( { TestWidget, TestArray, TestItem } );
+		await oHelper.addHtml(
+			`<div class="main _ _TestWidget"><div class="array _ _TestArray"></div></div>`
+		);
+
+		oLinker.newRelQuery().typeOf( TestItem ).onAdd( () => {
+			fnAddGlobalSpy();
+		} )
+
+		const oMain = oHelper.widget( '.main', TestWidget );
+		const oTestArray = oHelper.widget( '.array', TestArray );
+
+		// отметим, что до добавления ничего не вызвалось
+		// и добавим новый элемнет
+		expect( fnAddGlobalSpy.calls.count() ).toEqual( 0 );
+		expect( fnAddSpy.calls.count() ).toEqual( 0 );
+		expect( fnDropSpy.calls.count() ).toEqual( 0 );
+		await oTestArray.addItem();
+
+		expect( fnAddGlobalSpy.calls.count() ).toEqual( 1 );
+		expect( fnAddSpy.calls.count() ).toEqual( 1 );
+		expect( fnDropSpy.calls.count() ).toEqual( 0 );
+		oTestArray.dropItem();
+
+		expect( fnAddGlobalSpy.calls.count() ).toEqual( 1 );
+		expect( fnAddSpy.calls.count() ).toEqual( 1 );
+		expect( fnDropSpy.calls.count() ).toEqual( 1 );
+		oMain.dropAll();
+
+		expect( fnAddGlobalSpy.calls.count() ).toEqual( 1 );
+		expect( fnAddSpy.calls.count() ).toEqual( 1 );
+		expect( fnDropSpy.calls.count() ).toEqual( 1 );
+
+		// тут виджет с событием удаляется, поэтому вызовов fnAddSpy и fnDropSpy быть не должно
+		await oMain.addItem();
+		expect( fnAddGlobalSpy.calls.count() ).toEqual( 2 );
+		expect( fnAddSpy.calls.count() ).toEqual( 1 );
+		expect( fnDropSpy.calls.count() ).toEqual( 1 );
+
+		fnDone();
+	} );
+
+	it( ".rel().onAdd() 2", async ( fnDone ) => {
+
+		let fnAddByTypeBadSpy = jasmine.createSpy('spy' );
+		let fnAddByTypeOkSpy = jasmine.createSpy('spy' );
+		let fnAddByIndexBadSpy = jasmine.createSpy('spy' );
+		let fnAddByIndexOkSpy = jasmine.createSpy('spy' );
+		let fnAddByWayBadSpy = jasmine.createSpy('spy' );
+		let fnAddByWayOkSpy = jasmine.createSpy('spy' );
+
+		class TestWidget extends Widget {
+			run() {
+				this.rel().typeOf( TestWidget ).onAdd( () => {
+					fnAddByTypeBadSpy();
+				} );
+				this.rel().typeOf( AddWidget ).onAdd( () => {
+					fnAddByTypeOkSpy();
+				} );
+				this.rel().index( 11 ).onAdd( () => {
+					fnAddByIndexBadSpy();
+				} );
+				this.rel().index(12).onAdd( () => {
+					fnAddByIndexOkSpy();
+				} );
+				this.rel().parent().typeOf( AddWidget ).onAdd( () => {
+					fnAddByWayBadSpy();
+				} );
+				this.rel().child().typeOf( AddWidget ).onAdd( () => {
+					fnAddByWayOkSpy();
+				} );
+			}
+			addItem() {
+				return this._html( '', '<div class="_ _AddWidget"></div>' );
+			}
+		}
+
+		class AddWidget extends Widget {
+			_getIndex() {
+				return 12;
+			}
+		}
+
+		oLinker.setWidgets( { TestWidget, AddWidget } );
+		await oHelper.addHtml(
+			`<div class="main _ _TestWidget"></div>`
+		);
+
+		const oMain = oHelper.widget( '.main', TestWidget );
+		await oMain.addItem();
+
+		expect( fnAddByTypeBadSpy.calls.count() ).toEqual( 0 );
+		expect( fnAddByTypeOkSpy.calls.count() ).toEqual( 1 );
+		expect( fnAddByIndexBadSpy.calls.count() ).toEqual( 0 );
+		expect( fnAddByIndexOkSpy.calls.count() ).toEqual( 1 );
+		expect( fnAddByWayBadSpy.calls.count() ).toEqual( 0 );
+		expect( fnAddByWayOkSpy.calls.count() ).toEqual( 1 );
+
+		fnDone();
+	} );
+
 	it( "._on() ._off() ._fire()", async () => {
 
 		class TestWidget extends Widget {

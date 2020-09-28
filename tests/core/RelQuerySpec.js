@@ -6,6 +6,7 @@ import {Widget as WidgetBase} from "./../../src/index.js";
  *  @type {IStorage}
  */
 let oStorage;
+let oLinker;
 let eSupParent, eParent, eBase, eChild, eSubChild, eOut, eOther;
 let oSupParentWidget, oParentWidget, oBaseWidget, oChildWidget, oSubChildWidget, oOtherWidget, oHelper;
 
@@ -24,7 +25,8 @@ describe( "RelQuery", () => {
 
 	beforeAll( ( fnDone ) => {
 		const oRoot = new RootBox( oDeps );
-		oRoot.box( 'core' ).init( () => {
+		oRoot.box( 'core' ).init( ( oLinkerReal ) => {
+			oLinker = oLinkerReal;
 			oRoot.box( 'core' ).oneLinker().setWidgets( { Widget } );
 			oStorage = oRoot.box( 'core' ).oneStorage();
 			oHelper = oRoot.box( 'test' ).newHelper();
@@ -77,7 +79,7 @@ describe( "RelQuery", () => {
 		it( "add", () => {
 
 			expect(
-				oStorage.query()
+				oLinker.newRelQuery()
 					.from( eBase )
 					.withFrom()
 					.typeOf( Widget )
@@ -86,7 +88,7 @@ describe( "RelQuery", () => {
 			).toEqual( oBaseWidget );
 
 			expect(
-				oStorage.query()
+				oLinker.newRelQuery()
 					.from( eBase )
 					.withFrom()
 					.typeOf( Widget )
@@ -95,7 +97,7 @@ describe( "RelQuery", () => {
 			).toEqual( oBaseWidget );
 
 			expect(
-				oStorage.query()
+				oLinker.newRelQuery()
 					.from( eBase )
 					.withFrom( false )
 					.typeOf( Widget )
@@ -106,7 +108,7 @@ describe( "RelQuery", () => {
 
 			// неподходящий css
 			expect(
-				oStorage.query()
+				oLinker.newRelQuery()
 					.typeOf( Widget )
 					.cssSel( '.undefined' )
 					.canEmpty( true )
@@ -114,7 +116,7 @@ describe( "RelQuery", () => {
 			).toEqual( null );
 
 			expect(
-				oStorage.query()
+				oLinker.newRelQuery()
 					.child()
 					.from( eBase )
 					.withFrom( false )
@@ -124,7 +126,7 @@ describe( "RelQuery", () => {
 			).toEqual( oChildWidget );
 
 			expect(
-				oStorage.query()
+				oLinker.newRelQuery()
 					.from( eBase )
 					.child()
 					.typeOf( Widget )
@@ -133,7 +135,7 @@ describe( "RelQuery", () => {
 			).toEqual( oChildWidget );
 			
 			expect(
-				oStorage.query()
+				oLinker.newRelQuery()
 					.parent()
 					.from( eBase )
 					.withFrom( false )
@@ -160,7 +162,7 @@ describe( "RelQuery", () => {
 
 			// находится по индексу, но не находится по css селектору
 			expect(
-				oStorage.query()
+				oLinker.newRelQuery()
 					.index( [ 'other' ] )
 					.cssSel( '.undefined' )
 					.canEmpty( true )
@@ -168,7 +170,7 @@ describe( "RelQuery", () => {
 			).toEqual( null );
 
 			expect(
-				oStorage.query()
+				oLinker.newRelQuery()
 					.child()
 					.from( eBase )
 					.withFrom( false )
@@ -179,7 +181,7 @@ describe( "RelQuery", () => {
 			).toEqual( oSubChildWidget );
 
 			expect(
-				oStorage.query()
+				oLinker.newRelQuery()
 					.child()
 					.from( eBase )
 					.withFrom( false )
@@ -188,7 +190,7 @@ describe( "RelQuery", () => {
 			).toEqual( [ oSubChildWidget ] );
 
 			expect(
-				oStorage.query()
+				oLinker.newRelQuery()
 					.parent()
 					.from( eBase )
 					.withFrom( false )
@@ -200,7 +202,7 @@ describe( "RelQuery", () => {
 			).toEqual( null );
 
 			expect(
-				oStorage.query()
+				oLinker.newRelQuery()
 					.parent()
 					.from( eBase )
 					.typeOf( Widget )
@@ -213,7 +215,7 @@ describe( "RelQuery", () => {
 
 			// тоже самое, но  с ошибкой
 			try {
-				oStorage.query()
+				oLinker.newRelQuery()
 					.index( 'unknown_index' )
 					.find();
 				fail();

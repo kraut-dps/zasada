@@ -1,6 +1,6 @@
 {
   "name": "zasada",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "",
   "author": "",
   "license": "MIT",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "classlist-polyfill": "^1.2.0",
-    "di-box": "^0.0.2",
+    "di-box": "^0.0.4",
     "proto-polyfill": "^1.7.0",
     "sourcemapped-stacktrace": "^1.1.11",
     "weakmap-polyfill": "^2.0.2",

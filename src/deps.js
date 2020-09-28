@@ -14,15 +14,11 @@ import {LogBox} from "./log/LogBox.js";
 import {Logger} from "./log/Logger.js";
 import {Error} from "./log/Error.js";
 import {RouteConsole} from "./log/route/RouteConsole.js";
+import {fnRel} from "di-box";
 
 export default {
 	core: {
 		_Box: CoreBox,
-		_fnRel: ( oRoot, oBox ) => {
-			const oLogBox = oRoot.box( 'log' );
-			oBox.oneLogger = oLogBox.oneLogger;
-			oBox.newError = oLogBox.newError;
-		},
 		Attrs,
 		Dom,
 		El,
@@ -33,6 +29,8 @@ export default {
 		Storage,
 		deepKey,
 		mergeDeep,
+		oneLogger: fnRel( 'log' ),
+		newError: fnRel( 'log' ),
 		oPolyfills: {
 			sPromiseUrl: __webpack_public_path__ + '/polyfill-promise.js',
 			pProto: () => import( /* webpackChunkName: "polyfill-proto" */ "proto-polyfill" ),
