@@ -211,6 +211,53 @@ function ( OtherWidget ) {
 },
 		]
 	},
+	RelEvent: {
+		sTitle: "Widget.rel().onAdd().onDrop() события на привязку/отвязку других виджетов",
+		sHtml:
+`<div class="block _ _TestWidget">
+	<= Сначала нажать на кнопку слева, чтобы выполнился код
+	<div class="block__element example__btn _TestWidget-SortBtn">Отсортировать элменты</div>
+	<div class="block__element example__btn _TestWidget-AddBtn">Добавить элемент</div>
+	<div class="block__element _TestWidget-Items">
+		<div class="block block_oth _ _OtherWidget" data-index="1"></div>
+		<div class="block block_oth _ _OtherWidget" data-index="2"></div>
+		<div class="block block_oth _ _OtherWidget" data-index="3"></div>
+	</div>
+</div>`,
+		aExamples: [
+function ( OtherWidget ) {
+	this.aOtherWidgets = this.rel().child().typeOf( OtherWidget )
+		.onAdd( ( oWidget ) => {
+			// каждое добавление виджета OtherWidget будет выполняться этот код
+			this.aOtherWidgets.push( oWidget );
+		} )
+		.find( true );
+
+	this._on( 'AddBtn', 'click', () => {
+		this._html(
+			'Items',
+			`<div class="block block_oth _ _OtherWidget" data-index="${Math.ceil( Math.random() * 1000 )}"></div>`,
+			'beforeend'
+		);
+	} );
+	this._on( 'SortBtn', 'click', () => {
+		this.bDesc = !this.bDesc;
+		// отсортируем внутренний массив виджетов
+		this.aOtherWidgets = this.aOtherWidgets.sort( ( oA, oB ) => {
+			const iA = oA.index();
+			const iB = oB.index();
+			return ( iA === iB ? 0 : ( iA > iB ? 1 : -1 ) ) * ( this.bDesc ? -1 : 1 );
+		} )
+		// отсортируем порядок DOM элементов
+		for( let i = 1; i < this.aOtherWidgets.length; i++ ) {
+			let eCur = this.aOtherWidgets[ i ].bl();
+			let ePrev = this.aOtherWidgets[ i - 1 ].bl()
+			ePrev.insertAdjacentElement( 'afterend', eCur );
+		}
+	} );
+},
+		]
+	},
 	Event: {
 		sTitle: "Widget._on(), Widget._off(), Widget._fire() обработка DOM событий",
 		sHtml: `<div class="block _ _TestWidget"></div>`,

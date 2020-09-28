@@ -65,13 +65,16 @@ export class CoreWidget {
 	/**
 	 * выборка других виджетов
 	 * @example
-	 * .rel().children().typeOf( WidgetClass ).find()
+	 * .rel().child().typeOf( WidgetClass ).find()
 	 *
 	 * @example
-	 * .rel().parents().typeOf( WidgetClass ).find()
+	 * .rel().parent().typeOf( WidgetClass ).find()
 	 *
 	 * @example
 	 * .rel().index( 'index' ).find()
+	 *
+	 * @example
+	 * .rel().typeOf( WidgetClass ).onAdd( fnHandler: ( IWidget, sEvent, IRelQuery ) )
 	 *
 	 * @param {string|Element|Element[]} mContext
 	 * @return {IRelQuery}

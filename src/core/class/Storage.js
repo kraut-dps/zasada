@@ -184,7 +184,7 @@ export class Storage {
 		}
 		this._oEventFns[ sEvent ].forEach( ( { oRelQuery, fnHandler } ) => {
 			if( this.checkWidget( oWidget, oRelQuery ) ) {
-				fnHandler( { oWidget, sEvent } );
+				fnHandler( oWidget, sEvent, oRelQuery );
 			}
 		} );
 	}

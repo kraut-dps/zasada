@@ -8,7 +8,7 @@
     "prod": "webpack --mode=production"
   },
   "dependencies": {
-    "zasada": "0.0.17"
+    "zasada": "0.0.20"
   },
   "devDependencies": {
     "@babel/core": "7.2.0",

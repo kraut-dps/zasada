@@ -14,7 +14,7 @@ class OtherWidget extends Widget {
 	bActive = false;
 	run() {}
 	_getIndex() {
-		return this._attr( '', 'index' );
+		return parseInt( this._attr( '', 'index' ) );
 	}
 	toggle() {
 		this.bActive = !this.bActive;
@@ -29,7 +29,7 @@ class InsertWidget extends Widget {
 
 class Example extends ExampleBase {
 	_exampleExec( fnExample ) {
-		const oTestWidget = this.rel().from( this._el( 'Area' ) ).children().typeOf( TestWidget ).find();
+		const oTestWidget = this.rel().from( this._el( 'Area' ) ).child().typeOf( TestWidget ).find();
 		fnExample.call( oTestWidget, OtherWidget );
 	}
 }
