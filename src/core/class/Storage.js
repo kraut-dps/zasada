@@ -289,6 +289,11 @@ export class Storage {
 		return aMatches;
 	}
 
+	/**
+	 * @param {IWidget} oWidget
+	 * @param {string} sBlockId
+	 * @private
+	 */
 	_addToIndex( oWidget, sBlockId ) {
 		const sIndex = oWidget.index();
 		if ( !sIndex ) {

@@ -1,3 +1,7 @@
+declare type constructor<T> = {
+	new (...args: any[]): T;
+};
+
 interface IPolyfillBox {
 	base(fnCallback, fnReject) :void;
 }
@@ -33,7 +37,7 @@ interface IElQuery {
 	key(): string;
 }
 
-interface IRelQuery {
+interface IRelQuery<T = IWidget> {
 	blockId(sBlockId: string): IRelQuery;
 
 	blockId(aBlockIds: string[]): IRelQuery;
@@ -62,15 +66,15 @@ interface IRelQuery {
 
 	onlyFirst(bOnlyFirst?: boolean): IRelQuery;
 
-	typeOf(cTypeOf: any): IRelQuery;
+	typeOf<T>(cTypeOf: constructor<T>): IRelQuery<T>;
 
-	find( bAll?: boolean ): (IWidget | IWidget[]);
+	find( bAll?: boolean ): (T | T[]);
 
 	getQuery(): object;
 
-	onAdd( fnHandler: ( { oWidget: IWidget, sEvent: string } ) => void ): IRelQuery;
+	onAdd( fnHandler: ( oWidget: T, sEvent: string ) => void ): IRelQuery;
 
-	onDrop( fnHandler: ( { oWidget: IWidget, sEvent: string } ) => void ): IRelQuery;
+	onDrop( fnHandler: ( oWidget: T, sEvent: string ) => void ): IRelQuery;
 
 	getWidget(): IWidget;
 

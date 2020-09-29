@@ -1,9 +1,11 @@
 {
   "name": "zasada",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "",
   "author": "",
   "license": "MIT",
+  "main": "./src/index.js",
+  "types": "./src/utils/interfaces.d.ts",
   "files": [
     "src/"
   ],
