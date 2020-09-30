@@ -51,7 +51,7 @@ export class El{
 
 			// сохраняем в кеше
 			if( !oElQuery.bNoCache ) {
-				this._oEls.set( oWidget.bl(), { ...{}, ...this._oEls.get( oWidget.bl() ), [oElQuery.key()]: aElements } );
+				this._oEls.set( oWidget, { ...{}, ...this._oEls.get( oWidget ), [oElQuery.key()]: aElements } );
 			}
 		}
 
@@ -66,7 +66,7 @@ export class El{
 		}
 	}
 	resetCache( oWidget ) {
-		this._oEls.set( oWidget.bl(), {} );
+		this._oEls.set( oWidget, {} );
 	}
 
 	parse( sEl ) {
@@ -85,7 +85,7 @@ export class El{
 			return false;
 		}
 
-		const oCache = this._oEls.get( oWidget.bl() ) || {};
+		const oCache = this._oEls.get( oWidget ) || {};
 
 		const sKey = oElQuery.key();
 

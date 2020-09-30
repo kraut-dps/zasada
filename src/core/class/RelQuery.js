@@ -217,7 +217,7 @@ export class RelQuery{
 	 * @param oWidget
 	 * @param sEvent
 	 */
-	_onDropOff( { oWidget, sEvent } ) {
+	_onDropOff( oWidget, sEvent ) {
 		let aEventHandlers = this._oEventsMap.get( oWidget );
 		if( !aEventHandlers ) {
 			return;
