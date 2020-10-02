@@ -65,7 +65,13 @@ export class Polyfills{
 		let bCheck = true;
 		try {
 			const eTest = document.createElement( "_" ), sClass = 'c';
+			// добавим, проверим что добавился
 			eTest.classList.add( sClass );
+			if ( !eTest.classList.contains( sClass ) ) {
+				throw 1;
+			}
+			// добавим через toggle, проверим что все ок
+			eTest.classList.toggle( sClass, true );
 			if ( !eTest.classList.contains( sClass ) ) {
 				throw 1;
 			}

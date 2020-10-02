@@ -31,6 +31,32 @@ describe( "Polyfills", () => {
 		} );
 	} );
 
+	it( "simple classList 2", async ( fnDone ) => {
+
+		let bSet = true;
+		// особая логика, чтобы закрыть Polyfills метода ElementClassList 100%
+		window.DOMTokenList.prototype.add = () => {};
+		window.DOMTokenList.prototype.toggle = () => { bSet = false };
+		window.DOMTokenList.prototype.contains = () => { return bSet };
+
+		class TestWidget extends Widget {
+			run() {
+				fnDone();
+			}
+		}
+
+		const oRoot = new RootBox( oDeps );
+
+		// рабочий тестовый url для подгрузки полифилла
+		oRoot.box( 'core' ).oPolyfills.sPromiseUrl = '/base/src/utils/polyfillPromise.js';
+		oRoot.box( 'core' ).polyfills( () => {
+			const oLinker = oRoot.box( 'core' ).oneLinker();
+			const oHelper = oRoot.box( 'test' ).oneHelper();
+			oLinker.setWidgets( { TestWidget } );
+			oHelper.addHtml( '<div class="_ _TestWidget"></div>' );
+		} );
+	} );
+
 	it( "bad promise polyfill url", ( fnDone ) => {
 
 		const cOriginPromise = window.Promise;
