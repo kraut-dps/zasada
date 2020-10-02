@@ -115,10 +115,12 @@ export class CoreWidget {
 	 * @param {any} mData данные события
 	 */
 	_fire( mContext, sEvent, mData ) {
-		const oEvent = new CustomEvent( sEvent, {detail: mData} );
+		const oEvent = new CustomEvent( sEvent, { detail: mData, cancelable: true } );
+		let bRet = true;
 		this._context( mContext ).forEach( ( eContext ) => {
-			eContext.dispatchEvent( oEvent );
+			bRet = eContext.dispatchEvent( oEvent ) && bRet;
 		} );
+		return bRet;
 	};
 
 	/**
@@ -339,17 +341,6 @@ export class CoreWidget {
 	 * @return {function}
 	 */
 	_wrapError( fnHandler ) {
-		/*if( !fnHandler._tryCatch) {
-			const oWidget = this;
-			fnHandler._tryCatch = function () {
-				try {
-					return fnHandler.apply( this, arguments );
-				} catch ( e ) {
-					throw oWidget.newError( { mOrigin: e, oWidget } );
-				}
-			};
-		}
-		return fnHandler._tryCatch;*/
 		if( !this._oWrapHandlers ) {
 			this._oWrapHandlers = new WeakMap();
 		}
