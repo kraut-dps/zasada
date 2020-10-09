@@ -1,6 +1,6 @@
-import oDeps from "zasada/src/deps.js";
-import {TestBox} from "zasada/src/test/TestBox.js";
-import {Helper} from "zasada/src/test/Helper.js";
+import oDeps from "./../../src/deps.js";
+import {TestBox} from "./../../src/test/TestBox.js";
+import {Helper} from "./../../src/test/Helper.js";
 
 oDeps.test = {
 	_Box: TestBox,

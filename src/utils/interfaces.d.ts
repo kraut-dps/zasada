@@ -2,6 +2,10 @@ declare type constructor<T> = {
 	new (...args: any[]): T;
 };
 
+declare type TContext = string | Element| Element[];
+
+declare type TAttrMap = string[] | object;
+
 interface IPolyfillBox {
 	base(fnCallback, fnReject) :void;
 }
@@ -81,20 +85,6 @@ interface IRelQuery<T = IWidget> {
 	widget( oWidget: IWidget ): IRelQuery;
 }
 
-interface IWidget {
-	bl(): Element;
-
-	blockId(): string
-
-	destructor(): void;
-
-	index(): string;
-
-	run(): void;
-
-	rel( mContext?: (string | Element| Element[]) ): IRelQuery;
-}
-
 interface IWidgetConstructor {
 	new( eBlock: Element, sBlockId: string ): IWidget;
 	readonly prototype: IWidget;
@@ -112,7 +102,8 @@ interface IStorage {
 
 
 interface ILinkerOptsItem {
-	cWidget?: IWidgetConstructor;
+	//cWidget?: IWidgetConstructor;
+	cWidget?: IWidget;
 	fnAfterNew? : ( oWidget: IWidget, object ) => any;
 	fnBeforeRun? : ( oWidget: IWidget ) => boolean | void;
 }
@@ -122,7 +113,8 @@ interface ILinkerOpts {
 }
 
 interface ILinkerClasses {
-	[sBlockId: string]: IWidgetConstructor;
+	//[sBlockId: string]: IWidgetConstructor;
+	[sBlockId: string]: IWidget;
 }
 
 interface ILinker {
@@ -142,26 +134,99 @@ interface ILogRaw {
 	oWidget: IWidget;
 }
 
-interface ILog {
-	sError: string;
-	sStack: string;
-	sBlockId: string;
-	eContext: Element;
-	oWidget: IWidget;
-}
-
 interface ILogger {
 	error( oLog: ILogRaw ): void;
 }
 
 interface ILogRoute {
-	log( oOpts: ILog ): void;
+	error( oError: ICustomError ): void;
 }
 
-interface IError extends Error{
+interface ICustomErrorProps {
+	message: string;
+	name: string;
+	stack: string;
+	mOrigin: any;
+	sHelp: string;
+	oWidget: IWidget | null;
+	eContext: Element | null;
+	sBlockId: string;
+	sStackMapped: string;
 }
 
-declare var IError: {
-	prototype: IError;
-	new(sMessage: string, sType: string): IError;
-};
+interface ICustomError extends ICustomErrorProps{
+	setStackMapped( sStackMapped: string ): void;
+	errorOrigin(): any;
+	msg(): string;
+	help(): string;
+	blockId(): string;
+	stackOrigin(): string;
+	stackMapped(): string;
+	context(): Element | null;
+	contextHtml( iSubStr: number ): string;
+	widget(): IWidget | null;
+	widgetClass(): string;
+	skipLog(): boolean;
+}
+
+/**
+ * @see {import("../core/widget/CoreWidget.js")}
+ */
+interface IWidget {
+
+	new( eBlock: Element, sBlockId: string ): IWidget;
+
+	newError( oError: Partial<ICustomErrorProps> ): ICustomError | any;
+
+	run(): Promise<any> | any | void;
+
+	bl(): Element;
+
+	blockId(): string
+
+	index(): string;
+
+	destructor(): void;
+
+	/**
+	 * поиск элемента виджета
+	 */
+	_el( mQuery: string | IElQuery ): Element|Element[];
+
+	/**
+	 * удаление из кеша найденного элемента
+	 */
+	_elReset(): void;
+
+	_rel( mContext: TContext ): IRelQuery;
+
+	_on( mContext: TContext, sEvent: string, fnHandler: ( oEvent: Event ) => void ): void;
+
+	_off( mContext: TContext, sEvent: string, fnHandler: ( oEvent: Event ) => void ): void;
+
+	_fire( mContext: TContext, sEvent: string, mData?: any ): boolean;
+
+	_mod( mContext: TContext, mMod: string | string[] | object, mValue: string | boolean ): void;
+
+	_attr( mContext: TContext, sAttr: string, sAttrPrefix?: string ): string | null;
+
+	_attrs( mContext: TContext, mMap: TAttrMap, sAttrPrefix?: string ): object;
+
+	_my( mMap: TAttrMap, sAttrPrefix?: string ): void;
+
+	_link( mContext: TContext, bWithSelf?: boolean ): Promise<any>;
+
+	_unlink( mContext: TContext, bWithSelf?: boolean ): void;
+
+	_html( mContext: TContext, sHtml: string, sInsertPosition?: InsertPosition ): Promise<any>;
+
+	_import( sImportName: string ): Promise<any>;
+
+	_context( mContext: TContext ): Element[];
+
+	_wrapError( fnHandler: () => any ): () => any;
+
+	_getIndex(): string;
+}
+
+export { IWidget as Widget };

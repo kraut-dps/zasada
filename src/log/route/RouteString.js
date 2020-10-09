@@ -4,49 +4,33 @@
  */
 export class RouteString {
 
-	iMaxElementHtml = 100;
-
 	error( oError ) {
-		let aMessage = [], oData = oError.data();
-		aMessage.push( oData.sMessage );
-		const sWidget = this._getWidgetStr( oData.sBlockId, oData.oWidget );
-		aMessage.push( 'Widget: ' + sWidget );
+		let aMessage = [];
+		aMessage.push( oError.msg() );
+		const sBlockId = oError.blockId();
+		const sWidgetClass = oError.widgetClass();
+		aMessage.push( 'BlockId: ' + sBlockId );
+		if( sWidgetClass !== sBlockId ) {
+			aMessage.push( 'WidgetClass: ' + sWidgetClass );
+		}
+		const sContextHtml = oError.contextHtml();
+		if( sContextHtml ) {
+			aMessage.push( 'Context HTML: ' + sContextHtml );
+		}
+		aMessage.push( 'Stack: ' + oError.stackMapped() );
 
-		aMessage.push( 'Element: ' + this._elementToStr( oData.eContext ) );
-
-		aMessage.push( 'Stack: ' + oData.sStackMapped );
-
-		if( oData.mOrigin ) {
-			aMessage.push( 'Origin: ' + oData.mOrigin );
+		const mOrigin = oError.errorOrigin();
+		if( mOrigin ) {
+			aMessage.push( 'OriginError: ' + mOrigin );
 		}
 
-		this._send( aMessage.join( "\n" ), oData );
+		this._send( aMessage.join( "\n" ), oError );
 	}
 
 	/**
-	 * redefine me
 	 * @param {string} sMessage
-	 * @param {object} oData
 	 */
-	_send( sMessage, oData ) {
+	_send( sMessage ) {
 		console.log( sMessage );
-	}
-
-	_elementToStr( eElement ) {
-		let sHtml = eElement.outerHTML.substr( 0, this.iMaxElementHtml ).trim();
-		const iPos = sHtml.indexOf( '>' );
-		if( iPos === -1 ) {
-			return sHtml + '...';
-		} else {
-			return sHtml.substr( 0, iPos + 1 );
-		}
-	}
-	
-	_getWidgetStr( sBlockId, oWidget ) {
-		let sWidget = sBlockId;
-		if( oWidget ) {
-			sWidget = oWidget.blockId();
-		}
-		return sWidget;
 	}
 }

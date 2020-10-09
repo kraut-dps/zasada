@@ -4,44 +4,52 @@
  */
 export class RouteConsole {
 
-	/**
-	 * @param {Error} oError
-	 */
 	error( oError ) {
 
-		let aMessage = [], aVars = [], oData = oError.data();
+		let aMessage = [], aVars = [];
 
 		aMessage.push( '  Error: "%s"' );
-		aVars.push( oData.sMessage );
+		aVars.push( oError.msg() );
 
-		if( oData.sHelp ) {
+		const sHelp = oError.help();
+		if( sHelp ) {
 			aMessage.push( 'Help: %s' );
-			aVars.push( oData.sHelp );
+			aVars.push( sHelp );
 		}
 
-		let sMessage = 'Widget: %s';
-		aVars.push( oData.sBlockId );
-		if( oData.oWidget ) {
+		const sBlocKId = oError.blockId();
+		let sMessage = 'BlockId: %s';
+		aVars.push( sBlocKId );
+
+		const sWidgetClass = oError.widgetClass();
+		if( sWidgetClass !== sBlocKId ) {
+			sMessage += ' WidgetClass: %s';
+			aVars.push( sWidgetClass );
+		}
+
+		const oWidget = oError.widget();
+		if( oWidget ) {
 			sMessage += ' %O';
-			aVars.push( oData.oWidget );
+			aVars.push( oWidget );
 		}
 		aMessage.push( sMessage );
 
-		aMessage.push( 'Element: %o' );
-		aVars.push( oData.eContext );
+		aMessage.push( 'Context: %o' );
+		aVars.push( oError.context() );
 
 		aMessage.push( 'StackMapped: %s' );
-		aVars.push( oData.sStackMapped );
+		aVars.push( oError.stackMapped() );
 
-		if( oData.mOrigin ) {
+		const mOrigin = oError.errorOrigin();
+		if( mOrigin ) {
 			aMessage.push( 'Origin: %O' );
-			aVars.push( oData.mOrigin );
+			aVars.push( mOrigin );
 		} else {
 			aMessage.push( 'Stack: %s' );
-			aVars.push( oData.sStack );
+			aVars.push( oError.stackOrigin() );
 		}
 
-		this._send( [ aMessage.join( "\n" ), ...aVars ], oData )
+		this._send( [ aMessage.join( "\n" ), ...aVars ], oError );
 	}
 
 	_send( aArgs ) {

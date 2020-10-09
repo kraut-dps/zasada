@@ -50,12 +50,12 @@ describe( "Linker", () => {
 						fnAfterNew: ( oWidget ) => {
 							oWidget.sProp3 = 3;
 							// пока еще нет в хранилище
-							expect( oWidget.rel().index( 'index' ).onlyFirst().canEmpty().find() ).toEqual( null );
+							expect( oWidget._rel().index( 'index' ).onlyFirst().canEmpty().find() ).toEqual( null );
 							return oWidget;
 						},
 						fnBeforeRun: ( oWidget ) => {
 							// проверяем что виджет уже внутри storage
-							expect( oWidget.rel().index( 'index' ).onlyFirst().find() ).isPrototypeOf( TestWidget );
+							expect( oWidget._rel().index( 'index' ).onlyFirst().find() ).isPrototypeOf( TestWidget );
 						}
 					}
 				} );

@@ -16,7 +16,6 @@ export class CoreBox extends Box {
 	RelQuery;
 	deepKey;
 	mergeDeep;
-	oneLogger;
 
 	/**
 	 * @type function( oError: object ) :IError
@@ -121,15 +120,11 @@ export class CoreBox extends Box {
 
 	/**
 	 * @param {function( ILinker )} fnCallback
-	 * @param fnReject
 	 */
 	init( fnCallback ) {
+
 		// загрузим полифилы если надо
 		this.polyfills( () => {
-
-				// глобальный перехват ошибок
-				this.errorHandlers();
-
 				// передача объекта Linker для удобства
 				fnCallback( this.oneLinker() );
 			}
@@ -143,22 +138,5 @@ export class CoreBox extends Box {
 		}
 		this._initCheck( oPolyfills );
 		oPolyfills.base( fnResolve );
-	}
-
-	errorHandlers() {
-		// глобальный перехват ошибок
-		window.onerror = ( message, sourceURL, line, column, error ) => {
-			if( !error ) {
-				error = this.newError( { mOrigin: { message, sourceURL, line, column } } );
-			}
-			this.oneLogger().error( error );
-			return true;
-		};
-		window.onunhandledrejection = ( event ) => {
-			this.oneLogger().error( event.reason );
-			try {
-				event.preventDefault();
-			}catch(e){}
-		};
 	}
 }

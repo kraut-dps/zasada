@@ -1,62 +1,36 @@
 import oDeps from "./../_support/deps.js";
 import {RootBox} from "di-box";
-import {Widget} from "./../../src/index.js";
 import { RouteString } from "./../../src/log/route/RouteString.js";
 import { RouteConsole } from "./../../src/log/route/RouteConsole.js";
+import {ErrorWidget} from "../_support/ErrorWidget.js";
+import {LogBox} from "../../src/log/LogBox.js";
 
-import { Error as CustomError } from "./../../src/log/Error.js";
-
-let oRootBox, oHelper, oOriginConsole, fnSendSpy = jasmine.createSpy('spy');
-
-class ErrorWidget extends Widget {
-
-	static TYPE_ERROR = 1;
-	static TYPE_COMPAT = 2;
-	static TYPE_STRING = 3;
-	static TYPE_REL_FROM_BAD = 4;
-
-	iType = ErrorWidget.TYPE_ERROR;
-
-	run() {
-
-		this._my( { 'type': 'i:iType' } );
-
-		switch( this.iType ) {
-			case ErrorWidget.TYPE_ERROR:
-				throw new Error( 'error origin' );
-			case ErrorWidget.TYPE_COMPAT:
-				throw { message: 'error object', sourceURL: 'sourceURL', line: 'line' };
-			case ErrorWidget.TYPE_STRING:
-				throw 'error string';
-			case ErrorWidget.TYPE_REL_FROM_BAD:
-				this.rel().from( 'bad' ).find();
-		}
-	}
-}
+let oRootBox, oHelper, oDepsFix, oConsoleOrigin, fnSendSpy = jasmine.createSpy('spy');
 
 /**
  * @implements ILogRoute
  */
-class TestRouteString extends RouteString {
+class TestRoute extends RouteString {
 	_send( ...aArgs) {
 		fnSendSpy( ...aArgs );
 	}
 }
 
 /**
- * @implements ILogRoute
+ * внутри отправки ошибки куда то, ошибка ))
  */
-class TestRouteConsole extends RouteConsole {
-	_send( ...aArgs ) {
+class TestRouteWithError extends RouteString {
+	_send( ...aArgs) {
 		fnSendSpy( ...aArgs );
+		throw new Error("error in error");
 	}
 }
 
-
-describe( "Routes", () => {
+describe( "base", () => {
 
 	beforeAll( ( fnDone ) => {
 		oRootBox = new RootBox( oDeps );
+		oRootBox.box( 'log' ).init();
 		const oCoreBox = oRootBox.box( 'core' );
 		oCoreBox.init( () => {
 			// чтобы не заморачиваться на задержку обработки stackMap
@@ -74,205 +48,6 @@ describe( "Routes", () => {
 	} );
 
 
-	describe( "RouteString", () => {
-
-		beforeAll( () => {
-			oOriginConsole = window.console;
-		} );
-
-		afterAll( () => {
-			window.console = oOriginConsole;
-		} );
-
-		it( "base", async ( fnDone ) => {
-
-			oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteString() };
-
-			fnSendSpy.and.callFake( ( sMessage, oData ) => {
-				expect( oData.sMessage ).toEqual( 'error origin' );
-				fnDone();
-			} );
-
-			await oHelper.addHtml(
-				`<div class="_ _ErrorWidget"></div>`,
-			);
-		} );
-
-		it( 'undefined widget', async ( fnDone ) => {
-			oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new RouteString() };
-			window.console = { log: fnDone };
-			await oHelper.addHtml(
-				`<div class="_ _UndefinedWidget"></div>`,
-			);
-		} );
-
-		it( 'long outerHTML', async ( fnDone ) => {
-			oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new RouteString() };
-			window.console = { log: ( sMessage ) => {
-				expect(sMessage.indexOf('...') !== -1).toBe(true);
-				fnDone();
-			} };
-			const s100Len = "1".repeat(100);
-			await oHelper.addHtml(
-				`<div class="_ _UndefinedWidget" data="${s100Len}"></div>`,
-			);
-		} );
-
-		it( 'Error without name', async ( fnDone ) => {
-			oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new RouteString() };
-			window.console = { log: ( sMessage ) => {
-				expect(sMessage.indexOf('#') !== -1).toBe(false);
-				fnDone();
-			} };
-			await oHelper.addHtml(
-				`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_REL_FROM_BAD}"></div>`,
-			);
-		} );
-	} );
-
-	describe( "RouteConsole", () => {
-
-		beforeAll( () => {
-			oOriginConsole = window.console;
-		} );
-
-		afterAll( () => {
-			window.console = oOriginConsole;
-		} );
-
-		it( 'no blockId and widget', async ( fnDone ) => {
-
-			// null, но на самом деле из дефолтного конфига возьмет RouteConsole
-			oRootBox.box( 'log' ).oneLogger().oRoutes = null;
-
-			window.console = { error: () => {
-				window.console = oOriginConsole;
-				fnDone();
-			} };
-			await oHelper.addHtml(
-				`<div class="_"></div>`,
-			);
-
-		} );
-
-		it( 'undefined widget console', async ( fnDone ) => {
-			oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new RouteConsole() };
-			window.console = { error: () => {
-				window.console = oOriginConsole;
-				fnDone();
-			} };
-			await oHelper.addHtml(
-				`<div class="_ _UndefinedWidget"></div>`,
-			);
-		} );
-
-		it( 'throw string', async ( fnDone ) => {
-
-			oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new RouteConsole()};
-
-			class ThrowWidget extends Widget {
-				run() {
-					throw "exception";
-				}
-			}
-			oRootBox.box( 'core' ).oneLinker().setWidgets( { ThrowWidget } );
-			window.console = { error: () => {
-				window.console = oOriginConsole;
-				fnDone();
-			} };
-			await oHelper.addHtml(
-				`<div class="_ _ThrowWidget"></div>`,
-			);
-		} );
-
-	} );
-
-	it( "type compat", async ( fnDone ) => {
-
-		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteConsole() };
-
-		fnSendSpy.and.callFake( ( sMessage, oData ) => {
-			expect( oData.sMessage ).toEqual( 'error object' );
-			fnDone();
-		} );
-
-		await oHelper.addHtml(
-			`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_COMPAT}"></div>`,
-		);
-	} );
-
-	it( "type pure error", async ( fnDone ) => {
-
-		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteConsole() };
-
-		fnSendSpy.and.callFake( ( sMessage, oData ) => {
-			expect( oData.sMessage ).toEqual( 'error custom origin' );
-			fnDone();
-		} );
-
-		const oError = new CustomError();
-		oError.message =  'error custom origin';
-		throw oError;
-	} );
-
-	it( "type error", async ( fnDone ) => {
-
-		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteConsole() };
-
-		fnSendSpy.and.callFake( ( sMessage, oData ) => {
-			expect( oData.sMessage ).toEqual( 'error origin' );
-			fnDone();
-		} );
-
-		await oHelper.addHtml(
-			`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_ERROR}"></div>`,
-		);
-	} );
-
-	it( "type string", async ( fnDone ) => {
-
-		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteConsole() };
-
-		fnSendSpy.and.callFake( ( sMessage, oData ) => {
-			expect( oData.sMessage ).toEqual( 'error string' );
-			fnDone();
-		} );
-
-		await oHelper.addHtml(
-			`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_STRING}"></div>`,
-		);
-	} );
-
-	it( "type string fake", async ( fnDone ) => {
-
-		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteConsole() };
-
-		fnSendSpy.and.callFake( ( sMessage, oData ) => {
-			expect( oData.sMessage ).toEqual( 'error string' );
-			fnDone();
-		} );
-		window.onerror( 'error string' );
-	} );
-
-	it( "mapStack lib error", async ( fnDone ) => {
-
-		// ситуация, когда по какой то причине вместо подгрузки sourcemapped-stacktrace библиотеки
-		// произошла ошибка
-		oRootBox.box( 'log' ).oneLogger().pMapStack = () => {
-			throw "error";
-		};
-		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteString() };
-
-		fnSendSpy.and.callFake( ( sMessage ) => {
-			oRootBox.box( 'log' ).oneLogger().pMapStack = oDeps.log.pMapStack;
-			fnDone();
-		} );
-
-		await oHelper.addHtml(
-			`<div class="_ _ErrorWidget"></div>`,
-		);
-	} );
-
 	it( "unset route by name", () => {
 
 		const oLogger = oRootBox.box( 'log' ).oneLogger();
@@ -289,17 +64,127 @@ describe( "Routes", () => {
 
 	it( "MapStack", async ( fnDone ) => {
 
-		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteString() };
+		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRoute() };
 		oRootBox.box( 'log' ).oneLogger().pMapStack = oRootBox.box( 'log' ).pMapStack;
 
-		fnSendSpy.and.callFake( ( sMessage, oData ) => {
-			expect( oData.sMessage ).toEqual( 'error origin' );
-			fnDone();
+		fnSendSpy.and.callFake( ( sMessage, oError ) => {
+			if( oError.msg() === 'error origin' ) {
+				fnDone();
+			}
 		} );
 
 		await oHelper.addHtml(
 			`<div class="_ _ErrorWidget"></div>`,
 		);
 
+	} );
+} );
+
+describe( "SubErrors", () => {
+
+	beforeEach( () => {
+		fnSendSpy.calls.reset();
+		oConsoleOrigin = window.console;
+		oDepsFix = {...{}, ...oDeps};
+		oDepsFix.log.pMapStack = null;
+		oDepsFix.log.oRouteTypes = {
+			test: TestRouteWithError
+		};
+	} );
+
+	afterEach( () => {
+		window.console = oConsoleOrigin
+	} )
+
+	it( "error in onunhandledrejection", async ( fnDone ) => {
+
+		console = {
+			log: fnDone
+		};
+
+		oRootBox = new RootBox( oDepsFix );
+		oRootBox.box( 'log' ).init();
+
+		// просто вызовет console.log в errorInOnunhandledrejection
+		new Promise( () => {
+			throw oRootBox.box( 'log' ).newError( {} );
+		} );
+	} );
+
+	it( "error in onunhandledrejection 2", async ( fnDone ) => {
+
+		// подменим обработчик
+		class LogBoxUpdated extends LogBox {
+			errorInOnunhandledrejection( oError, oEvent ) {
+				if( oEvent.reason.message.indexOf( 'error in onunhandledrejection 2' ) !== -1 ) {
+					//expect( fnSendSpy.calls.count() ).toEqual( 1 );
+					fnDone();
+				}
+			}
+		}
+		oDepsFix.log._Box = LogBoxUpdated;
+		oRootBox = new RootBox( oDepsFix );
+		oRootBox.box( 'log' ).init();
+
+		new Promise( () => {
+			throw new Error('error in onunhandledrejection 2');
+		} );
+	} );
+
+	it( "error in onerror", async ( fnDone ) => {
+
+		console = {
+			log: fnDone
+		};
+
+		oRootBox = new RootBox( oDepsFix );
+		oRootBox.box( 'log' ).init();
+
+		oRootBox.box( 'core' ).init( () => {
+			oHelper = oRootBox.box( 'test' ).oneHelper();
+			oHelper.addHtml(
+				`<div class="_ _UndefinedWidget1"></div>`,
+			)
+		} );
+	} );
+
+	it( "error in onerror 2", async ( fnDone ) => {
+
+		// подменим обработчик
+		class LogBoxUpdated extends LogBox {
+			errorInOnerror( oError, message, sourceURL, line, column, oErrorOrigin ) {
+				if( oErrorOrigin.msg().indexOf( 'UndefinedWidget2' ) !== -1 ) {
+					//expect( fnSendSpy.calls.count() ).toEqual( 1 );
+					fnDone();
+				}
+			}
+		}
+		oDepsFix.log._Box = LogBoxUpdated;
+		oRootBox = new RootBox( oDepsFix );
+		oRootBox.box( 'log' ).init();
+
+		oRootBox.box( 'core' ).init( () => {
+			oHelper = oRootBox.box( 'test' ).oneHelper();
+			oHelper.addHtml(
+				`<div class="_ _UndefinedWidget2"></div>`,
+			)
+		} );
+	} );
+
+	it( "bad window.Error", async ( fnDone ) => {
+
+		const ErrorOrigin = window.Error;
+		window.Error = () => {
+			return {};
+		};
+
+		try{
+			oRootBox = new RootBox( oDepsFix );
+			throw oRootBox.box( 'log' ).newError( {} );
+		} catch( e ) {
+			expect( e.stackOrigin() ).toEqual( null );
+			window.Error = ErrorOrigin;
+			fnDone();
+		}
 	} );
 } );

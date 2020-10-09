@@ -7,7 +7,14 @@ export class CoreWidget {
 	__sId;
 	__sIdx;
 
+	/**
+	 * @type {function(): ILinker}
+	 */
 	oneLinker;
+
+	/**
+	 * @type {function(): IAttrs}
+	 */
 	oneAttrs;
 
 	/**
@@ -16,7 +23,7 @@ export class CoreWidget {
 	oneEl;
 
 	/**
-	 * @type {function( oError: object ): IError}
+	 * @type {function( oError: object ): ICustomError}
 	 */
 	newError;
 
@@ -29,8 +36,10 @@ export class CoreWidget {
 		this.__sId = sBlockId;
 	}
 
+	/**
+	 * @return {Promise<any> | void}
+	 */
 	run() {
-
 	}
 
 	/**
@@ -65,21 +74,21 @@ export class CoreWidget {
 	/**
 	 * выборка других виджетов
 	 * @example
-	 * .rel().child().typeOf( WidgetClass ).find()
+	 * ._rel().child().typeOf( WidgetClass ).find()
 	 *
 	 * @example
-	 * .rel().parent().typeOf( WidgetClass ).find()
+	 * ._rel().parent().typeOf( WidgetClass ).find()
 	 *
 	 * @example
-	 * .rel().index( 'index' ).find()
+	 * ._rel().index( 'index' ).find()
 	 *
 	 * @example
-	 * .rel().typeOf( WidgetClass ).onAdd( fnHandler: ( IWidget, sEvent, IRelQuery ) )
+	 * ._rel().typeOf( WidgetClass ).onAdd( fnHandler: ( IWidget, sEvent, IRelQuery ) )
 	 *
 	 * @param {string|Element|Element[]} mContext
 	 * @return {IRelQuery}
 	 */
-	rel( mContext = '' ) {
+	_rel( mContext = '' ) {
 		return this.oneLinker()
 			.newRelQuery()
 			.widget( this )
@@ -114,7 +123,7 @@ export class CoreWidget {
 	 * @param {string} sEvent название события
 	 * @param {any} mData данные события
 	 */
-	_fire( mContext, sEvent, mData ) {
+	_fire( mContext, sEvent, mData = {} ) {
 		const oEvent = new CustomEvent( sEvent, { detail: mData, cancelable: true } );
 		let bRet = true;
 		this._context( mContext ).forEach( ( eContext ) => {
@@ -202,9 +211,10 @@ export class CoreWidget {
 	 * @example
 	 * ._my( { prop1: 'i:attr1', prop2: 'b:attr2' } ) // cast i - int, b - bool, ... {@link Attrs.oCasts}
 	 * @param {array|object} mMap
+	 * @param {string|null} sAttrPrefix
 	 */
-	_my( mMap ) {
-		const oAttrs = this._attrs( '', mMap );
+	_my( mMap, sAttrPrefix = null ) {
+		const oAttrs = this._attrs( '', mMap, sAttrPrefix );
 		for ( let sAttr in oAttrs ) {
 			this[sAttr] = oAttrs[sAttr];
 		}
@@ -239,7 +249,7 @@ export class CoreWidget {
 	 * обертка Element.innerHTML и Element.insertAdjacentHTML для динамического изменения HTML
 	 * @param {string|Element|Element[]} mContext
 	 * @param {string} sHtml
-	 * @param {null|string} sInsertPosition beforebegin | afterbegin | beforeend | afterend for Element.insertAdjacentHTML
+	 * @param {null|InsertPosition} sInsertPosition for { @link Element.insertAdjacentHTML }
 	 * @return {Promise<any[]>}
 	 */
 	_html( mContext, sHtml, sInsertPosition = null ) {

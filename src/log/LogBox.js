@@ -29,6 +29,13 @@ export class LogBox extends Box{
 			delete oProps.mOrigin;
 		} else {
 			oError = new this.Error();
+			/*try{
+				throw new Error("1");
+			} catch( e ) {
+				if( e && e.stack ) {
+					oError.sStack = e.stack;
+				}
+			}*/
 		}
 		Object.assign( oError, oProps );
 		//for( let sKey in oProps ) {
@@ -37,5 +44,38 @@ export class LogBox extends Box{
 			//}
 		//}
 		return oError;
+	}
+
+	init() {
+		// глобальный перехват ошибок
+		window.onerror = ( message, sourceURL, line, column, oError ) => {
+			try {
+				if ( !oError ) {
+					oError = this.newError( {mOrigin: {message, sourceURL, line, column}} );
+				}
+				this.oneLogger().error( oError );
+			} catch( e ) {
+				this.errorInOnerror( e, message, sourceURL, line, column, oError );
+			}
+			return true;
+		};
+		window.onunhandledrejection = ( oEvent ) => {
+			try {
+				this.oneLogger().error( oEvent.reason );
+				//if( oEvent.preventDefault ) {
+				//	oEvent.preventDefault();
+				//}
+				return false;
+			} catch( e ) {
+				this.errorInOnunhandledrejection( e, oEvent )
+			}
+		};
+	}
+
+	errorInOnerror( oError, message, sourceURL, line, column, oErrorOrigin ) {
+		console.log( 'error in window.onerror: ',  oError, message, sourceURL, line, column, oErrorOrigin );
+	}
+	errorInOnunhandledrejection( oError, oEvent ) {
+		console.log( 'error in window.onunhandledrejection: ',  oError, oEvent.reason );
 	}
 }

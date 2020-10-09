@@ -8,9 +8,9 @@ describe( "Widget", () => {
 
 	beforeAll( ( fnDone ) => {
 		const oRootBox = new RootBox( oDeps );
-		oRootBox.box( 'core' ).init( () => {
+		oRootBox.box( 'core' ).init( ( oLinkerReal ) => {
 			oHelper = oRootBox.box( 'test' ).oneHelper();
-			oLinker = oRootBox.box( 'core' ).oneLinker();
+			oLinker = oLinkerReal;
 			fnDone();
 		} );
 	} );
@@ -83,7 +83,26 @@ describe( "Widget", () => {
 		expect( oWidget._el( 'Item' ).textContent ).toEqual('3' );
 	} );
 
-	it( ".rel()", async () => {
+	it( "._el() 2", async () => {
+
+		class Widget1 extends Widget {}
+		class Widget2 extends Widget{}
+		oLinker.setWidgets( { Widget1, Widget2 } );
+		await oHelper.addHtml(
+			'<div class="widget _ _Widget1 _Widget2">' +
+			'<div class="_Widget1-El">1</div>' +
+			'<div class="_Widget2-El">2</div>' +
+			'</div>'
+		);
+
+		const oWidget1 = oHelper.widget( '.widget', Widget1 );
+		const oWidget2 = oHelper.widget( '.widget', Widget2 );
+		expect( oWidget2._el( 'El' ).textContent ).toEqual("2" );
+		expect( oWidget1._el( 'El' ).textContent ).toEqual("1" );
+		expect( oWidget2._el( 'El' ).textContent ).toEqual("2" );
+	} );
+
+	it( "._rel()", async () => {
 
 		class TestWidget extends Widget {
 
@@ -102,12 +121,12 @@ describe( "Widget", () => {
 		const oWidget3 = oHelper.widget( '.widget3', TestWidget );
 
 		// тут только coverage rel false, остальное отдельно в RelQuery тестируется
-		expect( oWidget1.rel().cssSel('.widget1').find() ).toEqual( oWidget1 );
-		expect( oWidget1.rel().cssSel('.widget2').find() ).toEqual( oWidget2 );
-		expect( oWidget1.rel( 'Element' ).find() ).toEqual( oWidget3 );
+		expect( oWidget1._rel().cssSel('.widget1').find() ).toEqual( oWidget1 );
+		expect( oWidget1._rel().cssSel('.widget2').find() ).toEqual( oWidget2 );
+		expect( oWidget1._rel( 'Element' ).find() ).toEqual( oWidget3 );
 	} );
 
-	it( ".rel() prev next", async () => {
+	it( "._rel() prev next", async () => {
 
 		class TestWidget extends Widget {
 			_getIndex() {
@@ -136,19 +155,19 @@ describe( "Widget", () => {
 		const oWidget42 = oHelper.widget( '.widget4', TestWidget2 );
 		const oWidget41 = oHelper.widget( '.widget4', TestWidget );
 
-		expect( oWidget1.rel().next().typeOf( TestWidget2 ).find( true ) ).toEqual( [ oWidget2, oWidget42 ] );
-		expect( oWidget2.rel().prev().typeOf( TestWidget ).find( true ) ).toEqual( [ oWidget1 ] );
-		expect( oWidget1.rel().prev().withFrom( false ).typeOf( TestWidget ).canEmpty().find() ).toEqual( null );
-		expect( oWidget42.rel().self().typeOf( TestWidget ).find() ).toEqual( oWidget41 );
-		expect( oWidget1.rel().next().typeOf( TestWidget ).index( 'widget3' ).find() ).toEqual( oWidget3 );
-		expect( oWidget3.rel().next().typeOf( TestWidget ).canEmpty().index( 'widget1' ).find() ).toEqual( null );
-		expect( oWidget41.rel().prev().typeOf( TestWidget2 ).index( 'widget4' ).find() ).toEqual( oWidget42 );
-		expect( oWidget41.rel().prev().typeOf( TestWidget ).index( 'widget1' ).find() ).toEqual( oWidget1 );
-		expect( oWidget1.rel().prev().typeOf( TestWidget ).canEmpty().index( 'widget4' ).find() ).toEqual( null );
-		expect( oWidget1.rel().self().canEmpty().index( 'widget4' ).find() ).toEqual( null );
+		expect( oWidget1._rel().next().typeOf( TestWidget2 ).find( true ) ).toEqual( [ oWidget2, oWidget42 ] );
+		expect( oWidget2._rel().prev().typeOf( TestWidget ).find( true ) ).toEqual( [ oWidget1 ] );
+		expect( oWidget1._rel().prev().withFrom( false ).typeOf( TestWidget ).canEmpty().find() ).toEqual( null );
+		expect( oWidget42._rel().self().typeOf( TestWidget ).find() ).toEqual( oWidget41 );
+		expect( oWidget1._rel().next().typeOf( TestWidget ).index( 'widget3' ).find() ).toEqual( oWidget3 );
+		expect( oWidget3._rel().next().typeOf( TestWidget ).canEmpty().index( 'widget1' ).find() ).toEqual( null );
+		expect( oWidget41._rel().prev().typeOf( TestWidget2 ).index( 'widget4' ).find() ).toEqual( oWidget42 );
+		expect( oWidget41._rel().prev().typeOf( TestWidget ).index( 'widget1' ).find() ).toEqual( oWidget1 );
+		expect( oWidget1._rel().prev().typeOf( TestWidget ).canEmpty().index( 'widget4' ).find() ).toEqual( null );
+		expect( oWidget1._rel().self().canEmpty().index( 'widget4' ).find() ).toEqual( null );
 	} );
 
-	it( ".rel().onAdd()", async ( fnDone ) => {
+	it( "._rel().onAdd()", async ( fnDone ) => {
 
 		let fnAddGlobalSpy = jasmine.createSpy('spy' );
 		let fnAddSpy = jasmine.createSpy('spy' );
@@ -166,7 +185,7 @@ describe( "Widget", () => {
 
 		class TestArray extends Widget {
 			run() {
-				this.rel().child().typeOf( TestItem )
+				this._rel().child().typeOf( TestItem )
 					.onAdd( () => {
 						fnAddSpy();
 					} )
@@ -230,7 +249,7 @@ describe( "Widget", () => {
 		fnDone();
 	} );
 
-	it( ".rel().onAdd() 2", async ( fnDone ) => {
+	it( "._rel().onAdd() 2", async ( fnDone ) => {
 
 		let fnAddByTypeBadSpy = jasmine.createSpy('spy' );
 		let fnAddByTypeOkSpy = jasmine.createSpy('spy' );
@@ -241,22 +260,22 @@ describe( "Widget", () => {
 
 		class TestWidget extends Widget {
 			run() {
-				this.rel().typeOf( TestWidget ).onAdd( () => {
+				this._rel().typeOf( TestWidget ).onAdd( () => {
 					fnAddByTypeBadSpy();
 				} );
-				this.rel().typeOf( AddWidget ).onAdd( () => {
+				this._rel().typeOf( AddWidget ).onAdd( () => {
 					fnAddByTypeOkSpy();
 				} );
-				this.rel().index( 11 ).onAdd( () => {
+				this._rel().index( 11 ).onAdd( () => {
 					fnAddByIndexBadSpy();
 				} );
-				this.rel().index(12).onAdd( () => {
+				this._rel().index(12).onAdd( () => {
 					fnAddByIndexOkSpy();
 				} );
-				this.rel().parent().typeOf( AddWidget ).onAdd( () => {
+				this._rel().parent().typeOf( AddWidget ).onAdd( () => {
 					fnAddByWayBadSpy();
 				} );
-				this.rel().child().typeOf( AddWidget ).onAdd( () => {
+				this._rel().child().typeOf( AddWidget ).onAdd( () => {
 					fnAddByWayOkSpy();
 				} );
 			}
@@ -308,7 +327,7 @@ describe( "Widget", () => {
 		expect( fnOnSpy.calls.count() ).toEqual(0 );
 
 		oWidget._fire( '', 'event' );
-		oWidget._fire( '', 'event' );
+		oWidget._fire( '', 'event', {} );
 
 		expect( fnOnSpy.calls.count() ).toEqual(2 );
 
@@ -373,6 +392,8 @@ describe( "Widget", () => {
 		oWidget._my( { var1: 'i:iVar1', var2: 'sVar2' } );
 		expect( oWidget.iVar1 ).toEqual( 7 );
 		expect( oWidget.sVar2 ).toEqual( 'two' );
+		oWidget._my( { var3: 'i:iVar1' }, '' );
+		expect( oWidget.iVar1 ).toEqual( 3 );
 	} );
 
 	it( ".mod()", async () => {
@@ -466,7 +487,7 @@ describe( "Widget", () => {
 		const oWidget3 = oHelper.widget( '.widget3', TestWidget );
 
 		// widget4 exists
-		expect( oWidget2.rel().typeOf( TestWidget ).cssSel( '.widget4' ).canEmpty().find() !== null ).toEqual( true );
+		expect( oWidget2._rel().typeOf( TestWidget ).cssSel( '.widget4' ).canEmpty().find() !== null ).toEqual( true );
 
 		// widget4 replace widget5
 		await oWidget2._html( '', '<div class="widget5 _ _TestWidget"></div>' );
@@ -490,7 +511,7 @@ describe( "Widget", () => {
 		const oWidget9 = oHelper.widget( '.widget9', TestWidget );
 
 		// widget4 not exists
-		expect( oWidget2.rel().typeOf( TestWidget ).cssSel( '.widget4' ).canEmpty().find() !== null ).toEqual( false );
+		expect( oWidget2._rel().typeOf( TestWidget ).cssSel( '.widget4' ).canEmpty().find() !== null ).toEqual( false );
 
 		// widget1 next widget6
 		expect( oWidget1.bl().nextElementSibling === oWidget6.bl() ).toEqual( true );

@@ -1,6 +1,6 @@
 # Zasada
 
-Фабрика виджетов ECMAScript, для упрощения WEB разработки, с рендерингом HTML на сервере.
+Фабрика виджетов, для упрощения WEB разработки, с рендерингом HTML на сервере.
 
 ## Определения
  * _Виджет_ - ecmascript class с методом run ( запускается при привязке виджета к DOM узлу ).
@@ -8,10 +8,11 @@
  * _Элемент_ - DOM узел потомок _блока_.
  Смысл определений _блок_ и _элемент_ из [БЭМ методологии](https://ru.bem.info/methodology/quick-start/).
 ```html
-<div class="_ _Widget"> // блок
-    <span class="_Widget-Element1"></span> // элемент
-    <span class="_Widget-Element2"></span> // элемент
+<div class="_ _Widget"> // блок, к которому првязан виджет "Widget"
+    <span class="_Widget-Element1"></span> // элемент виджета Widget, с названием "Element1"
+    <span class="_Widget-Element2"></span> // элемент виджета Widget, с названием "Element2"
 </div>
+// "_" - специальный класс, чтобы в один запрос к DOM найти все узлы с виджетами
 ```
 ```javascript
 // виджет

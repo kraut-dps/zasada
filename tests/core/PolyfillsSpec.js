@@ -34,7 +34,7 @@ describe( "Polyfills", () => {
 	it( "simple classList 2", async ( fnDone ) => {
 
 		let bSet = true;
-		// особая логика, чтобы закрыть Polyfills метода ElementClassList 100%
+		// особая логика, чтобы закрыть coverage Polyfills метода ElementClassList 100%
 		window.DOMTokenList.prototype.add = () => {};
 		window.DOMTokenList.prototype.toggle = () => { bSet = false };
 		window.DOMTokenList.prototype.contains = () => { return bSet };
@@ -59,15 +59,19 @@ describe( "Polyfills", () => {
 
 	it( "bad promise polyfill url", ( fnDone ) => {
 
-		const cOriginPromise = window.Promise;
+		const cPromiseOrigin = window.Promise;
+		const fnOnErrorOrigin = window.onerror;
+
+		window.onerror = ( message ) => {
+			if( message.indexOf( 'badUrl.js' ) !== -1 ) {
+				window.Promise = cPromiseOrigin;
+				window.onerror = fnOnErrorOrigin
+				fnDone();
+			}
+		};
 
 		// почистим window от нормальных реализаций, чтобы загрузились полифилы
 		window.Promise = null;
-
-		window.onerror = ( message, sourceURL, line, column, error ) => {
-			window.Promise = cOriginPromise;
-			fnDone();
-		}
 
 		const oRoot = new RootBox( oDeps );
 

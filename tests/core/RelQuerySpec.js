@@ -27,7 +27,7 @@ describe( "RelQuery", () => {
 		const oRoot = new RootBox( oDeps );
 		oRoot.box( 'core' ).init( ( oLinkerReal ) => {
 			oLinker = oLinkerReal;
-			oRoot.box( 'core' ).oneLinker().setWidgets( { Widget } );
+			oLinker.setWidgets( { Widget } );
 			oStorage = oRoot.box( 'core' ).oneStorage();
 			oHelper = oRoot.box( 'test' ).newHelper();
 			fnDone();
@@ -237,7 +237,7 @@ describe( "RelQuery", () => {
 			const oTwo = oHelper.widget( '.two', Widget );
 
 			expect(
-				oOne.rel()
+				oOne._rel()
 					.index( "index" )
 					.find()
 			).toEqual( oTwo );
@@ -248,7 +248,7 @@ describe( "RelQuery", () => {
 			oStorage.reindex( document.body );
 			oStorage.reindex( document.body, false );
 			expect(
-				oTwo.rel()
+				oTwo._rel()
 					.index( "index" )
 					.find()
 			).toEqual( oOne );

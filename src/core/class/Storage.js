@@ -128,7 +128,7 @@ export class Storage {
 		}
 
 		if( eFrom && !(eFrom instanceof Element) ) {
-			throw this.newError( { message: '.rel typeof eFrom !== Element' } );
+			throw this.newError( { message: '._rel typeof eFrom !== Element' } );
 		}
 
 		if ( aIndex.length ) {

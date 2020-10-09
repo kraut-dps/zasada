@@ -12,7 +12,7 @@ import {mergeDeep} from "./utils/mergeDeep.js";
 
 import {LogBox} from "./log/LogBox.js";
 import {Logger} from "./log/Logger.js";
-import {Error} from "./log/Error.js";
+import {CustomError as Error} from "./log/CustomError.js";
 import {RouteConsole} from "./log/route/RouteConsole.js";
 
 export default {
@@ -28,12 +28,11 @@ export default {
 		Storage,
 		deepKey,
 		mergeDeep,
-		"&oneLogger": "log",
 		"&newError": "log",
 		oPolyfills: {
 			sPromiseUrl: __webpack_public_path__ + '/polyfill-promise.js',
 			pProto: () => import( /* webpackChunkName: "polyfill-proto" */ "proto-polyfill" ),
-			pMozilla: () => import( /* webpackChunkName: "polyfill-mozilla" */ "zasada/src/utils/polyfillsMozilla.js" ),
+			pMozilla: () => import( /* webpackChunkName: "polyfill-mozilla" */ "./utils/polyfillsMozilla.js" ),
 			pWeakMap: () => import( /* webpackChunkName: "polyfill-weakmap" */ 'weakmap-polyfill' ),
 			pClassList: () => import( /* webpackChunkName: "polyfill-classlist" */ 'classlist-polyfill' )
 		}
