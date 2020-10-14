@@ -143,7 +143,7 @@ export class Linker {
 		}
 	}
 
-	widget( eContext, sBlockId ) {
+	widget( eContext, sBlockId, oCodeOpts = null ) {
 		const oCustomOpts = { ...this._oOpts[ sBlockId ] };
 		const { fnBeforeNew } = oCustomOpts;
 		let oNewWidget;
@@ -152,7 +152,11 @@ export class Linker {
 				fnBeforeNew ? fnBeforeNew( oCustomOpts ) : null
 			)
 			.then( () => {
-				const { cWidget, oProps, fnAfterNew } = this.fnDeepKey( [ 'cWidget', 'oProps', 'fnAfterNew' ], oCustomOpts, this._oOpts[ sBlockId ] );
+				let aSources = [ oCustomOpts, this._oOpts[ sBlockId ] ];
+				if( oCodeOpts !== null ) {
+					aSources.unshift( oCodeOpts );
+				}
+				const { cWidget, oProps, fnAfterNew } = this.fnDeepKey( [ 'cWidget', 'oProps', 'fnAfterNew' ], ...aSources );
 				if ( !cWidget ) {
 					throw this.newError( {
 						message: 'Not set widget class "' + sBlockId + '"',
@@ -177,7 +181,9 @@ export class Linker {
 			.then( () => {
 				const { bSkipRun } = this.fnDeepKey( ['bSkipRun'], oCustomOpts, this._oOpts[ sBlockId ] );
 				if( !bSkipRun ) {
-					oNewWidget.run();
+					return Promise.resolve( oNewWidget.run() ).then( () => {
+						return oNewWidget;
+					} );
 				}
 				return oNewWidget;
 			} )

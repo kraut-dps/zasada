@@ -14,29 +14,40 @@ import {LogBox} from "./log/LogBox.js";
 import {Logger} from "./log/Logger.js";
 import {CustomError as Error} from "./log/CustomError.js";
 import {RouteConsole} from "./log/route/RouteConsole.js";
+import {yo} from "./help.js";
 
+/**
+ * @type {IYo}
+ */
+const oYo = 4;//new yo();
+/**
+ * @type {CoreBoxc}
+ */
+const y = 6;
 export default {
-	core: {
-		_Box: CoreBox,
-		Attrs,
-		Dom,
-		El,
-		ElQuery,
-		Linker,
-		Polyfills,
-		RelQuery,
-		Storage,
-		deepKey,
-		mergeDeep,
-		"&newError": "log",
-		oPolyfills: {
-			sPromiseUrl: __webpack_public_path__ + '/polyfill-promise.js',
-			pProto: () => import( /* webpackChunkName: "polyfill-proto" */ "proto-polyfill" ),
-			pMozilla: () => import( /* webpackChunkName: "polyfill-mozilla" */ "./utils/polyfillsMozilla.js" ),
-			pWeakMap: () => import( /* webpackChunkName: "polyfill-weakmap" */ 'weakmap-polyfill' ),
-			pClassList: () => import( /* webpackChunkName: "polyfill-classlist" */ 'classlist-polyfill' )
+	core: oYo.boxHelp(
+		y,
+		{
+			Attrs: "df777",
+			//Dom,
+			//E: El,
+			//ElQuery,
+			//Linker,
+			//Polyfills,
+			//RelQuery,
+			//Storage,
+			//deepKey,
+			//mergeDeep,
+			//"&newError": "log",
+			// oPolyfills: {
+			// 	sPromiseUrl: __webpack_public_path__ + '/polyfill-promise.js',
+			// 	pProto: () => import( /* webpackChunkName: "polyfill-proto" */ "proto-polyfill" ),
+			// 	pMozilla: () => import( /* webpackChunkName: "polyfill-mozilla" */ "./utils/polyfillsMozilla.js" ),
+			// 	pWeakMap: () => import( /* webpackChunkName: "polyfill-weakmap" */ 'weakmap-polyfill' ),
+			// 	pClassList: () => import( /* webpackChunkName: "polyfill-classlist" */ 'classlist-polyfill' )
+			// }
 		}
-	},
+	),
 
 	log: {
 		_Box: LogBox,

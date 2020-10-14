@@ -12,6 +12,7 @@
   "scripts": {
     "unit": "karma start ./tests/karma.conf.js --single-run",
     "coverage": "karma start ./tests/karma.conf.js --single-run --coverage",
+    "ts-types": "tsc -p ./tsTypes.json",
     "bolerplate": "mkdir -p ./app && cp -r ./webpack-bolerplate/* ./app",
     "webpack-bolerplate-development": "cd ./app && ./../node_modules/.bin/webpack --mode=development",
     "webpack-bolerplate-pproduction": "cd ./app && ./../node_modules/.bin/webpack --mode=production"

@@ -6,11 +6,11 @@ declare type TContext = string | Element| Element[];
 
 declare type TAttrMap = string[] | object;
 
-interface IPolyfillBox {
+interface IPolyfills {
 	base(fnCallback, fnReject) :void;
 }
 
-interface IAttrs {
+export interface IAttrs {
 	parse(aElements: Element[], mMap: (string | object | [][]), sPrefix?: string);
 }
 
@@ -227,6 +227,25 @@ interface IWidget {
 	_wrapError( fnHandler: () => any ): () => any;
 
 	_getIndex(): string;
+}
+
+interface ICoreBox{
+	Attrs: number//constructor<IAttrs>;
+	Dom: constructor<IDom>;
+	El: constructor<IEl>;
+	ElQuery: constructor<IElQuery>;
+	Linker: constructor<ILinker>;
+	Polyfills: constructor<IPolyfills>;
+	Storage: constructor<IStorage>;
+	RelQuery: constructor<IRelQuery>;
+
+	deepKey: ( mKeys: any, ...aSources: any ) => any;
+	mergeDeep: ( oTarget: object, oSource: object ) => void;
+	oPolyfills: any;
+}
+
+interface IYo {
+	boxHelp<ICoreBox>( Box: ICoreBox, oProps: Required<ICoreBox>): object;
 }
 
 export { IWidget as Widget };

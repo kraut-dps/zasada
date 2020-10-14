@@ -47,6 +47,13 @@ export class Attrs {
 	 */
 	sModSepItem = ',';
 
+	/**
+	 * Разбор атрибутов
+	 * @param {Element[]} aElements
+	 * @param {string|string[]|object} mMap
+	 * @param {string|null} sPrefix
+	 * @return {{}}
+	 */
 	parse( aElements, mMap, sPrefix = null ) {
 		const oRet = {};
 		const aMap = this._parseMap( mMap );

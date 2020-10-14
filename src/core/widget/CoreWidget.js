@@ -246,6 +246,15 @@ export class CoreWidget {
 	}
 
 	/**
+	 * отвязать виджеты от контекста
+	 * @param {string|Element|Element[]} mContext
+	 * @param {boolean} bWithSelf включая DOM элемент контекста?
+	 */
+	_widget( eContext, sBlockId, oCodeOpts = null ) {
+		return this.oneLinker().widget( eContext, sBlockId, oCodeOpts );
+	}
+
+	/**
 	 * обертка Element.innerHTML и Element.insertAdjacentHTML для динамического изменения HTML
 	 * @param {string|Element|Element[]} mContext
 	 * @param {string} sHtml

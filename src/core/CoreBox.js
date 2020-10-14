@@ -1,26 +1,23 @@
 import { Box } from "di-box";
+
+/**
+ * @implements ICoreBox
+ */
 export class CoreBox extends Box {
 
-	/**
-	 * @type {function(new:Attrs)}
-	 */
 	Attrs;
 	Dom;
 	El;
 	ElQuery;
 	Linker;
 	Polyfills;
-
 	Storage;
-	oPolyfills;
 	RelQuery;
+
 	deepKey;
 	mergeDeep;
 
-	/**
-	 * @type function( oError: object ) :IError
-	 */
-	newError;
+	oPolyfills;
 
 	/**
 	 * @type {function(): Linker}
@@ -116,6 +113,10 @@ export class CoreBox extends Box {
 		const oElQuery = new this.ElQuery( sEl );
 		oElQuery.newError = this.newError;
 		return oElQuery;
+	}
+
+	newError( oError ) {
+		return oError;
 	}
 
 	/**
