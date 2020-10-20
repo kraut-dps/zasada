@@ -229,8 +229,8 @@ interface IWidget {
 	_getIndex(): string;
 }
 
-interface ICoreBox{
-	Attrs: number//constructor<IAttrs>;
+/*interface ICoreBox{
+	Attrs: constructor<IAttrs>;
 	Dom: constructor<IDom>;
 	El: constructor<IEl>;
 	ElQuery: constructor<IElQuery>;
@@ -242,7 +242,7 @@ interface ICoreBox{
 	deepKey: ( mKeys: any, ...aSources: any ) => any;
 	mergeDeep: ( oTarget: object, oSource: object ) => void;
 	oPolyfills: any;
-}
+}*/
 
 interface IYo {
 	boxHelp<ICoreBox>( Box: ICoreBox, oProps: Required<ICoreBox>): object;

@@ -33,7 +33,7 @@ if( !Object.assign ) {
 /*!
  * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent#Polyfill
  */
-if( typeof window.CustomEvent !== 'function' ) {
+/*if( typeof window.CustomEvent !== 'function' ) {
 	function CustomEvent( event, params ) {
 		params = params || {bubbles: false, cancelable: false, detail: undefined};
 		const evt = document.createEvent( 'CustomEvent' );
@@ -43,7 +43,7 @@ if( typeof window.CustomEvent !== 'function' ) {
 
 	CustomEvent.prototype = window.Event.prototype;
 	window.CustomEvent = CustomEvent;
-}
+}*/
 
 /*!
  * https://developer.mozilla.org/en-US/docs/Web/API/Element/matches#Polyfill

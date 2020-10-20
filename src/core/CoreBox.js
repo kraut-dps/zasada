@@ -1,10 +1,14 @@
 import { Box } from "di-box";
+//import { ICoreBox, IAttrs } from "../utils/interfaces.js";
+
 
 /**
  * @implements ICoreBox
  */
 export class CoreBox extends Box {
-
+	/**
+	 * @type {IAttrs}
+	 */
 	Attrs;
 	Dom;
 	El;

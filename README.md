@@ -7,6 +7,7 @@
  * _Блок_ - DOM узел, к которому привязан _виджет_.
  * _Элемент_ - DOM узел потомок _блока_.
  Смысл определений _блок_ и _элемент_ из [БЭМ методологии](https://ru.bem.info/methodology/quick-start/).
+## Разметка 
 ```html
 <div class="_ _Widget"> // блок, к которому првязан виджет "Widget"
     <span class="_Widget-Element1"></span> // элемент виджета Widget, с названием "Element1"
@@ -43,6 +44,15 @@ class Widget {
  * Интерфейсы из коробки для доступа к данным в атрибутах _блоков_ и _элементов_ ._attr, ._attrs, ._my
  * Интерфейсы из коробки для работы с событиями ._on, ._off, ._fire
  * Средний размер 38 kb, 10 kb gz
+
+## Установка
+```bash
+npm install -g degit
+npx degit zasada/webpack-bolerplate app
+cd app
+npm i
+npm run dev
+```
 
 ## Концепция
  * По аналогии с DOM, CSSOM еще одна Object Model, где узлами являются DOM элементы с привязанным js функционалом.
