@@ -216,6 +216,9 @@ export class Storage {
 			}
 			for ( let j = 0; j < aBlockIds.length; j++ ) {
 				sBlockId = aBlockIds[ j ];
+				if( !oWidgets[ sBlockId ] ) {
+					continue;
+				}
 				if( cWidget && oWidgets[ sBlockId ] instanceof cWidget || !cWidget ) {
 					aRet.push( oWidgets[ sBlockId ] );
 					if ( bOnlyFirst ) {
