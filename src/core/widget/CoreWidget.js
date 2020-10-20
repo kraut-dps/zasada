@@ -42,6 +42,12 @@ export class CoreWidget {
 	run() {
 	}
 
+	attach() {
+	}
+
+	detach() {
+	}
+
 	/**
 	 * DOM элемент основного узла виджета
 	 * @return {Element}
@@ -243,6 +249,13 @@ export class CoreWidget {
 		this._context( mContext ).forEach( ( eContext ) => {
 			this.oneLinker().unlink( eContext, bWithSelf );
 		} );
+	}
+
+	/**
+	 * динамическое создание виджета
+	 */
+	_widget( eContext, sBlockId, oCustomOpts = null ) {
+		return this.oneLinker().widget( eContext, sBlockId, oCustomOpts );
 	}
 
 	/**

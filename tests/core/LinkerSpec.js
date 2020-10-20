@@ -151,37 +151,27 @@ describe( "Linker", () => {
 	describe( 'link', () => {
 
 		it( 'not-found-blockid', async ( fnDone ) => {
-			window.onerror = ( message, sourceURL, line, column, error ) => {
-				if( error && error.sHelp === 'not-found-blockid' ) {
+			await oHelper.addHtml(
+				`<div class="_"></div>`
+			).catch( ( oError ) => {
+				if( oError && oError.sHelp === 'not-found-blockid' ) {
 					fnDone();
 					return true;
 				}
-			}
-			await oHelper.addHtml(
-				`<div class="_"></div>`
-			);
+			} )
 		} );
 
 		it( 'no-widget-opts', async ( fnDone ) => {
-			window.onerror = ( message, sourceURL, line, column, error ) => {
-				if( error && error.sHelp === 'no-widget-opts' ) {
-					fnDone();
-					return true;
-				}
-			}
 			await oHelper.addHtml(
 				`<div class="_ _UnknownWidget"></div>`
-			);
+			).catch( ( oError ) => {
+				if( oError && oError.sHelp === 'no-widget-opts' ) {
+					fnDone();
+				}
+			} )
 		} );
 
 		it( 'no-widget-class', async ( fnDone ) => {
-
-			window.onunhandledrejection = ( event ) => {
-				if( event.reason && event.reason.sHelp === 'no-widget-class' ) {
-					fnDone();
-					return true;
-				}
-			}
 
 			oLinker.setOpts( {
 				TestWidget: {}
@@ -189,17 +179,14 @@ describe( "Linker", () => {
 
 			await oHelper.addHtml(
 				`<div class="_ _TestWidget"></div>`
-			);
+			).catch( ( oError ) => {
+				if( oError && oError.sHelp === 'no-widget-class' ) {
+					fnDone();
+				}
+			} )
 		} );
 
 		it( "no-widget-prop", async ( fnDone ) => {
-
-			window.onunhandledrejection = ( event ) => {
-				if( event.reason && event.reason.sHelp === 'no-widget-prop' ) {
-					fnDone();
-					return true;
-				}
-			}
 
 			class TestWidget extends Widget {
 				sProp1;
@@ -215,7 +202,11 @@ describe( "Linker", () => {
 			} );
 			await oHelper.addHtml(
 				'<div class="widget _ _TestWidget"></div>'
-			);
+			).catch( ( oError ) => {
+				if( oError && oError.sHelp === 'no-widget-prop' ) {
+					fnDone();
+				}
+			} )
 		} );
 
 		it( 'link with self', async ( fnDone ) => {

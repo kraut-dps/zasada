@@ -124,11 +124,11 @@ export class Linker {
 						}
 						aPromises.push( this.widget( eModelContext, sBlockId ) );
 					} catch ( oError ) {
-						setTimeout( () => { throw oError; } );
+						aPromises.push( Promise.reject( oError ) );
 					}
 				}
 			} catch ( oError ) {
-				setTimeout( () => { throw oError; } );
+				aPromises.push( Promise.reject( oError ) );
 			}
 		}
 		return Promise.all( aPromises );
@@ -143,8 +143,8 @@ export class Linker {
 		}
 	}
 
-	widget( eContext, sBlockId ) {
-		const oCustomOpts = { ...this._oOpts[ sBlockId ] };
+	widget( eContext, sBlockId, oCustomOpts = null ) {
+		oCustomOpts = { ...(oCustomOpts || {} ), ...this._oOpts[ sBlockId ] };
 		const { fnBeforeNew } = oCustomOpts;
 		let oNewWidget;
 		return Promise
@@ -152,7 +152,8 @@ export class Linker {
 				fnBeforeNew ? fnBeforeNew( oCustomOpts ) : null
 			)
 			.then( () => {
-				const { cWidget, oProps, fnAfterNew } = this.fnDeepKey( [ 'cWidget', 'oProps', 'fnAfterNew' ], oCustomOpts, this._oOpts[ sBlockId ] );
+				oCustomOpts = { ...oCustomOpts, ...this._oOpts[ sBlockId ] };
+				const { cWidget, oProps, fnAfterNew } = this.fnDeepKey( [ 'cWidget', 'oProps', 'fnAfterNew' ], oCustomOpts );
 				if ( !cWidget ) {
 					throw this.newError( {
 						message: 'Not set widget class "' + sBlockId + '"',
@@ -177,7 +178,9 @@ export class Linker {
 			.then( () => {
 				const { bSkipRun } = this.fnDeepKey( ['bSkipRun'], oCustomOpts, this._oOpts[ sBlockId ] );
 				if( !bSkipRun ) {
-					oNewWidget.run();
+					return Promise.resolve( oNewWidget.run() ).then( () => {
+						return oNewWidget;
+					} );
 				}
 				return oNewWidget;
 			} )

@@ -18,11 +18,6 @@ export class CoreBox extends Box {
 	mergeDeep;
 
 	/**
-	 * @type function( oError: object ) :IError
-	 */
-	newError;
-
-	/**
 	 * @type {function(): Linker}
 	 */
 	oneLinker() {
@@ -116,6 +111,10 @@ export class CoreBox extends Box {
 		const oElQuery = new this.ElQuery( sEl );
 		oElQuery.newError = this.newError;
 		return oElQuery;
+	}
+
+	newError( oError ) {
+		return oError;
 	}
 
 	/**

@@ -59,6 +59,45 @@ describe( "Widget", () => {
 		expect( fnDestructorSpy.calls.count() ).toEqual(1 );
 	} );
 
+	it( "._widget()", async () => {
+		let fnRunTestSubWidget1Spy = jasmine.createSpy('spy' );
+		let fnRunTestSubWidget2Spy = jasmine.createSpy('spy' );
+
+		class TestWidget extends Widget {
+			async run() {
+				await this._widget( this.bl(), 'TestSubWidget1' );
+				return await this._widget( this.bl(), 'TestSubWidget2', { oProps: { iVar: 10 } } );
+			}
+		}
+
+		class TestSubWidget1 extends Widget {
+			run() {
+				fnRunTestSubWidget1Spy();
+			}
+		}
+
+		class TestSubWidget2 extends Widget {
+			iVar = 3;
+			run() {
+				if( this.iVar === 10 ) {
+					fnRunTestSubWidget2Spy();
+				}
+			}
+		}
+
+		oLinker.setWidgets( { TestWidget, TestSubWidget1, TestSubWidget2 } );
+
+		expect( fnRunTestSubWidget1Spy.calls.count() ).toEqual( 0 );
+		expect( fnRunTestSubWidget2Spy.calls.count() ).toEqual( 0 );
+
+		await oHelper.addHtml(
+			'<div class="widget _ _TestWidget"></div>'
+		);
+
+		expect( fnRunTestSubWidget1Spy.calls.count() ).toEqual( 1 );
+		expect( fnRunTestSubWidget2Spy.calls.count() ).toEqual( 1 );
+	} );
+
 	it( "._el()", async () => {
 
 		oLinker.setWidgets( { Widget } );

@@ -124,7 +124,7 @@ interface ILinker {
 	setImports( oDynamicImports: object ): void;
 	link( eContext: Element, bWithSelf?: boolean ): Promise<any[]>;
 	unlink( eContext: Element, bWithSelf? : boolean ): void;
-	widget( eContext: Element, sBlockId : string ): Promise<any[]>;
+	widget( eContext: Element, sBlockId : string, oCustomOpts: object|null ): Promise<any[]>;
 }
 
 interface ILogRaw {
@@ -217,6 +217,8 @@ interface IWidget {
 	_link( mContext: TContext, bWithSelf?: boolean ): Promise<any>;
 
 	_unlink( mContext: TContext, bWithSelf?: boolean ): void;
+
+	_widget( eContext: Element, sBlockId: string, oCustomOpts: object | null ): Promise<any>;
 
 	_html( mContext: TContext, sHtml: string, sInsertPosition?: InsertPosition ): Promise<any>;
 

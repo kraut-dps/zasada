@@ -117,7 +117,6 @@ describe( "SubErrors", () => {
 		class LogBoxUpdated extends LogBox {
 			errorInOnunhandledrejection( oError, oEvent ) {
 				if( oEvent.reason.message.indexOf( 'error in onunhandledrejection 2' ) !== -1 ) {
-					//expect( fnSendSpy.calls.count() ).toEqual( 1 );
 					fnDone();
 				}
 			}
@@ -140,20 +139,20 @@ describe( "SubErrors", () => {
 		oRootBox = new RootBox( oDepsFix );
 		oRootBox.box( 'log' ).init();
 
-		oRootBox.box( 'core' ).init( () => {
-			oHelper = oRootBox.box( 'test' ).oneHelper();
-			oHelper.addHtml(
-				`<div class="_ _UndefinedWidget1"></div>`,
-			)
-		} );
+		setTimeout(
+			() => {
+				throw new Error();
+			},
+			0
+		);
 	} );
 
-	it( "error in onerror 2", async ( fnDone ) => {
+	 it( "error in onerror 2", ( fnDone ) => {
 
 		// подменим обработчик
 		class LogBoxUpdated extends LogBox {
 			errorInOnerror( oError, message, sourceURL, line, column, oErrorOrigin ) {
-				if( oErrorOrigin.msg().indexOf( 'UndefinedWidget2' ) !== -1 ) {
+				if( oErrorOrigin.message === 'error in onerror 2' ) {
 					//expect( fnSendSpy.calls.count() ).toEqual( 1 );
 					fnDone();
 				}
@@ -163,12 +162,12 @@ describe( "SubErrors", () => {
 		oRootBox = new RootBox( oDepsFix );
 		oRootBox.box( 'log' ).init();
 
-		oRootBox.box( 'core' ).init( () => {
-			oHelper = oRootBox.box( 'test' ).oneHelper();
-			oHelper.addHtml(
-				`<div class="_ _UndefinedWidget2"></div>`,
-			)
-		} );
+		 setTimeout(
+			 () => {
+				throw new Error( 'error in onerror 2' );
+			 },
+			 0
+		);
 	} );
 
 	it( "bad window.Error", async ( fnDone ) => {
