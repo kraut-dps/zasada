@@ -1,8 +1,7 @@
 import { Box } from "di-box";
 export class CoreBox extends Box {
-
 	/**
-	 * @type {function(new:Attrs)}
+	 * @type {IAttrs}
 	 */
 	Attrs;
 	Dom;
@@ -10,10 +9,9 @@ export class CoreBox extends Box {
 	ElQuery;
 	Linker;
 	Polyfills;
-
 	Storage;
-	oPolyfills;
 	RelQuery;
+
 	deepKey;
 	mergeDeep;
 

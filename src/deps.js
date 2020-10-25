@@ -18,7 +18,7 @@ import {RouteConsole} from "./log/route/RouteConsole.js";
 export default {
 	core: {
 		_Box: CoreBox,
-		Attrs,
+		Attrs: Attrs,
 		Dom,
 		El,
 		ElQuery,
