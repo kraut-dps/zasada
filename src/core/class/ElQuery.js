@@ -1,4 +1,7 @@
 /**
+ * @typedef {import('./../interfaces').IElQuery} IElQuery
+ */
+/**
  * формирование запроса на поиск елемента внутри блока
  * @implements IElQuery
  */
@@ -76,7 +79,10 @@ export class ElQuery {
 		this.sId = sId;
 		return this;
 	}
-	
+
+	getId() {
+		return this.sId;
+	}
 
 	/**
 	 * @param {boolean} bWithFrom
@@ -86,7 +92,11 @@ export class ElQuery {
 		this.bWithFrom = bWithFrom;
 		return this;
 	}
-	
+
+	isWithFrom() {
+		return this.bWithFrom;
+	}
+
 	/**
 	 * @param {boolean} bCanEmpty
 	 * @return {IElQuery|this}
@@ -95,7 +105,11 @@ export class ElQuery {
 		this.bCanEmpty = bCanEmpty;
 		return this;
 	}
-	
+
+	isCanEmpty() {
+		return this.bCanEmpty;
+	}
+
 	/**
 	 * @param {boolean} bOnlyFirst
 	 * @return {IElQuery|this}
@@ -105,6 +119,10 @@ export class ElQuery {
 		return this;
 	}
 
+	isOnlyFirst() {
+		return this.bOnlyFirst;
+	}
+
 	/**
 	 * @param {boolean} bNoCache
 	 * @return {IElQuery|this}
@@ -112,5 +130,9 @@ export class ElQuery {
 	noCache( bNoCache ) {
 		this.bNoCache = bNoCache;
 		return this;
+	}
+
+	isNoCache() {
+		return this.bNoCache;
 	}
 }

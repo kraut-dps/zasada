@@ -1,11 +1,20 @@
 /**
+ * @typedef {import('./../interfaces').ILinker} ILinker
+ * @typedef {import('./../interfaces').ILinkerOpts} ILinkerOpts
+ * @typedef {import('./../interfaces').ILinkerClasses} ILinkerClasses
+ * @typedef {import('./../interfaces').IWidget} IWidget
+ * @typedef {import('./../interfaces').IWidgetConstructor} IWidgetConstructor
+ * @typedef {import('./../interfaces').IDom} IDom
+ * @typedef {import('./../interfaces').IStorage} IStorage
+ */
+/**
  * основной класс связывающий {Element} с виджетами
  * @implements ILinker
  */
 export class Linker {
 
 	/**
-	 * @type {function(Element, string, function() ): IWidget}
+	 * @type {function(Element, string, IWidgetConstructor ): IWidget}
 	 */
 	newWidget;
 
@@ -24,12 +33,12 @@ export class Linker {
 	oneDom;
 
 	/**
-	 * @type {function( oTarget: object|*, oSource: object|* ): void }
+	 * @type {function( object, object ): void }
 	 */
 	fnMergeDeep;
 
 	/**
-	 * @type {function( mKeys: object|array, aSources: ...object ): void }
+	 * @type {function( object|array, ...object ): object }
 	 */
 	fnDeepKey;
 

@@ -1,5 +1,6 @@
 /**
  * логирование ошибок
+ * @type ILogger
  */
 export class Logger {
 

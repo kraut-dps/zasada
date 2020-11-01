@@ -1,27 +1,21 @@
-import {constructor, help} from "./help.js";
+//import {help} from "./help.js";
+import {Attr1} from "./Attr1.js";
+import {Box1} from "./Box1.js";
+import {box} from "./box.js";
 
-/**
- * @implements IAttr
- */
-class Attr1{
-    do() {
-        console.log(1);
-    }
-
-}
 class Attr2{
 
 }
 
-class Box1{
-    /**
-     * @type {IAttr}
-     */
-    Attr1;
-}
-
-const oHelp = new help();
+/*const oHelp = new help();
 oHelp.boxHelp(
+    Box1,
+    {
+        Attr1: Attr1
+    }
+);*/
+
+box(
     Box1,
     {
         Attr1: Attr2

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /*!
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
  */
@@ -43,7 +44,7 @@ if( !Object.assign ) {
 
 	CustomEvent.prototype = window.Event.prototype;
 	window.CustomEvent = CustomEvent;
-}*/
+}
 
 /*!
  * https://developer.mozilla.org/en-US/docs/Web/API/Element/matches#Polyfill
@@ -76,3 +77,4 @@ if( !Element.prototype.closest ) {
 		return null;
 	};
 }
+export {};

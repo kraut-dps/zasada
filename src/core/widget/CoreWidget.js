@@ -1,4 +1,14 @@
 /**
+ * @typedef {import('./../interfaces').IWidget} IWidget
+ * @typedef {import('./../interfaces').ILinker} ILinker
+ * @typedef {import('./../interfaces').IAttrs} IAttrs
+ * @typedef {import('./../interfaces').IEl} IEl
+ * @typedef {import('./../interfaces').IElQuery} IElQuery
+ * @typedef {import('./../interfaces').IRelQuery} IRelQuery
+ * @typedef {import('./../interfaces').ICustomError} ICustomError
+ * @typedef {import('./../interfaces').TContext} TContext
+ */
+/**
  * виджет
  * @implements IWidget
  */
@@ -23,7 +33,7 @@ export class CoreWidget {
 	oneEl;
 
 	/**
-	 * @type {function( oError: object ): ICustomError}
+	 * @type {function( object ): ICustomError}
 	 */
 	newError;
 
@@ -102,9 +112,9 @@ export class CoreWidget {
 	}
 
 	/**
-	 * @param {string|Element|Element[]} mContext
+	 * @param {TContext} mContext
 	 * @param {string} sEvent
-	 * @param {function} fnHandler
+	 * @param {function(Event):any} fnHandler
 	 */
 	_on( mContext, sEvent, fnHandler ) {
 		this._context( mContext ).forEach( ( eContext ) => {
@@ -151,7 +161,7 @@ export class CoreWidget {
 	 * 
 	 * @param {string|Element|Element[]} mContext
 	 * @param {string|array|object} mMod
-	 * @param {bool|string} mValue
+	 * @param {boolean|string} mValue
 	 */
 	_mod( mContext, mMod, mValue ) {
 		this._context( mContext ).forEach( ( eContext ) => {
@@ -168,7 +178,7 @@ export class CoreWidget {
 					}
 					break;
 				case 'string':
-					eContext.classList.toggle( mMod, mValue );
+					eContext.classList.toggle( mMod, !!mValue );
 					break;
 			}
 		} );
@@ -331,7 +341,7 @@ export class CoreWidget {
 	}
 
 	/**
-	 * @param {string|string[]|Element|Element[]} mContext
+	 * @param {any} mContext
 	 * @return {Element[]}
 	 */
 	_context( mContext ) {
@@ -360,8 +370,8 @@ export class CoreWidget {
 
 	/**
 	 * возможность обернуть обработчик, чтобы обогатить Error, добавить в него объект виджета
-	 * @param {function} fnHandler
-	 * @return {function}
+	 * @param {any} fnHandler
+	 * @return {any}
 	 */
 	_wrapError( fnHandler ) {
 		if( !this._oWrapHandlers ) {

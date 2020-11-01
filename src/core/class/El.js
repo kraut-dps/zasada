@@ -1,17 +1,20 @@
 /**
+ * @typedef {import('./../interfaces').IEl} IEl
+ * @typedef {import('./../interfaces').IElQuery} IElQuery
+ * @typedef {import('./../interfaces').IDom} IDom
+ * @typedef {import('./../interfaces').IWidget} IWidget
+ */
+/**
  * поиск элементов
  * @implements IEl
  */
 export class El{
 
 	/**
-	 * @type {function( sQuery: string ): IElQuery}
+	 * @type {function( string ):IElQuery}
 	 */
 	newElQuery;
 
-	/**
-	 * @type {function( oError: object ): IError}
-	 */
 	newError;
 
 	/**
@@ -50,19 +53,19 @@ export class El{
 			aElements = this._findEl( oWidget, oElQuery );
 
 			// сохраняем в кеше
-			if( !oElQuery.bNoCache ) {
+			if( !oElQuery.isNoCache() ) {
 				this._oEls.set( oWidget, { ...{}, ...this._oEls.get( oWidget ), [oElQuery.key()]: aElements } );
 			}
 		}
 
 		if( aElements.length === 0 ) {
-			if( !oElQuery.bCanEmpty ) {
+			if( !oElQuery.isCanEmpty() ) {
 				throw this.newError( { message: 'Element "_' + oWidget.blockId() + '-' + mQuery + '" not found', sHelp: 'element-not-found' } );
 			} else {
-				return oElQuery.bOnlyFirst ? null : [];
+				return oElQuery.isOnlyFirst() ? null : [];
 			}
 		} else {
-			return oElQuery.bOnlyFirst ? aElements[ 0 ] : aElements;
+			return oElQuery.isOnlyFirst() ? aElements[ 0 ] : aElements;
 		}
 	}
 	resetCache( oWidget ) {
@@ -104,14 +107,21 @@ export class El{
 		return false;
 	}
 
+	/**
+	 *
+	 * @param {IWidget} oWidget
+	 * @param {IElQuery} oElQuery
+	 * @return {Element[]}
+	 * @private
+	 */
 	_findEl( oWidget, oElQuery ) {
 		const oDom = this.oneDom();
-		const sSelector = oDom.sel( oWidget.blockId(), oElQuery.sId );
+		const sSelector = oDom.sel( oWidget.blockId(), oElQuery.getId() );
 		return oDom.children(
 			oWidget.bl(),
 			sSelector,
-			oElQuery.bWithFrom,
-			oElQuery.bOnlyFirst
+			oElQuery.isWithFrom(),
+			oElQuery.isOnlyFirst()
 		);
 	}
 

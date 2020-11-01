@@ -1,11 +1,30 @@
 import { Box } from "di-box";
+
+/**
+ * @typedef {import('./interfaces').IAttrs} IAttrs
+ * @typedef {import('./interfaces').IAttrsConstructor} IAttrsConstructor
+ * @typedef {import('./interfaces').IDom} IDom
+ * @typedef {import('./interfaces').IDomConstructor} IDomConstructor
+ * @typedef {import('./interfaces').IEl} IEl
+ * @typedef {import('./interfaces').IElConstructor} IElConstructor
+ * @typedef {import('./interfaces').ILinker} ILinker
+ * @typedef {import('./interfaces').IWidget} IWidget
+ */
+
 export class CoreBox extends Box {
+
 	/**
-	 * @type {IAttrs}
+	 * @type {IAttrsConstructor}
 	 */
 	Attrs;
+
+	/**
+	 * @type {IDomConstructor}
+	 */
 	Dom;
+
 	El;
+
 	ElQuery;
 	Linker;
 	Polyfills;
@@ -15,8 +34,10 @@ export class CoreBox extends Box {
 	deepKey;
 	mergeDeep;
 
+	oPolyfills;
+
 	/**
-	 * @type {function(): Linker}
+	 * @return {ILinker}
 	 */
 	oneLinker() {
 		return this.one( this.newLinker );
@@ -35,7 +56,7 @@ export class CoreBox extends Box {
 	}
 
 	/**
-	 * @type {function(): Dom}
+	 * @return {IDom}
 	 */
 	oneDom() {
 		return this.one( this.newDom );
@@ -44,9 +65,6 @@ export class CoreBox extends Box {
 		return new this.Dom();
 	}
 
-	/**
-	 * @type {function(): Storage}
-	 */
 	oneStorage() {
 		return this.one( this.newStorage );
 	}
@@ -59,7 +77,7 @@ export class CoreBox extends Box {
 	}
 
 	/**
-	 * @type {function(): IAttrs}
+	 * @return {IAttrs}
 	 */
 	oneAttrs() {
 		return this.one( this.newAttrs );
@@ -70,9 +88,6 @@ export class CoreBox extends Box {
 		return oAttrs;
 	}
 
-	/**
-	 * @type {function(): El}
-	 */
 	oneEl() {
 		return this.one( this.newEl );
 	}
@@ -87,7 +102,7 @@ export class CoreBox extends Box {
 	/**
 	 * @param {Element} eElement
 	 * @param {string} sBlockId
-	 * @param {function( Element, string ) } cClass
+	 * @param {function( Element, string ):void } cClass
 	 * @returns {IWidget}
 	 */
 	baseNewWidget( eElement, sBlockId, cClass ) {
@@ -111,12 +126,16 @@ export class CoreBox extends Box {
 		return oElQuery;
 	}
 
+	/**
+	 * @param oError
+	 * @return number
+	 */
 	newError( oError ) {
 		return oError;
 	}
 
 	/**
-	 * @param {function( ILinker )} fnCallback
+	 * @param {function( ILinker ): void} fnCallback
 	 */
 	init( fnCallback ) {
 

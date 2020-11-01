@@ -1,4 +1,10 @@
 /**
+ * @typedef {import('./../interfaces').IStorage} IStorage
+ * @typedef {import('./../interfaces').IDom} IDom
+ * @typedef {import('./../interfaces').IRelQuery} IRelQuery
+ * @typedef {import('./../interfaces').IWidget} IWidget
+ */
+/**
  * хранилище виджетов
  * @implements IStorage
  */
@@ -67,7 +73,7 @@ export class Storage {
 	 * удаление узла
 	 * @param {Element} eContext
 	 * @param {boolean} bWithSelf
-	 * @returns {array}
+	 * @returns {IWidget[]}
 	 */
 	drop( eContext, bWithSelf ) {
 
@@ -233,7 +239,7 @@ export class Storage {
 	/**
 	 * непосредственно метод поиска элементов в DOM
 	 * @param {Element} eContext откуда начинаем
-	 * @param {int} sWay направление
+	 * @param {string} sWay направление
 	 * @param {boolean} bWithSelf захватываем eContext в выборку?
 	 * @param {string[]} aBlockIds массив названий виджетов
 	 * @param {string} sSelector дополнительный фильтрующий селектор

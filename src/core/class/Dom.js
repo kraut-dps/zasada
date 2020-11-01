@@ -1,4 +1,7 @@
 /**
+ * @typedef {import('./../interfaces').IDom} IDom
+ */
+/**
  * работа с DOM деревом
  * @implements IDom
  */
@@ -28,11 +31,11 @@ export class Dom {
 		} else {
 			let aChildren = eContext.querySelectorAll( sSel );
 			// NodeListOf<Element> => Element[]
-			aChildren = Array.prototype.slice.call( aChildren );
+			//aChildren = Array.prototype.slice.call( aChildren );
 			if( bAddSelf ) {
 				return [ eContext, ...aChildren ];
 			} else {
-				return aChildren;
+				return [ ...aChildren ];
 			}
 		}
 	}

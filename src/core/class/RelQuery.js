@@ -1,4 +1,9 @@
 /**
+ * @typedef {import('./../interfaces').IRelQuery} IRelQuery
+ * @typedef {import('./../interfaces').IStorage} IStorage
+ * @typedef {import('./../interfaces').IWidget} IWidget
+ */
+/**
  * формирование запроса на поиск виджетов
  * @implements IRelQuery
  */
@@ -29,34 +34,49 @@ export class RelQuery{
 	_bDropOff = false;
 
 	/**
-	 * @param {function} cTypeOf
-	 * @return {IRelQuery|this}
+	 * @param cTypeOf
+	 * @return {RelQuery}
 	 */
 	typeOf( cTypeOf ) {
 		this.cTypeOf = cTypeOf;
 		return this;
 	}
 
+	/**
+	 * @return {RelQuery}
+	 */
 	parent() {
 		this.sWay = 'parent';
 		return this;
 	}
 
+	/**
+	 * @return {RelQuery}
+	 */
 	child() {
 		this.sWay = 'child';
 		return this;
 	}
 
+	/**
+	 * @return {RelQuery}
+	 */
 	next() {
 		this.sWay = 'next';
 		return this;
 	}
 
+	/**
+	 * @return {RelQuery}
+	 */
 	prev() {
 		this.sWay = 'prev';
 		return this;
 	}
 
+	/**
+	 * @return {RelQuery}
+	 */
 	self() {
 		this.sWay = 'self';
 		return this;
@@ -64,7 +84,7 @@ export class RelQuery{
 
 	/**
 	 * @param {Element} eFrom
-	 * @return {IRelQuery|this}
+	 * @return {RelQuery}
 	 */
 	from( eFrom ) {
 		this.eFrom = eFrom;
@@ -73,7 +93,7 @@ export class RelQuery{
 	
 	/**
 	 * @param {boolean} bWithFrom
-	 * @return {IRelQuery|this}
+	 * @return {RelQuery}
 	 */
 	withFrom( bWithFrom = true ) {
 		this.bWithFrom = bWithFrom;
@@ -82,7 +102,7 @@ export class RelQuery{
 
 	/**
 	 * @param {string|string[]} mIndex
-	 * @return {IRelQuery|this}
+	 * @return {RelQuery}
 	 */
 	index( mIndex ) {
 		if( typeof mIndex === 'object' && Array.isArray( mIndex ) ) {
@@ -95,7 +115,7 @@ export class RelQuery{
 
 	/**
 	 * @param {string} sCssSel
-	 * @return {IRelQuery|this}
+	 * @return {RelQuery}
 	 */
 	cssSel( sCssSel ) {
 		this.sCssSel = sCssSel;
@@ -104,7 +124,7 @@ export class RelQuery{
 	
 	/**
 	 * @param {boolean} bCanEmpty
-	 * @return {IRelQuery|this}
+	 * @return {RelQuery}
 	 */
 	canEmpty( bCanEmpty = true ) {
 		this.bCanEmpty = bCanEmpty;
@@ -113,13 +133,17 @@ export class RelQuery{
 	
 	/**
 	 * @param {boolean} bOnlyFirst
-	 * @return {IRelQuery|this}
+	 * @return {RelQuery}
 	 */
 	onlyFirst( bOnlyFirst = true ) {
 		this.bOnlyFirst = bOnlyFirst;
 		return this;
 	}
-	
+
+	/**
+	 * @param oWidget
+	 * @return {RelQuery}
+	 */
 	widget( oWidget ) {
 		this._oWidget = oWidget;
 		return this;
@@ -131,7 +155,7 @@ export class RelQuery{
 
 	/**
 	 * @param {string|string[]} mBlockId
-	 * @return {IRelQuery|this}
+	 * @return {RelQuery}
 	 */
 	blockId( mBlockId ) {
 		if( typeof mBlockId === 'string' ) {
@@ -143,8 +167,8 @@ export class RelQuery{
 	}
 
 	/**
-	 * @param {boolean|null} bAll
-	 * @return {IWidget|IWidget[]}
+	 * @param bAll
+	 * @return {any}
 	 */
 	find( bAll = null ) {
 		if( bAll !== null ) {
@@ -157,7 +181,13 @@ export class RelQuery{
 		return aRet;
 	}
 
+	/**
+	 * @return {any}
+	 */
 	getQuery() {
+		/**
+		 * @type {any} // TS2536
+		 */
 		const oQuery = {};
 		for( let sKey in this ) {
 			if( sKey.substr( 0, 1 ) === '_' ) {

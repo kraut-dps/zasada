@@ -1,6 +1,9 @@
-import {importExt} from "zasada/src/utils/importExt.js";
+import {importExt} from "../../utils/importExt.js";
 /**
- * @implements IPolyfillBox
+ * @typedef {import('./../interfaces').IPolyfills} IPolyfills
+ */
+/**
+ * @implements IPolyfills
  */
 export class Polyfills{
 

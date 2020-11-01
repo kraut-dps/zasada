@@ -1,11 +1,15 @@
 /**
+ * @typedef {import('./../interfaces').IAttrsInit} IAttrsInit
+ */
+
+/**
  * разбор значений и конвертация типов из атрибутов Element
- * @implements IAttrs
+ * @implements IAttrsInit
  */
 export class Attrs {
 
 	/**
-	 * @type function( oError: object ) :IError
+	 * @type {function( object ): any}
 	 */
 	newError;
 
@@ -52,7 +56,7 @@ export class Attrs {
 	 * @param {Element[]} aElements
 	 * @param {string|string[]|object} mMap
 	 * @param {string|null} sPrefix
-	 * @return {{}}
+	 * @return {Object.<string, any>}
 	 */
 	parse( aElements, mMap, sPrefix = null ) {
 		const oRet = {};

@@ -1,8 +1,17 @@
 import {Box} from "di-box";
 
+/** @typedef {import('./../utils/interfaces.d.ts').ILogger} ILogger */
+
 export class LogBox extends Box{
 
+	/**
+	 * @type {ILogger}
+	 */
 	Logger;
+
+	/**
+	 * @type {ICustomError}
+	 */
 	Error;
 	oRouteTypes;
 	pMapStack;

@@ -5,21 +5,22 @@
   "author": "",
   "license": "MIT",
   "main": "./src/index.js",
-  "types": "./src/utils/interfaces.d.ts",
+  "types": "./types/core/index.d.ts",
   "files": [
-    "src/"
+    "src/",
+    "types/"
   ],
   "scripts": {
     "unit": "karma start ./tests/karma.conf.js --single-run",
     "coverage": "karma start ./tests/karma.conf.js --single-run --coverage",
-    "ts-types": "npx typescript --build ./tsTypes.json",
+    "ts-types": "npx typescript --build ./tsconfig.json",
     "bolerplate": "mkdir -p ./app && cp -r ./webpack-bolerplate/* ./app",
     "webpack-bolerplate-development": "cd ./app && ./../node_modules/.bin/webpack --mode=development",
     "webpack-bolerplate-pproduction": "cd ./app && ./../node_modules/.bin/webpack --mode=production"
   },
   "dependencies": {
     "classlist-polyfill": "^1.2.0",
-    "di-box": "^0.0.5",
+    "di-box": "git+https://github.com/kraut-dps/di-box.git#tmp",
     "proto-polyfill": "^1.7.0",
     "sourcemapped-stacktrace": "^1.1.11",
     "weakmap-polyfill": "^2.0.2",
