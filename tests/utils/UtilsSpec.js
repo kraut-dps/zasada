@@ -1,6 +1,6 @@
-import { deepKey } from "./../../src/utils/deepKey.js";
-import { mergeDeep } from "./../../src/utils/mergeDeep.js";
-import { importExt } from "./../../src/utils/importExt.js";
+import { deepKey } from "../../packages/core/src/utils/deepKey.js";
+import { mergeDeep } from "../../packages/core/src/utils/mergeDeep.js";
+import { importExt } from "../../packages/core/src/utils/importExt.js";
 
 describe( "Utils", () => {
 

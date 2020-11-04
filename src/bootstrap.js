@@ -1,6 +1,6 @@
 /// <reference path="utils/interfaces.d.ts"/>
 import oCore, {_Box as CoreBox} from "./core/index.js";
-import /*oLog,*/ {_Box as LogBox} from "./log/index.js";
+import /*oLog,*/ {_Box as LogBox} from "../packages/log/src";
 import {box} from "./box.js";
 
 /**

@@ -2,7 +2,7 @@ import {RootBox} from "di-box";
 import oDeps from "zasada/src/deps.js";
 import {Example as ExampleBase} from "../Example.js";
 import {Widget} from "zasada/src/index.js";
-import {importExt} from "zasada/src/utils/importExt.js";
+import {importExt} from "zasada/packages/core/src/utils/importExt.js";
 
 const oRootBox = new RootBox( oDeps );
 oRootBox.box( 'core' ).init( ( oLinker ) => {

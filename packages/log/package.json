@@ -1,0 +1,19 @@
+{
+  "name": "@zasada/log",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./src/index.js",
+  "types": "./types/packages/core/src/index.d.ts",
+  "files": [
+    "src/",
+    "types/"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@zasada/core": "^0.0.1"
+  }
+}

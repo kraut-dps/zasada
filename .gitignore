@@ -6,3 +6,11 @@
 /examples/package-lock.json
 /node_modules/
 /package-lock.json
+/packages/core/node_modules
+/packages/core/package-lock.json
+/packages/log/node_modules
+/packages/log/package-lock.json
+/packages/test/node_modules
+/packages/test/package-lock.json
+/packages/widget/node_modules
+/packages/widget/package-lock.json

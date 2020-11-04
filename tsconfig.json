@@ -1,6 +1,6 @@
 {
-  "include": [ "src/core/**/*.js", "src/core/**/*.ts" ],
-  "exclude": [ "src/utils/webpackBase.js", "src/tmp.ts" ],
+  "include": [ "src/core/**/*.ts" ],
+  "exclude":  "src/utils/webpackBase.js", "src/tmp.ts" ],
 
   "compilerOptions": {
     "moduleResolution": "node",

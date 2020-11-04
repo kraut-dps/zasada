@@ -1,9 +1,9 @@
 import oDeps from "./../_support/deps.js";
 import {RootBox} from "di-box";
 import {Widget} from "./../../src/index.js";
-import { RouteConsole } from "./../../src/log/route/RouteConsole.js";
+import { RouteConsole } from "../../packages/log/src/route/RouteConsole.js";
 
-import { CustomError } from "./../../src/log/CustomError.js";
+import { CustomError } from "../../packages/log/src/CustomError.js";
 import {ErrorWidget} from "../_support/ErrorWidget.js";
 
 let oRootBox, oHelper, oOriginConsole, fnSendSpy = jasmine.createSpy('spy');

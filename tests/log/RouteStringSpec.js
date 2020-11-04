@@ -1,8 +1,8 @@
 import oDeps from "./../_support/deps.js";
 import {RootBox} from "di-box";
-import { RouteString } from "./../../src/log/route/RouteString.js";
+import { RouteString } from "../../packages/log/src/route/RouteString.js";
 import {ErrorWidget} from "./../_support/ErrorWidget.js";
-import {CustomError} from "./../../src/log/CustomError.js";
+import {CustomError} from "../../packages/log/src/CustomError.js";
 
 let oRootBox, oHelper, oOriginConsole, fnSendSpy = jasmine.createSpy('spy');
 

@@ -1,2 +1,2 @@
-import {CoreWidget as Widget} from "./core/widget/CoreWidget.js";
+import {Widget as Widget} from "../packages/widget/src/CoreWidget.js";
 export {Widget};

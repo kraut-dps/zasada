@@ -1,0 +1,19 @@
+{
+  "name": "@zasada/widget",
+  "version": "0.0.4",
+  "description": "",
+  "main": "./src/Widget.js",
+  "types": "./types/Widget.d.ts",
+  "files": [
+    "src/",
+    "types/"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@zasada/core": "^0.0.1"
+  }
+}

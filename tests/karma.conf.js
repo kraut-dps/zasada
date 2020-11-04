@@ -63,7 +63,7 @@ module.exports = function ( config ) {
 			{pattern: 'node_modules/yaku/lib/yaku.js', included: true},
 			{pattern: 'node_modules/proto-polyfill/index.js', included: false},
 			'./tests/**/*Spec.js',
-			'./src/utils/polyfillPromise.js',
+			'../packages/core/src/utils/polyfillPromise.js',
 			{pattern: './tests/_support/data/*.js', included: false},
 			{pattern: 'node_modules/weakmap-polyfill/weakmap-polyfill.js', included: false},
 			{pattern: 'node_modules/classlist-polyfill/src/index.js', included: false},
