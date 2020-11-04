@@ -1,11 +1,12 @@
 /**
  * @typedef {import('./../interfaces').IRelQuery} IRelQuery
+ * @typedef {import('./../interfaces').IRelQueryInit} IRelQueryInit
  * @typedef {import('./../interfaces').IStorage} IStorage
  * @typedef {import('./../interfaces').IWidget} IWidget
  */
 /**
  * формирование запроса на поиск виджетов
- * @implements IRelQuery
+ * @implements IRelQueryInit
  */
 export class RelQuery{
 

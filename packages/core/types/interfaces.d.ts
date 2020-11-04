@@ -109,7 +109,6 @@ export interface IStorage {
 }
 export interface IStorageInit {
     oneDom: () => IDom;
-    newQuery: () => IRelQuery;
     newError: (oError: ICustomErrorProps) => any;
 }
 export interface IStorageConstructor {

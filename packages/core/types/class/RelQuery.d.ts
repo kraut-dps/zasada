@@ -1,13 +1,14 @@
 /**
  * @typedef {import('./../interfaces').IRelQuery} IRelQuery
+ * @typedef {import('./../interfaces').IRelQueryInit} IRelQueryInit
  * @typedef {import('./../interfaces').IStorage} IStorage
  * @typedef {import('./../interfaces').IWidget} IWidget
  */
 /**
  * формирование запроса на поиск виджетов
- * @implements IRelQuery
+ * @implements IRelQueryInit
  */
-export class RelQuery implements IRelQuery {
+export class RelQuery implements IRelQueryInit {
     cTypeOf: any;
     eFrom: any;
     bWithFrom: boolean;
@@ -124,5 +125,6 @@ export class RelQuery implements IRelQuery {
     _onDropOff(oWidget: any, sEvent: any): void;
 }
 export type IRelQuery = import("../interfaces").IRelQuery<import("../interfaces").IWidget>;
+export type IRelQueryInit = import("../interfaces").IRelQueryInit;
 export type IStorage = import("../interfaces").IStorage;
 export type IWidget = import("../interfaces").IWidget;

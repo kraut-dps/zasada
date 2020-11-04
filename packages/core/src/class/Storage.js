@@ -1,12 +1,12 @@
 /**
- * @typedef {import('./../interfaces').IStorage} IStorage
+ * @typedef {import('./../interfaces').IStorageInit} IStorageInit
  * @typedef {import('./../interfaces').IDom} IDom
  * @typedef {import('./../interfaces').IRelQuery} IRelQuery
  * @typedef {import('./../interfaces').IWidget} IWidget
  */
 /**
  * хранилище виджетов
- * @implements IStorage
+ * @implements IStorageInit
  */
 export class Storage {
 
@@ -14,11 +14,6 @@ export class Storage {
 	 * @type {function(): IDom}
 	 */
 	oneDom;
-
-	/**
-	 * @type {function( function(): Storage ): IRelQuery}
-	 */
-	newQuery;
 
 	newError;
 

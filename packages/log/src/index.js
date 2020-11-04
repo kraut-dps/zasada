@@ -3,12 +3,12 @@ import {Logger} from "./Logger.js";
 import {CustomError as Error} from "./CustomError.js";
 import {RouteConsole} from "./route/RouteConsole.js";
 
-export default {
-	Logger,
-	Error,
-	oRouteTypes: {
-		console: RouteConsole,
-	},
-	pMapStack: () => import( /* webpackChunkName: "map-stack" */ 'sourcemapped-stacktrace' )
+const oBox = new LogBox();
+oBox.Logger = Logger;
+oBox.Error = Error;
+oBox.oRouteTypes = {
+	console: RouteConsole,
 };
-export {LogBox as _Box};
+oBox.pMapStack = () => import( /* webpackChunkName: "map-stack" */ 'sourcemapped-stacktrace' );
+
+export { oBox as default };

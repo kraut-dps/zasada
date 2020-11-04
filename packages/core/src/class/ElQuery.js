@@ -1,9 +1,10 @@
 /**
+ * @typedef {import('./../interfaces').IElQueryInit} IElQueryInit
  * @typedef {import('./../interfaces').IElQuery} IElQuery
  */
 /**
  * формирование запроса на поиск елемента внутри блока
- * @implements IElQuery
+ * @implements IElQueryInit
  */
 export class ElQuery {
 

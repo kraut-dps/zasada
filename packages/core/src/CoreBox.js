@@ -67,7 +67,7 @@ export class CoreBox extends Box {
 		oLinker.oneDom = this.oneDom;
 		oLinker.fnMergeDeep = this.mergeDeep;
 		oLinker.fnDeepKey = this.deepKey;
-		oLinker.fnAssertUndefProps = this._initCheck;
+		oLinker.fnAssertUndefProps = this.initCheck;
 		return oLinker;
 	}
 
@@ -90,7 +90,6 @@ export class CoreBox extends Box {
 	newStorage() {
 		const oStorage = new this.Storage();
 		oStorage.oneDom = this.oneDom;
-		oStorage.newQuery = this.newRelQuery;
 		oStorage.newError = this.newError;
 		return oStorage;
 	}
@@ -181,7 +180,7 @@ export class CoreBox extends Box {
 		for( let sPolyfill in this.oPolyfills ) {
 			oPolyfills[ sPolyfill ] = this.oPolyfills[ sPolyfill ];
 		}
-		this._initCheck( oPolyfills );
+		this.initCheck( oPolyfills );
 		oPolyfills.base( fnResolve );
 	}
 }

@@ -5,6 +5,7 @@ import {Box} from "di-box";
  * @typedef {import('./interfaces').ILoggerConstructor} ILoggerConstructor
  * @typedef {import('./interfaces').ICustomError} ICustomError
  * @typedef {import('./interfaces').ICustomErrorConstructor} ICustomErrorConstructor
+ * @typedef {import('./interfaces').IRouteTypes} IRouteTypes
  */
 
 export class LogBox extends Box{
@@ -18,7 +19,15 @@ export class LogBox extends Box{
 	 * @type {ICustomErrorConstructor}
 	 */
 	Error;
+
+	/**
+	 * @type {IRouteTypes}
+	 */
 	oRouteTypes;
+
+	/**
+	 * @type {function(): Promise<any>}
+	 */
 	pMapStack;
 
 	/**

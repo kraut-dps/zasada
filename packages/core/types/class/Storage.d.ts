@@ -1,22 +1,18 @@
 /**
- * @typedef {import('./../interfaces').IStorage} IStorage
+ * @typedef {import('./../interfaces').IStorageInit} IStorageInit
  * @typedef {import('./../interfaces').IDom} IDom
  * @typedef {import('./../interfaces').IRelQuery} IRelQuery
  * @typedef {import('./../interfaces').IWidget} IWidget
  */
 /**
  * хранилище виджетов
- * @implements IStorage
+ * @implements IStorageInit
  */
-export class Storage implements IStorage {
+export class Storage implements IStorageInit {
     /**
      * @type {function(): IDom}
      */
     oneDom: () => IDom;
-    /**
-     * @type {function( function(): Storage ): IRelQuery}
-     */
-    newQuery: (arg0: () => Storage) => IRelQuery;
     newError: any;
     /**
      * @type {WeakMap} eBlock => { sBlockId1: oWidget1, sBlockId2: oWidget2 }
@@ -93,7 +89,7 @@ export class Storage implements IStorage {
      */
     addBlockIdWidgetClassRel(cWidget: any, sBlockId: any): void;
 }
-export type IStorage = import("../interfaces").IStorage;
+export type IStorageInit = import("../interfaces").IStorageInit;
 export type IDom = import("../interfaces").IDom;
 export type IRelQuery = import("../interfaces").IRelQuery<import("../interfaces").IWidget>;
 export type IWidget = import("../interfaces").IWidget;

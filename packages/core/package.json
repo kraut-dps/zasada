@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "main": "./src/index.js",
-  "types": "./types/packages/core/src/index.d.ts",
+  "types": "./types/index.d.ts",
   "files": [
     "src/",
     "types/"
@@ -12,5 +12,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "classlist-polyfill": "^1.2.0",
+    "di-box": "git+https://github.com/kraut-dps/di-box.git#tmp",
+    "proto-polyfill": "^1.7.0",
+    "sourcemapped-stacktrace": "^1.1.11",
+    "weakmap-polyfill": "^2.0.2",
+    "yaku": "^1.0.1"
+  }
 }

@@ -2,13 +2,13 @@ import { IWidget, ICustomErrorProps } from "@zasada/core/src/interfaces";
 export interface ILogger {
     error(oError: Error | ICustomErrorProps | ICustomError): void;
 }
-interface IRouteTypes {
+export interface IRouteTypes {
     [id: string]: ILogRouteConstructor;
 }
 export interface ILoggerInit extends ILogger {
     newError(oError: ICustomErrorProps): ICustomError;
     oRouteTypes: IRouteTypes;
-    pMapStack: Promise<object>;
+    pMapStack: () => Promise<any>;
 }
 export interface ILoggerConstructor {
     new (): ILoggerInit;
@@ -36,4 +36,3 @@ export interface ICustomError extends ICustomErrorProps {
 export interface ICustomErrorConstructor {
     new (): ICustomError;
 }
-export {};

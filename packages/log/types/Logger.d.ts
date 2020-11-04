@@ -1,11 +1,12 @@
 /**
  * @typedef {import('./interfaces').ILogger} ILogger
+ * @typedef {import('./interfaces').ILoggerInit} ILoggerInit
  * @typedef {import('./interfaces').ICustomError} ICustomError
  * @typedef {import('./interfaces').ILogRoute} ILogRoute
  */
 /**
  * логирование ошибок
- * @type ILogger
+ * @type ILoggerInit
  */
 export class Logger {
     oRouteTypes: any;
@@ -34,5 +35,6 @@ export class Logger {
     protected _getRoutes(): null | ILogRoute[];
 }
 export type ILogger = import("./interfaces").ILogger;
+export type ILoggerInit = import("./interfaces").ILoggerInit;
 export type ICustomError = import("./interfaces").ICustomError;
 export type ILogRoute = import("./interfaces").ILogRoute;

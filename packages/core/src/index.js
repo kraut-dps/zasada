@@ -10,23 +10,22 @@ import {Storage} from "./class/Storage.js";
 import {deepKey} from "./utils/deepKey.js";
 import {mergeDeep} from "./utils/mergeDeep.js";
 
-export default {
-	Attrs,
-	Dom,
-	El,
-	ElQuery,
-	Linker,
-	Polyfills,
-	RelQuery,
-	Storage,
-	deepKey,
-	mergeDeep,
-	oPolyfills: {
-		sPromiseUrl: __webpack_public_path__ + '/polyfill-promise.js',
-		pProto: () => import( /* webpackChunkName: "polyfill-proto" */ "proto-polyfill" ),
-		pMozilla: () => import( /* webpackChunkName: "polyfill-mozilla" */ "./utils/polyfillsMozilla.js" ),
-		pWeakMap: () => import( /* webpackChunkName: "polyfill-weakmap" */ 'weakmap-polyfill' ),
-		pClassList: () => import( /* webpackChunkName: "polyfill-classlist" */ 'classlist-polyfill' )
-	}
+const oBox = new CoreBox();
+oBox.Attrs = Attrs;
+oBox.Dom = Dom;
+oBox.El = El;
+oBox.ElQuery = ElQuery;
+oBox.Linker = Linker;
+oBox.Polyfills = Polyfills;
+oBox.RelQuery = RelQuery;
+oBox.Storage = Storage;
+oBox.deepKey = deepKey;
+oBox.mergeDeep = mergeDeep;
+oBox.oPolyfills = {
+	sPromiseUrl: __webpack_public_path__ + '/polyfill-promise.js',
+	pProto: () => import( /* webpackChunkName: "polyfill-proto" */ "proto-polyfill" ),
+	pMozilla: () => import( /* webpackChunkName: "polyfill-mozilla" */ "./utils/polyfillsMozilla.js" ),
+	pWeakMap: () => import( /* webpackChunkName: "polyfill-weakmap" */ 'weakmap-polyfill' ),
+	pClassList: () => import( /* webpackChunkName: "polyfill-classlist" */ 'classlist-polyfill' )
 };
-export {CoreBox as _Box};
+export {oBox as default};

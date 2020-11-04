@@ -1,11 +1,12 @@
 /**
+ * @typedef {import('./../interfaces').IElQueryInit} IElQueryInit
  * @typedef {import('./../interfaces').IElQuery} IElQuery
  */
 /**
  * формирование запроса на поиск елемента внутри блока
- * @implements IElQuery
+ * @implements IElQueryInit
  */
-export class ElQuery implements IElQuery {
+export class ElQuery implements IElQueryInit {
     constructor(sQuery: any);
     newError: any;
     sId: string;
@@ -53,4 +54,5 @@ export class ElQuery implements IElQuery {
     noCache(bNoCache: boolean): IElQuery | this;
     isNoCache(): boolean;
 }
+export type IElQueryInit = import("../interfaces").IElQueryInit;
 export type IElQuery = import("../interfaces").IElQuery;

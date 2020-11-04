@@ -1,5 +1,6 @@
 /**
  * @typedef {import('./../interfaces').ILinker} ILinker
+ * @typedef {import('./../interfaces').ILinkerInit} ILinkerInit
  * @typedef {import('./../interfaces').ILinkerOpts} ILinkerOpts
  * @typedef {import('./../interfaces').ILinkerClasses} ILinkerClasses
  * @typedef {import('./../interfaces').IWidget} IWidget
@@ -9,7 +10,7 @@
  */
 /**
  * основной класс связывающий {Element} с виджетами
- * @implements ILinker
+ * @implements ILinkerInit
  */
 export class Linker {
 

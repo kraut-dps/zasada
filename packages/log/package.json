@@ -15,5 +15,8 @@
   "license": "MIT",
   "devDependencies": {
     "@zasada/core": "^0.0.1"
+  },
+  "dependencies": {
+    "di-box": "git+https://github.com/kraut-dps/di-box.git#tmp"
   }
 }

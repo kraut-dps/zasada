@@ -1,14 +1,14 @@
 /**
- * @typedef {import('./../interfaces').IEl} IEl
+ * @typedef {import('./../interfaces').IElInit} IElInit
  * @typedef {import('./../interfaces').IElQuery} IElQuery
  * @typedef {import('./../interfaces').IDom} IDom
  * @typedef {import('./../interfaces').IWidget} IWidget
  */
 /**
  * поиск элементов
- * @implements IEl
+ * @implements IElInit
  */
-export class El implements IEl {
+export class El implements IElInit {
     /**
      * @type {function( string ):IElQuery}
      */
@@ -50,7 +50,7 @@ export class El implements IEl {
     private _findEl;
     _clone(oObj: any): any;
 }
-export type IEl = import("../interfaces").IEl;
+export type IElInit = import("../interfaces").IElInit;
 export type IElQuery = import("../interfaces").IElQuery;
 export type IDom = import("../interfaces").IDom;
 export type IWidget = import("../interfaces").IWidget;

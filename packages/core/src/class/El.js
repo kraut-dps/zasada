@@ -1,12 +1,12 @@
 /**
- * @typedef {import('./../interfaces').IEl} IEl
+ * @typedef {import('./../interfaces').IElInit} IElInit
  * @typedef {import('./../interfaces').IElQuery} IElQuery
  * @typedef {import('./../interfaces').IDom} IDom
  * @typedef {import('./../interfaces').IWidget} IWidget
  */
 /**
  * поиск элементов
- * @implements IEl
+ * @implements IElInit
  */
 export class El{
 

@@ -8,7 +8,7 @@
     "prod": "webpack --mode=production"
   },
   "dependencies": {
-    "zasada": "0.0.20"
+    "zasada": "git+https://github.com/kraut-dps/zasada.git#tmp"
   },
   "devDependencies": {
     "@babel/core": "7.2.0",
