@@ -1,14 +1,15 @@
 var fnWebpackMerge = require( 'webpack-merge' ).merge;
 var oWebpackBase = require( '@zasada/bootstrap/src/webpackBase.js' );
+var sProject = __dirname + '/src';
 
 var oConfig = fnWebpackMerge(
 	oWebpackBase,
 	{
 		entry: {
-			"1_HelloWorld": __dirname + '/src/1_HelloWorld/index.js',
-			"2_WidgetApi": __dirname +'/src/2_WidgetApi/index.js',
-			"3_LinkerApi": __dirname +'/src/3_LinkerApi/index.js',
-			"4_Di": __dirname +'/src/4_Di/index.js',
+			"1_HelloWorld": sProject + '/1_HelloWorld/index.js',
+			"2_WidgetApi": sProject +'/2_WidgetApi/index.js',
+			"3_LinkerApi": sProject +'/3_LinkerApi/index.js',
+			"4_Di": sProject +'/4_Di/index.js',
 			"polyfill-promise": '@zasada/core/src/utils/polyfillPromise.js',
 		},
 		output: {
@@ -16,7 +17,7 @@ var oConfig = fnWebpackMerge(
 				return pathData.chunk.name === 'polyfill-promise' ? '[name].js' : '[name]/index.js';
 			},
 			chunkFilename: '[name].js',
-			path: __dirname + '/build/',
+			path: sProject + '/build/',
 			publicPath: '/build/',
 		},
 		//resolve:{
@@ -25,7 +26,7 @@ var oConfig = fnWebpackMerge(
 		//	}
 		//},
 		devServer:{
-			contentBase: __dirname,
+			contentBase: sProject,
 		}
 	}
 );

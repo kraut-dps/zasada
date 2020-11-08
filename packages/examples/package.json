@@ -8,7 +8,7 @@
     "prod": "webpack --mode=production"
   },
   "dependencies": {
-    "@zasada/bootstrap": "^0.1.3",
+    "@zasada/bootstrap": "^0.1.6",
     "@zasada/core": "^0.1.2",
     "@zasada/log": "^0.1.2",
     "@zasada/widget": "^0.1.2"
