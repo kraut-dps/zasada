@@ -16,5 +16,8 @@
   "dependencies": {
     "di-box": "^0.1.0"
   },
+  "devDependencies": {
+    "@zasada/test": "^0.1.2"
+  },
   "gitHead": "f01faea8a93efda2908c7b28c1879af57b9a378f"
 }

@@ -82,7 +82,7 @@ module.exports = {
 					}
 				},
 				// https://github.com/webpack/webpack/issues/2031#issuecomment-219040479
-				exclude: /node_modules\/(?!(di-box|zasada)\/).*/
+				exclude: /node_modules\/(?!(di-box|@zasada)\/).*/
 			},
 		]
 	},

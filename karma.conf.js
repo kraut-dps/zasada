@@ -5,7 +5,7 @@ var fnIsCoverageRun = function ( oConfig ) {
 };
 
 var fnGetWebpackConfig = function ( oConfig ) {
-	var oWebpackBase = require( './src/utils/webpackBase.js' );
+	var oWebpackBase = require( '@zasada/bootstrap/src/webpackBase.js' );
 	var fnWebpackMerge = require( 'webpack-merge' ).merge;
 	var oWebpackConfig = fnWebpackMerge(
 		oWebpackBase,
