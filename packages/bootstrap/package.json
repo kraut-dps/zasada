@@ -1,6 +1,6 @@
 {
   "name": "@zasada/bootstrap",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
@@ -14,9 +14,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@zasada/core": "^0.1.0",
-    "@zasada/log": "^0.1.0",
-    "@zasada/test": "^0.1.0"
+    "@zasada/core": "^0.1.1",
+    "@zasada/log": "^0.1.1",
+    "@zasada/test": "^0.1.1"
   },
   "gitHead": "f01faea8a93efda2908c7b28c1879af57b9a378f"
 }
