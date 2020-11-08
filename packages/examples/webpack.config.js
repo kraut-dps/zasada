@@ -5,11 +5,11 @@ var oConfig = fnWebpackMerge(
 	oWebpackBase,
 	{
 		entry: {
-			"1_HelloWorld": __dirname + '/1_HelloWorld/index.js',
-			"2_WidgetApi": __dirname +'/2_WidgetApi/index.js',
-			"3_LinkerApi": __dirname +'/3_LinkerApi/index.js',
-			"4_Di": __dirname +'/4_Di/index.js',
-			"polyfill-promise": 'zasada/src/utils/polyfillPromise.js',
+			"1_HelloWorld": __dirname + '/src/1_HelloWorld/index.js',
+			"2_WidgetApi": __dirname +'/src/2_WidgetApi/index.js',
+			"3_LinkerApi": __dirname +'/src/3_LinkerApi/index.js',
+			"4_Di": __dirname +'/src/4_Di/index.js',
+			"polyfill-promise": '@zasada/core/src/utils/polyfillPromise.js',
 		},
 		output: {
 			filename: ( pathData ) => {

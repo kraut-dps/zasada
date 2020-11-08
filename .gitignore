@@ -10,6 +10,7 @@
 /packages/bootstrap/package-lock.json
 /packages/core/node_modules
 /packages/core/package-lock.json
+/packages/examples/node_modules
 /packages/log/node_modules
 /packages/log/package-lock.json
 /packages/test/node_modules
