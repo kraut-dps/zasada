@@ -1,4 +1,5 @@
 // core-log
+
 import log from '@zasada/log';
 import core from '@zasada/core';
 
