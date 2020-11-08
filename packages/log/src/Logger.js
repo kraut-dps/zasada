@@ -41,6 +41,39 @@ export class Logger {
 		} )
 	}
 
+	init() {
+		// глобальный перехват ошибок
+		window.onerror = ( message, sourceURL, line, column, oError ) => {
+			try {
+				if ( !oError ) {
+					oError = this.newError( {mOrigin: {message, sourceURL, line, column}} );
+				}
+				this.error( oError );
+			} catch( e ) {
+				this.errorInOnerror( e, message, sourceURL, line, column, oError );
+			}
+			return true;
+		};
+		window.onunhandledrejection = ( oEvent ) => {
+			try {
+				this.error( oEvent.reason );
+				//if( oEvent.preventDefault ) {
+				//	oEvent.preventDefault();
+				//}
+				return false;
+			} catch( e ) {
+				this.errorInOnunhandledrejection( e, oEvent )
+			}
+		};
+	}
+
+	errorInOnerror( oError, message, sourceURL, line, column, oErrorOrigin ) {
+		console.log( 'error in window.onerror: ',  oError, message, sourceURL, line, column, oErrorOrigin );
+	}
+	errorInOnunhandledrejection( oError, oEvent ) {
+		console.log( 'error in window.onunhandledrejection: ',  oError, oEvent.reason );
+	}
+
 	/**
 	 * обогащение ошибки mapped stack, если это возможно
 	 * без Promise, может к моменту вызова не быть еще полифила

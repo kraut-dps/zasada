@@ -1,20 +1,22 @@
 {
-  "name": "@zasada/log",
+  "name": "@zasada/bootstrap",
   "version": "0.1.0",
   "description": "",
   "main": "./src/index.js",
-  "types": "./types/index.d.ts",
+  "types": "./src/index.d.ts",
   "files": [
     "src/",
     "types/"
   ],
   "scripts": {
-    "ts-types": "tsc --build ./tsconfig.json"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "di-box": "^0.1.0"
+    "@zasada/core": "^0.1.0",
+    "@zasada/log": "^0.1.0",
+    "@zasada/test": "^0.1.0"
   },
   "gitHead": "f01faea8a93efda2908c7b28c1879af57b9a378f"
 }

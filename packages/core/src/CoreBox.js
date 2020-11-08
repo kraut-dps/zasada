@@ -67,7 +67,9 @@ export class CoreBox extends Box {
 		oLinker.oneDom = this.oneDom;
 		oLinker.fnMergeDeep = this.mergeDeep;
 		oLinker.fnDeepKey = this.deepKey;
-		oLinker.fnAssertUndefProps = this.initCheck;
+
+		// без bind( this ), будет sProtectedPrefix undefined
+		oLinker.fnAssertUndefProps = this.initCheck.bind( this );
 		return oLinker;
 	}
 

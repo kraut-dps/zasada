@@ -1,4 +1,4 @@
-import {Widget} from "../../src/index.js";
+import {Widget} from "./bootstrap.js";
 
 export class ErrorWidget extends Widget {
 

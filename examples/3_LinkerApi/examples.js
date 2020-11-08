@@ -48,7 +48,7 @@ window.oExamples = {
 				// отдельный виджет, который запустит WidgetSkipRun
 				class WidgetRunner extends Widget {
 					run() {
-						this.rel().typeOf( WidgetSkipRun ).find().run();
+						this._rel().typeOf( WidgetSkipRun ).find().run();
 					}
 				}
 

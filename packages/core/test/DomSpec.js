@@ -1,5 +1,4 @@
-import oDeps from "./../_support/deps.js";
-import {RootBox} from "di-box";
+import oRoot from "./_support/bootstrap.js";
 
 let oHelper, oDom, eBase, aNodes, aIds;
 
@@ -14,11 +13,9 @@ const fnGetIds = ( aNodes ) => {
 describe( "Dom", () => {
 
 	beforeAll( ( fnDone ) => {
-		const oRoot = new RootBox( oDeps );
-		const oCoreBox = oRoot.box( 'core' );
-		oCoreBox.init( () => {
-			oDom = oCoreBox.oneDom();
-			oHelper = oRoot.box( 'test' ).oneHelper();
+		oRoot.core.init( () => {
+			oHelper = oRoot.test.oneHelper();
+			oDom = oRoot.core.oneDom();
 			fnDone();
 		} );
 	} );

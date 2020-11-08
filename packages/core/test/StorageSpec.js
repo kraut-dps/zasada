@@ -1,16 +1,13 @@
-import oDeps from "./../_support/deps.js";
-import {RootBox} from "di-box";
-import {Widget} from "./../../src/index.js";
+import oRoot, {Widget} from "./_support/bootstrap.js";
 
 let oStorage, oHelper, oLinker;
 describe( "Storage", () => {
 
 	beforeAll( ( fnDone ) => {
-		const oRoot = new RootBox( oDeps );
-		oRoot.box( 'core' ).init( ( oLinkerReal ) => {
+		oRoot.core.init( ( oLinkerReal ) => {
 			oLinker = oLinkerReal;
-			oStorage = oRoot.box( 'core' ).oneStorage();
-			oHelper = oRoot.box( 'test' ).newHelper();
+			oStorage = oRoot.core.oneStorage();
+			oHelper = oRoot.test.newHelper();
 			fnDone();
 		} );
 	} );

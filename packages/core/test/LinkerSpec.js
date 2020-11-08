@@ -1,16 +1,14 @@
-import oDeps from "./../_support/deps.js";
-import {RootBox} from "di-box";
-import {Widget} from "./../../src/index.js";
+import oRoot, {Widget} from "./_support/bootstrap.js";
 
 let oHelper, oLinker;
 
 describe( "Linker", () => {
 
 	beforeAll( ( fnDone ) => {
-		const oRoot = new RootBox( oDeps );
-		oRoot.box( 'core' ).init( ( oLinkerReal ) => {
+
+		oRoot.core.init( ( oLinkerReal ) => {
 			oLinker = oLinkerReal;
-			oHelper = oRoot.box( 'test' ).oneHelper();
+			oHelper = oRoot.test.oneHelper();
 			fnDone();
 		} );
 
@@ -37,9 +35,7 @@ describe( "Linker", () => {
 				}
 			}
 
-			const oRootBox = new RootBox( oDeps );
-			const oHelper = oRootBox.box( 'test' ).oneHelper();
-			oRootBox.box( 'core' ).oneLinker()
+			oLinker
 				.setOpts( {
 					TestWidget: {
 						cWidget: TestWidget,
@@ -79,16 +75,13 @@ describe( "Linker", () => {
 		// проверка что установится сложная структура, произойдет deepMerge
 		it( "struct", async () => {
 
-			class TestWidget extends Widget {
+			class TestWidget2 extends Widget {
 				oStruct = null;
 			}
 
-			const oRootBox = new RootBox( oDeps );
-			const oLinker = oRootBox.box( 'core' ).oneLinker();
-			const oHelper = oRootBox.box( 'test' ).oneHelper();
 			oLinker.setOpts( {
-				TestWidget: {
-					cWidget: TestWidget,
+				TestWidget2: {
+					cWidget: TestWidget2,
 					oProps: {
 						oStruct: {
 							sKey1: 1
@@ -97,8 +90,8 @@ describe( "Linker", () => {
 				}
 			} );
 			oLinker.setOpts( {
-				TestWidget: {
-					cWidget: TestWidget,
+				TestWidget2: {
+					cWidget: TestWidget2,
 					oProps: {
 						oStruct: {
 							sKey2: 2
@@ -107,10 +100,10 @@ describe( "Linker", () => {
 				}
 			} );
 			await oHelper.addHtml(
-				'<div class="widget _ _TestWidget"></div>'
+				'<div class="widget _ _TestWidget2"></div>'
 			);
 
-			const oWidget = oHelper.widget( '.widget', TestWidget );
+			const oWidget = oHelper.widget( '.widget', TestWidget2 );
 			expect( oWidget.oStruct ).toEqual( {sKey1: 1, sKey2: 2} );
 		} );
 	} );
@@ -123,9 +116,6 @@ describe( "Linker", () => {
 		class LazyWidget extends Widget {
 		}
 
-		const oRootBox = new RootBox( oDeps );
-		const oLinker = oRootBox.box( 'core' ).oneLinker();
-		const oHelper = oRootBox.box( 'test' ).oneHelper();
 		oLinker.setWidgets( {BaseWidget} );
 
 		oLinker.setBeforeNew(
@@ -174,13 +164,13 @@ describe( "Linker", () => {
 		it( 'no-widget-class', async ( fnDone ) => {
 
 			oLinker.setOpts( {
-				TestWidget: {}
+				BadWidget: {}
 			} );
 
 			await oHelper.addHtml(
-				`<div class="_ _TestWidget"></div>`
+				`<div class="_ _BadWidget"></div>`
 			).catch( ( oError ) => {
-				if( oError && oError.sHelp === 'no-widget-class' ) {
+				if( oError && oError.mOrigin.sHelp === 'no-widget-class' ) {
 					fnDone();
 				}
 			} )
@@ -203,7 +193,7 @@ describe( "Linker", () => {
 			await oHelper.addHtml(
 				'<div class="widget _ _TestWidget"></div>'
 			).catch( ( oError ) => {
-				if( oError && oError.sHelp === 'no-widget-prop' ) {
+				if( oError && oError.mOrigin.sHelp === 'no-widget-prop' ) {
 					fnDone();
 				}
 			} )
@@ -211,17 +201,15 @@ describe( "Linker", () => {
 
 		it( 'link with self', async ( fnDone ) => {
 
-			class TestWidget extends Widget {
+			class SelfWidget extends Widget {
 				run() {
 					fnDone();
 				}
 			}
 
-			const oRootBox = new RootBox( oDeps );
-			const oLinker = oRootBox.box( 'core' ).oneLinker();
-			oLinker.setWidgets( { TestWidget } );
+			oLinker.setWidgets( { SelfWidget } );
 			const eDiv = document.createElement( 'div' );
-			eDiv.className = '_ _TestWidget'
+			eDiv.className = '_ _SelfWidget'
 			document.body.appendChild( eDiv );
 			oLinker.link( eDiv, true );
 		} );
@@ -232,21 +220,17 @@ describe( "Linker", () => {
 
 		let bCheck;
 
-		class TestWidget extends Widget {
+		class SkipRunWidget extends Widget {
 			run() {
 				bCheck = true;
 			}
 		}
 
-		const oRootBox = new RootBox( oDeps );
-		const oLinker = oRootBox.box( 'core' ).oneLinker();
-		const oHelper = oRootBox.box( 'test' ).oneHelper();
-
 		// сначала стандартный запуск с run
 		bCheck = false;
 		oLinker.setOpts( {
 			Widget: {
-				cWidget: TestWidget,
+				cWidget: SkipRunWidget,
 				bSkipRun: false
 			}
 		} );
@@ -258,7 +242,7 @@ describe( "Linker", () => {
 		bCheck = false;
 		oLinker.setOpts( {
 			Widget: {
-				cWidget: TestWidget,
+				cWidget: SkipRunWidget,
 				bSkipRun: true
 			}
 		} );

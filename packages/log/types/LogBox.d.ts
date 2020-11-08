@@ -23,15 +23,15 @@ export class LogBox extends Box {
      * @type {function(): Promise<any>}
      */
     pMapStack: () => Promise<any>;
+    _oLogger: any;
     /**
+     * не через .one, потому что может не быть полифила WeakMap
      * @type {function(): ILogger}
      */
     oneLogger(): ILogger;
     newLogger(): import("./interfaces").ILoggerInit;
     newError(oProps: any): any;
     init(): void;
-    errorInOnerror(oError: any, message: any, sourceURL: any, line: any, column: any, oErrorOrigin: any): void;
-    errorInOnunhandledrejection(oError: any, oEvent: any): void;
 }
 export type ILogger = import("./interfaces").ILogger;
 export type ILoggerConstructor = import("./interfaces").ILoggerConstructor;

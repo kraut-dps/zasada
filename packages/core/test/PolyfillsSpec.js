@@ -1,8 +1,33 @@
-import oDeps from "./../_support/deps.js";
-import {RootBox} from "di-box";
-import {Widget} from "./../../src/index.js";
+import oRoot, {Widget} from "./_support/bootstrap.js";
+
+let oOrigins = {};
 
 describe( "Polyfills", () => {
+
+	beforeEach( () => {
+		oOrigins = {
+			Promise: window.Promise,
+			WeakMap: window.WeakMap,
+			Proto: Object.__proto__,
+			CustomEvent: window.CustomEvent,
+			contains: window.DOMTokenList.prototype.contains,
+			add: window.DOMTokenList.prototype.add,
+			toggle: window.DOMTokenList.prototype.toggle
+		}
+	} );
+
+	afterEach( () => {
+
+		window.Promise = oOrigins.Promise;
+		window.WeakMap = oOrigins.WeakMap;
+		Object.__proto__ = oOrigins.Proto;
+		window.CustomEvent = oOrigins.CustomEvent;
+		window.DOMTokenList.prototype.contains = oOrigins.contains;
+		window.DOMTokenList.prototype.add = oOrigins.add;
+		window.DOMTokenList.prototype.toggle = oOrigins.toggle;
+
+	} );
+
 
 	it( "simple", async ( fnDone ) => {
 
@@ -13,21 +38,19 @@ describe( "Polyfills", () => {
 		window.CustomEvent = null;
 		window.DOMTokenList.prototype.contains = () => { return false };
 
-		class TestWidget extends Widget {
+		class PolyfillWidget extends Widget {
 			run() {
 				fnDone();
 			}
 		}
 
-		const oRoot = new RootBox( oDeps );
-
 		// рабочий тестовый url для подгрузки полифилла
-		oRoot.box( 'core' ).oPolyfills.sPromiseUrl = '/base/src/utils/polyfillPromise.js';
-		oRoot.box( 'core' ).polyfills( () => {
-			const oLinker = oRoot.box( 'core' ).oneLinker();
-			const oHelper = oRoot.box( 'test' ).oneHelper();
-			oLinker.setWidgets( { TestWidget } );
-			oHelper.addHtml( '<div class="_ _TestWidget"></div>' );
+		oRoot.core.oPolyfills.sPromiseUrl = '/base/packages/core/src/utils/polyfillPromise.js';
+		oRoot.core.polyfills( () => {
+			const oLinker = oRoot.core.oneLinker();
+			const oHelper = oRoot.test.oneHelper();
+			oLinker.setWidgets( { PolyfillWidget } );
+			oHelper.addHtml( '<div class="_ _PolyfillWidget"></div>' );
 		} );
 	} );
 
@@ -39,21 +62,19 @@ describe( "Polyfills", () => {
 		window.DOMTokenList.prototype.toggle = () => { bSet = false };
 		window.DOMTokenList.prototype.contains = () => { return bSet };
 
-		class TestWidget extends Widget {
+		class PolyfillClassListWidget extends Widget {
 			run() {
 				fnDone();
 			}
 		}
 
-		const oRoot = new RootBox( oDeps );
-
 		// рабочий тестовый url для подгрузки полифилла
-		oRoot.box( 'core' ).oPolyfills.sPromiseUrl = '/base/src/utils/polyfillPromise.js';
-		oRoot.box( 'core' ).polyfills( () => {
-			const oLinker = oRoot.box( 'core' ).oneLinker();
-			const oHelper = oRoot.box( 'test' ).oneHelper();
-			oLinker.setWidgets( { TestWidget } );
-			oHelper.addHtml( '<div class="_ _TestWidget"></div>' );
+		oRoot.core.oPolyfills.sPromiseUrl = '/base/packages/core/src/utils/polyfillPromise.js';
+		oRoot.core.polyfills( () => {
+			const oLinker = oRoot.core.oneLinker();
+			const oHelper = oRoot.test.oneHelper();
+			oLinker.setWidgets( { PolyfillClassListWidget } );
+			oHelper.addHtml( '<div class="_ _PolyfillClassListWidget"></div>' );
 		} );
 	} );
 
@@ -73,10 +94,8 @@ describe( "Polyfills", () => {
 		// почистим window от нормальных реализаций, чтобы загрузились полифилы
 		window.Promise = null;
 
-		const oRoot = new RootBox( oDeps );
-
 		// подставим кривой урл с Promise polyfill, проверим срабатываение ошибки
-		oRoot.box( 'core' ).oPolyfills.sPromiseUrl = '/badUrl.js';
-		oRoot.box( 'core' ).init( fail );
+		oRoot.core.oPolyfills.sPromiseUrl = '/badUrl.js';
+		oRoot.core.init( fail );
 	} );
 } );

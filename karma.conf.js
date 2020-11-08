@@ -1,11 +1,11 @@
-var sProjectRoot = __dirname  + '/../';
+var sProjectRoot = __dirname;
 
 var fnIsCoverageRun = function ( oConfig ) {
 	return !!oConfig.coverage;
 };
 
 var fnGetWebpackConfig = function ( oConfig ) {
-	var oWebpackBase = require( '../src/utils/webpackBase.js' );
+	var oWebpackBase = require( './src/utils/webpackBase.js' );
 	var fnWebpackMerge = require( 'webpack-merge' ).merge;
 	var oWebpackConfig = fnWebpackMerge(
 		oWebpackBase,
@@ -32,7 +32,7 @@ var fnGetWebpackConfig = function ( oConfig ) {
 					options: {esModules: true}
 				},
 				enforce: 'post',
-				exclude: /node_modules|tests|polyfill/
+				exclude: /node_modules|test|polyfill/
 			}
 		);
 	}
@@ -52,7 +52,7 @@ module.exports = function ( config ) {
 	config.set( {
 
 		// base path that will be used to resolve all patterns (eg. files, exclude)
-		basePath: '..',
+		basePath: '',
 
 		// frameworks to use
 		// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -62,8 +62,8 @@ module.exports = function ( config ) {
 		files: [
 			{pattern: 'node_modules/yaku/lib/yaku.js', included: true},
 			{pattern: 'node_modules/proto-polyfill/index.js', included: false},
-			'./tests/**/*Spec.js',
-			'../packages/core/src/utils/polyfillPromise.js',
+			'./packages/*/test/*Spec.js',
+			'./packages/core/src/utils/polyfillPromise.js',
 			{pattern: './tests/_support/data/*.js', included: false},
 			{pattern: 'node_modules/weakmap-polyfill/weakmap-polyfill.js', included: false},
 			{pattern: 'node_modules/classlist-polyfill/src/index.js', included: false},
@@ -76,8 +76,8 @@ module.exports = function ( config ) {
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
-			'./tests/**/*Spec.js': ['webpack', 'sourcemap'],
-			'./src/utils/polyfillPromise.js': ['webpack', 'sourcemap']
+			'./packages/*/test/*Spec.js': ['webpack', 'sourcemap'],
+			'./packages/core/src/utils/polyfillPromise.js': ['webpack', 'sourcemap']
 		},
 
 		// test results reporter to use

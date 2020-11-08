@@ -30,11 +30,17 @@ export class LogBox extends Box{
 	 */
 	pMapStack;
 
+	_oLogger;
+
 	/**
+	 * не через .one, потому что может не быть полифила WeakMap
 	 * @type {function(): ILogger}
 	 */
 	oneLogger() {
-		return this.one( this.newLogger );
+		if( !this._oLogger ) {
+			this._oLogger = this.newLogger();
+		}
+		return this._oLogger;
 	}
 
 	newLogger() {
@@ -70,35 +76,11 @@ export class LogBox extends Box{
 	}
 
 	init() {
-		// глобальный перехват ошибок
-		window.onerror = ( message, sourceURL, line, column, oError ) => {
-			try {
-				if ( !oError ) {
-					oError = this.newError( {mOrigin: {message, sourceURL, line, column}} );
-				}
-				this.oneLogger().error( oError );
-			} catch( e ) {
-				this.errorInOnerror( e, message, sourceURL, line, column, oError );
-			}
-			return true;
-		};
-		window.onunhandledrejection = ( oEvent ) => {
-			try {
-				this.oneLogger().error( oEvent.reason );
-				//if( oEvent.preventDefault ) {
-				//	oEvent.preventDefault();
-				//}
-				return false;
-			} catch( e ) {
-				this.errorInOnunhandledrejection( e, oEvent )
-			}
-		};
+		this.oneLogger().init();
 	}
 
-	errorInOnerror( oError, message, sourceURL, line, column, oErrorOrigin ) {
-		console.log( 'error in window.onerror: ',  oError, message, sourceURL, line, column, oErrorOrigin );
-	}
-	errorInOnunhandledrejection( oError, oEvent ) {
-		console.log( 'error in window.onunhandledrejection: ',  oError, oEvent.reason );
+	reset () {
+		this._oLogger = null;
+		super.reset();
 	}
 }

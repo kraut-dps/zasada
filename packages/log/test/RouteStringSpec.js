@@ -1,10 +1,11 @@
-import oDeps from "./../_support/deps.js";
-import {RootBox} from "di-box";
-import { RouteString } from "../../packages/log/src/route/RouteString.js";
-import {ErrorWidget} from "./../_support/ErrorWidget.js";
-import {CustomError} from "../../packages/log/src/CustomError.js";
+import oRoot, {Widget} from "./_support/bootstrap.js";
+import { RouteString } from "../src/route/RouteString.js";
+import { CustomError } from "../src/CustomError.js";
+import {ErrorWidget} from "./_support/ErrorWidget.js";
 
-let oRootBox, oHelper, oOriginConsole, fnSendSpy = jasmine.createSpy('spy');
+
+
+let oHelper, oOriginConsole, fnSendSpy = jasmine.createSpy('spy');
 
 /**
  * @implements ILogRoute
@@ -19,15 +20,12 @@ describe( "RouteString", () => {
 
 	beforeAll( ( fnDone ) => {
 		oOriginConsole = window.console;
-		oRootBox = new RootBox( oDeps );
-		oRootBox.box( 'log' ).init();
-		const oCoreBox = oRootBox.box( 'core' );
-		oCoreBox.init( () => {
+		oRoot.core.init( ( oLinker ) => {
 			// чтобы не заморачиваться на задержку обработки stackMap
-			oRootBox.box( 'log' ).oneLogger().pMapStack = null;
+			oRoot.log.oneLogger().pMapStack = null;
 
-			oCoreBox.oneLinker().setWidgets( { ErrorWidget } );
-			oHelper = oRootBox.box( 'test' ).oneHelper();
+			oLinker.setWidgets( { ErrorWidget } );
+			oHelper = oRoot.test.oneHelper();
 			fnDone();
 		} );
 	} );
@@ -38,13 +36,14 @@ describe( "RouteString", () => {
 
 	beforeEach( () => {
 		fnSendSpy.calls.reset();
-		oRootBox.box( 'log' ).oneLogger().oRoutes = null;
+		oRoot.log.reset();
 	} );
 
 
 	it( "simple", async ( fnDone ) => {
 
-		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteString() };
+		oRoot.log.oRouteTypes = { test: TestRouteString };
+		oRoot.log.init();
 
 		fnSendSpy.and.callFake( ( sMessage, oError ) => {
 			expect( oError.msg() ).toEqual( 'error origin' );
@@ -55,7 +54,9 @@ describe( "RouteString", () => {
 	} );
 
 	it( 'undefined widget', async ( fnDone ) => {
-		oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new RouteString() };
+		oRoot.log.oRouteTypes = { test: RouteString };
+		oRoot.log.init();
+
 		window.console = { log: fnDone };
 		await oHelper.addHtml(
 			`<div class="_ _UndefinedWidget"></div>`,
@@ -63,7 +64,9 @@ describe( "RouteString", () => {
 	} );
 
 	it( 'long outerHTML', async ( fnDone ) => {
-		oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new TestRouteString() };
+
+		oRoot.log.oRouteTypes = { test: TestRouteString };
+		oRoot.log.init();
 
 		fnSendSpy.and.callFake( ( sMessage, oError ) => {
 			expect(sMessage.indexOf('...') !== -1).toBe(true);
@@ -78,7 +81,10 @@ describe( "RouteString", () => {
 	} );
 
 	it( 'Error without name', async ( fnDone ) => {
-		oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new RouteString() };
+
+		oRoot.log.oRouteTypes = { test: RouteString };
+		oRoot.log.init();
+
 		window.console = { log: ( sMessage ) => {
 				expect(sMessage.indexOf('#') !== -1).toBe(false);
 				fnDone();
@@ -90,7 +96,8 @@ describe( "RouteString", () => {
 
 	it( "onunhandledrejection skipLog", async ( fnDone ) => {
 
-		oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new TestRouteString() };
+		oRoot.log.oRouteTypes = { test: TestRouteString };
+		oRoot.log.init();
 
 		fnSendSpy.and.callFake( ( sMessage, oError ) => {
 			expect(oError.msg() ).toBe( "not skip error" );
@@ -127,13 +134,13 @@ describe( "RouteString", () => {
 
 		// ситуация, когда по какой то причине вместо подгрузки sourcemapped-stacktrace библиотеки
 		// произошла ошибка
-		oRootBox.box( 'log' ).oneLogger().pMapStack = () => {
+		oRoot.log.pMapStack = () => {
 			throw "error";
 		};
-		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteString() };
+		oRoot.log.oRouteTypes = { test: TestRouteString };
+		oRoot.log.init();
 
 		fnSendSpy.and.callFake( () => {
-			oRootBox.box( 'log' ).oneLogger().pMapStack = oDeps.log.pMapStack;
 			fnDone();
 		} );
 

@@ -1,15 +1,16 @@
-import oDeps from "./_support/deps.js";
-import {RootBox} from "di-box";
-import {Widget} from "./../src/index.js";
+import {Widget} from "./../src/Widget.js";
+import oCoreBox from "@zasada/core";
+import oTestBox from "@zasada/test";
 
 let oHelper, oLinker;
 
 describe( "Widget", () => {
 
 	beforeAll( ( fnDone ) => {
-		const oRootBox = new RootBox( oDeps );
-		oRootBox.box( 'core' ).init( ( oLinkerReal ) => {
-			oHelper = oRootBox.box( 'test' ).oneHelper();
+		oTestBox.oneLinker = oCoreBox.oneLinker;
+		const oRoot = { core: oCoreBox, test: oTestBox };
+		oRoot.core.init( ( oLinkerReal ) => {
+			oHelper = oRoot.test.oneHelper();
 			oLinker = oLinkerReal;
 			fnDone();
 		} );

@@ -32,7 +32,7 @@ var oConfig = fnWebpackMerge(
 
 module.exports = ( oEnv, oArgv ) => {
 	if (oArgv.mode === 'development') {
-		oConfig.devtool = 'eval-cheap-module-source-map';
+		oConfig.devtool = 'cheap-source-map';
 	}
 	if (oArgv.mode === 'production') {
 		oConfig.devtool = 'source-map';

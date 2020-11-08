@@ -1,11 +1,9 @@
-import {RootBox} from "di-box";
-import oDeps from "zasada/src/deps.js";
 import {Example as ExampleBase} from "../Example.js";
-import {Widget} from "zasada/src/index.js";
-import {importExt} from "zasada/packages/core/src/utils/importExt.js";
+import {Widget} from "@zasada/widget";
+import {importExt} from "@zasada/core/src/utils/importExt.js";
+import oRoot from "@zasada/bootstrap";
 
-const oRootBox = new RootBox( oDeps );
-oRootBox.box( 'core' ).init( ( oLinker ) => {
+oRoot.core.init( ( oLinker ) => {
 
 	class Example extends ExampleBase {
 

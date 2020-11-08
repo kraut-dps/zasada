@@ -6,6 +6,8 @@
 /examples/package-lock.json
 /node_modules/
 /package-lock.json
+/packages/bootstrap/node_modules
+/packages/bootstrap/package-lock.json
 /packages/core/node_modules
 /packages/core/package-lock.json
 /packages/log/node_modules

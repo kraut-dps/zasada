@@ -1,21 +1,16 @@
-import oDeps from "./../_support/deps.js";
-import {RootBox} from "di-box";
-import {Widget} from "./../../src/index.js";
-
+import oRoot, {Widget} from "./_support/bootstrap.js";
 
 class WidgetTest extends Widget {
 }
 
-let oEl, oHelper, oCoreBox;
+let oEl, oHelper;
 describe( "El", () => {
 
 	beforeAll( ( fnDone ) => {
-		const oRootBox = new RootBox( oDeps );
-		oCoreBox = oRootBox.box( 'core' );
-		oCoreBox.init( () => {
-			oCoreBox.oneLinker().setWidgets( { WidgetTest } );
-			oEl = oCoreBox.oneEl();
-			oHelper = oRootBox.box( 'test' ).oneHelper();
+		oRoot.core.init( ( oLinker ) => {
+			oLinker.setWidgets( { WidgetTest } );
+			oHelper = oRoot.test.oneHelper();
+			oEl = oRoot.core.oneEl();
 			fnDone();
 		} );
 	} );
@@ -36,7 +31,7 @@ describe( "El", () => {
 		// просто в качестве аргумента не строка а объект
 		expect( oEl.find( oWidget, oEl.parse( 'Foo[]' ) ) ).toEqual( aFoos );
 
-		const oElQuery = oCoreBox.newElQuery();
+		const oElQuery = oRoot.core.newElQuery();
 		oElQuery.id( 'Foo' );
 		oElQuery.onlyFirst( false );
 

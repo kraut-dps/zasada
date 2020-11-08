@@ -1,7 +1,3 @@
-declare namespace _default {
-    export { Helper };
-}
-export default _default;
-export { TestBox as _Box };
-import { Helper } from "./Helper.js";
+export { oBox as default };
+declare const oBox: TestBox;
 import { TestBox } from "./TestBox.js";

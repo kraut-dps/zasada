@@ -1,12 +1,9 @@
-import oDeps from "./../_support/deps.js";
-import {RootBox} from "di-box";
-import {Widget} from "./../../src/index.js";
-import { RouteConsole } from "../../packages/log/src/route/RouteConsole.js";
+import oRoot, {Widget} from "./_support/bootstrap.js";
+import { RouteConsole } from "../src/route/RouteConsole.js";
+import { CustomError } from "../src/CustomError.js";
+import {ErrorWidget} from "./_support/ErrorWidget.js";
 
-import { CustomError } from "../../packages/log/src/CustomError.js";
-import {ErrorWidget} from "../_support/ErrorWidget.js";
-
-let oRootBox, oHelper, oOriginConsole, fnSendSpy = jasmine.createSpy('spy');
+let oHelper, oOriginConsole, fnSendSpy = jasmine.createSpy('spy');
 
 /**
  * @implements ILogRoute
@@ -22,46 +19,45 @@ describe( "RouteConsole", () => {
 
 	beforeAll( ( fnDone ) => {
 		oOriginConsole = window.console;
-		oRootBox = new RootBox( oDeps );
-		oRootBox.box( 'log' ).init();
-		const oCoreBox = oRootBox.box( 'core' );
-		oCoreBox.init( () => {
+		oRoot.core.init( ( oLinker ) => {
 			// чтобы не заморачиваться на задержку обработки stackMap
-			oRootBox.box( 'log' ).oneLogger().pMapStack = null;
+			oRoot.log.oneLogger().pMapStack = null;
 
-			oCoreBox.oneLinker().setWidgets( { ErrorWidget } );
-			oHelper = oRootBox.box( 'test' ).oneHelper();
+			oLinker.setWidgets( { ErrorWidget } );
+			oHelper = oRoot.test.oneHelper();
 			fnDone();
 		} );
 	} );
 
-	afterAll( () => {
+	beforeEach( () => {
+		fnSendSpy.calls.reset();
+		oRoot.log.reset();
+	} );
+
+	afterEach( () => {
 		window.console = oOriginConsole;
 	} )
 
-	beforeEach( () => {
-		fnSendSpy.calls.reset();
-		oRootBox.box( 'log' ).oneLogger().oRoutes = null;
-	} );
-
-
-	it( 'no blockId and widget', async ( fnDone ) => {
+	/*it( 'no blockId and widget', async ( fnDone ) => {
 
 		// null, но на самом деле из дефолтного конфига возьмет RouteConsole
-		oRootBox.box( 'log' ).oneLogger().oRoutes = null;
+		oRoot.log.oneLogger().oRoutes = null;
 
-		window.console = { error: () => {
-			window.console = oOriginConsole;
-			fnDone();
+		window.console = { error: ( s1, oError ) => {
+			if( oError.sHelp === 'not-found-blockid' ) {
+				fnDone();
+			}
 		} };
 		await oHelper.addHtml(
 			`<div class="_"></div>`,
 		);
 
-	} );
+	} );*/
 
 	it( 'undefined widget console', async ( fnDone ) => {
-		oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new RouteConsole() };
+		oRoot.log.oRouteTypes = { test: RouteConsole };
+		oRoot.log.init();
+
 		window.console = { error: () => {
 			window.console = oOriginConsole;
 			fnDone();
@@ -73,16 +69,16 @@ describe( "RouteConsole", () => {
 
 	it( 'throw string', async ( fnDone ) => {
 
-		oRootBox.box( 'log' ).oneLogger().oRoutes = {test: new RouteConsole()};
+		oRoot.log.oRouteTypes = { test: RouteConsole };
+		oRoot.log.init();
 
 		class ThrowWidget extends Widget {
 			run() {
 				throw "exception";
 			}
 		}
-		oRootBox.box( 'core' ).oneLinker().setWidgets( { ThrowWidget } );
+		oRoot.core.oneLinker().setWidgets( { ThrowWidget } );
 		window.console = { error: () => {
-			window.console = oOriginConsole;
 			fnDone();
 		} };
 		await oHelper.addHtml(
@@ -92,7 +88,8 @@ describe( "RouteConsole", () => {
 
 	it( "type compat", async ( fnDone ) => {
 
-		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteConsole() };
+		oRoot.log.oRouteTypes = { test: TestRouteConsole };
+		oRoot.log.init();
 
 		fnSendSpy.and.callFake( ( sMessage, oError ) => {
 			expect( oError.msg() ).toEqual( 'error object' );
@@ -106,7 +103,8 @@ describe( "RouteConsole", () => {
 
 	it( "type pure error", async ( fnDone ) => {
 
-		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteConsole() };
+		oRoot.log.oRouteTypes = { test: TestRouteConsole };
+		oRoot.log.init();
 
 		fnSendSpy.and.callFake( ( sMessage, oError ) => {
 			expect( oError.msg() ).toEqual( 'error custom origin' );
@@ -120,7 +118,8 @@ describe( "RouteConsole", () => {
 
 	it( "type error", async ( fnDone ) => {
 
-		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteConsole() };
+		oRoot.log.oRouteTypes = { test: TestRouteConsole };
+		oRoot.log.init();
 
 		fnSendSpy.and.callFake( ( sMessage, oError ) => {
 			expect( oError.msg() ).toEqual( 'error origin' );
@@ -134,7 +133,8 @@ describe( "RouteConsole", () => {
 
 	it( "type string", async ( fnDone ) => {
 
-		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteConsole() };
+		oRoot.log.oRouteTypes = { test: TestRouteConsole };
+		oRoot.log.init();
 
 		fnSendSpy.and.callFake( ( sMessage, oError ) => {
 			expect( oError.msg() ).toEqual( 'error string' );
@@ -148,7 +148,8 @@ describe( "RouteConsole", () => {
 
 	it( "type string fake", async ( fnDone ) => {
 
-		oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRouteConsole() };
+		oRoot.log.oRouteTypes = { test: TestRouteConsole };
+		oRoot.log.init();
 
 		fnSendSpy.and.callFake( ( sMessage, oError ) => {
 			expect( oError.msg() ).toEqual( 'error string' );

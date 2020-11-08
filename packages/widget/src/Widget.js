@@ -1,5 +1,6 @@
 /**
  * @typedef {import('@zasada/core/src/interfaces').IWidget} IWidget
+ * @typedef {import('@zasada/core/src/interfaces').IWidgetInit} IWidgetInit
  * @typedef {import('@zasada/core/src/interfaces').ILinker} ILinker
  * @typedef {import('@zasada/core/src/interfaces').IAttrs} IAttrs
  * @typedef {import('@zasada/core/src/interfaces').IEl} IEl
@@ -11,7 +12,7 @@
  */
 /**
  * виджет
- * @implements IWidget
+ * @implements IWidgetInit
  */
 export class Widget {
 	__eBl;

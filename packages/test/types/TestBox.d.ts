@@ -1,4 +1,5 @@
 export class TestBox extends Box {
+    constructor(sNeedCheckPrefix?: string, sProtectedPrefix?: string);
     /**
      * @type {IHelperConstructor}
      */

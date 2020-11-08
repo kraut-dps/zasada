@@ -1,5 +1,4 @@
-import oDeps from "./../_support/deps.js";
-import {RootBox} from "di-box";
+import oCoreBox from "../src/index.js";
 
 let oAttrs, eBase;
 
@@ -26,9 +25,8 @@ const fnCast = ( sAttrs, sPrefix, iCnt ) => {
 describe( "Attrs", () => {
 
 	beforeAll( ( fnDone ) => {
-		const oRoot = new RootBox( oDeps );
-		oRoot.box( 'core' ).init( () => {
-			oAttrs = oRoot.box( 'core' ).oneAttrs();
+		oCoreBox.init( () => {
+			oAttrs = oCoreBox.oneAttrs();
 			fnDone();
 		} );
 	} );

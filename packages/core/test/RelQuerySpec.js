@@ -1,6 +1,4 @@
-import oDeps from "./../_support/deps.js";
-import {RootBox} from "di-box";
-import {Widget as WidgetBase} from "./../../src/index.js";
+import oRoot, {Widget as WidgetBase} from "./_support/bootstrap.js";
 
 /**
  *  @type {IStorage}
@@ -24,12 +22,11 @@ class OtherWidget extends WidgetBase {
 describe( "RelQuery", () => {
 
 	beforeAll( ( fnDone ) => {
-		const oRoot = new RootBox( oDeps );
-		oRoot.box( 'core' ).init( ( oLinkerReal ) => {
+		oRoot.core.init( ( oLinkerReal ) => {
 			oLinker = oLinkerReal;
 			oLinker.setWidgets( { Widget } );
-			oStorage = oRoot.box( 'core' ).oneStorage();
-			oHelper = oRoot.box( 'test' ).newHelper();
+			oStorage = oRoot.core.oneStorage();
+			oHelper = oRoot.test.newHelper();
 			fnDone();
 		} );
 	} );

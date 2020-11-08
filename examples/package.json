@@ -8,7 +8,10 @@
     "prod": "webpack --mode=production"
   },
   "dependencies": {
-    "zasada": "git+https://github.com/kraut-dps/zasada.git#tmp"
+    "@zasada/bootstrap": "file:../packages/bootstrap",
+    "@zasada/widget": "file:../packages/widget",
+    "@zasada/core": "file:../packages/core",
+    "@zasada/log": "file:../packages/log"
   },
   "devDependencies": {
     "@babel/core": "7.2.0",
@@ -24,6 +27,7 @@
     "webpack": "^4.44.0",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "3.11.0",
-    "webpack-merge": "^5.1.1"
+    "webpack-merge": "^5.1.1",
+    "zasada": "0.0.20"
   }
 }

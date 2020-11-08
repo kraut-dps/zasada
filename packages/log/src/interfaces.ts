@@ -2,6 +2,7 @@ import {IWidget, ICustomErrorProps} from "@zasada/core/src/interfaces";
 
 export interface ILogger {
 	error( oError: Error | ICustomErrorProps | ICustomError ): void;
+	init(): void;
 }
 
 export interface IRouteTypes {

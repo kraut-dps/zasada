@@ -149,28 +149,28 @@ function () {
 		]
 	},
 	Rel: {
-		sTitle: "Widget.rel() доступ к другим виджетам",
+		sTitle: "Widget._rel() доступ к другим виджетам",
 		sHtml:
 `<div class="block block_oth _ _OtherWidget" data-index="parent">
 	<div class="block _ _TestWidget">
 		<div class="block block_oth _ _OtherWidget" data-index="child"></div>
 	</div>
-	<div class="block block_oth _ _OtherWidget" data-index="sibling">
+	<div class="block block_oth _ _OtherWidget" data-index="sibling"></div>
 </div>`,
 		aExamples: [
 function ( OtherWidget ) {
-	// доступ к предку по типу .parents()
-	const oOtherWidget = this.rel()
-		.parents()
+	// доступ к предку по типу .parent()
+	const oOtherWidget = this._rel()
+		.parent()
 		.typeOf( OtherWidget )
 		.find();
 	oOtherWidget.toggle();
 
 },
 function ( OtherWidget ) {
-	// доступ к потомку по типу .children()
-	const oOtherWidget = this.rel()
-		.children()
+	// доступ к потомку по типу .child()
+	const oOtherWidget = this._rel()
+		.child()
 		.typeOf( OtherWidget )
 		.find();
 	oOtherWidget.toggle();
@@ -178,7 +178,7 @@ function ( OtherWidget ) {
 },
 function ( OtherWidget ) {
 	// доступ по индексу .index()
-	const oOtherWidget = this.rel()
+	const oOtherWidget = this._rel()
 		.index( 'sibling' )
 		.find();
 	oOtherWidget.toggle();
@@ -186,7 +186,7 @@ function ( OtherWidget ) {
 },
 function ( OtherWidget ) {
 	// доступ к нескольким виджетам .find( bAll = true )
-	this.rel()
+	this._rel()
 		.typeOf( OtherWidget )
 		.find( true )
 		.forEach( ( oOtherWidget ) => {
@@ -196,14 +196,14 @@ function ( OtherWidget ) {
 },
 function ( OtherWidget ) {
 	// поиск несуществующего виджета выдаст ошибку
-	this.rel()
+	this._rel()
 		.typeOf( OtherWidget )
 		.index( 'badIndex' )
 		.find();
 },
 function ( OtherWidget ) {
 	// но вызов .canEmpty() уберет ошибку
-	this.rel()
+	this._rel()
 		.typeOf( OtherWidget )
 		.index( 'badIndex' )
 		.canEmpty()
@@ -212,7 +212,7 @@ function ( OtherWidget ) {
 		]
 	},
 	RelEvent: {
-		sTitle: "Widget.rel().onAdd().onDrop() события на привязку/отвязку других виджетов",
+		sTitle: "Widget._rel().onAdd().onDrop() события на привязку/отвязку других виджетов",
 		sHtml:
 `<div class="block _ _TestWidget">
 	<= Сначала нажать на кнопку слева, чтобы выполнился код
@@ -226,7 +226,7 @@ function ( OtherWidget ) {
 </div>`,
 		aExamples: [
 function ( OtherWidget ) {
-	this.aOtherWidgets = this.rel().child().typeOf( OtherWidget )
+	this.aOtherWidgets = this._rel().child().typeOf( OtherWidget )
 		.onAdd( ( oWidget ) => {
 			// каждое добавление виджета OtherWidget будет выполняться этот код
 			this.aOtherWidgets.push( oWidget );

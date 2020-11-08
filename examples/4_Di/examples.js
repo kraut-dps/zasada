@@ -5,13 +5,13 @@ window.oExamples = {
 	<div class="block__element" e="Block-Element"></div>
 		</div>`,
 		aExamples: [
-			function( RootBox, oDeps, Widget, eContext ) {
+			function( oRoot, Widget, eContext ) {
 
 				// допустим хотим сделать кастомную разметку виджетов
 				// хотим в атрибуте "b" чтобы указывалось название виджета
 				// а в атрибуте "e" чтобы указывалось название элемента
 
-				class CustomDom extends oDeps.core.Dom {
+				class CustomDom extends oRoot.core.Dom {
 					// подменяем метод, который формирует css селектор для поиска виджетов
 					sel( sBlockId = '', sElementId = '' ) {
 						if( sBlockId ) {
@@ -44,10 +44,11 @@ window.oExamples = {
 					}
 				}
 
-				oDeps.core.Dom = CustomDom;
-				const oRootBox = new RootBox( oDeps );
-
-				oRootBox.box( 'core' ).init( ( oLinker ) => {
+				const oRootClone = { ...{}, ...oRoot };
+				oRootClone.log.reset();
+				oRootClone.core.reset();
+				oRootClone.core.Dom = CustomDom;
+				oRootClone.core.init( ( oLinker ) => {
 					oLinker.setWidgets( { Block } );
 					oLinker.link( eContext );
 				} );
@@ -59,7 +60,7 @@ window.oExamples = {
 		sTitle: "Кастомный вывод ошибок",
 		sHtml: `<div class="block _ _ErrorWidget"></div>`,
 		aExamples: [
-			function( RootBox, oDeps, Widget, eContext, RouteString ) {
+			function( oRoot, Widget, eContext, RouteString ) {
 
 				// допустим хотим сделать чтобы ошибки через alert выводились
 
@@ -75,10 +76,11 @@ window.oExamples = {
 					}
 				}
 
-				oDeps.log.oRouteTypes = [ CustomErrorRoute ];
-				const oRootBox = new RootBox( oDeps );
-
-				oRootBox.box( 'core' ).init( ( oLinker ) => {
+				const oRootClone = { ...{}, ...oRoot };
+				oRootClone.log.reset();
+				oRootClone.core.reset();
+				oRootClone.log.oRouteTypes = { CustomErrorRoute };
+				oRootClone.core.init( ( oLinker ) => {
 					oLinker.setWidgets( { ErrorWidget } );
 					oLinker.link( eContext );
 				} );

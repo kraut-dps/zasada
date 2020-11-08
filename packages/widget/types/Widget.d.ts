@@ -1,5 +1,6 @@
 /**
  * @typedef {import('@zasada/core/src/interfaces').IWidget} IWidget
+ * @typedef {import('@zasada/core/src/interfaces').IWidgetInit} IWidgetInit
  * @typedef {import('@zasada/core/src/interfaces').ILinker} ILinker
  * @typedef {import('@zasada/core/src/interfaces').IAttrs} IAttrs
  * @typedef {import('@zasada/core/src/interfaces').IEl} IEl
@@ -11,9 +12,9 @@
  */
 /**
  * виджет
- * @implements IWidget
+ * @implements IWidgetInit
  */
-export class Widget implements IWidget {
+export class Widget implements IWidgetInit {
     /**
      * @param {Element} eBlock DOM элемент основного узла виджета
      * @param {string} sBlockId строковый инедтификатор типа виджета
@@ -214,6 +215,7 @@ export class Widget implements IWidget {
     destructor(): void;
 }
 export type IWidget = import("@zasada/core/src/interfaces").IWidget;
+export type IWidgetInit = import("@zasada/core/src/interfaces").IWidgetInit;
 export type ILinker = import("@zasada/core/src/interfaces").ILinker;
 export type IAttrs = import("@zasada/core/src/interfaces").IAttrs;
 export type IEl = import("@zasada/core/src/interfaces").IEl;

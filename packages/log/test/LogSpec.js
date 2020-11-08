@@ -1,189 +1,185 @@
-import oDeps from "./../_support/deps.js";
-import {RootBox} from "di-box";
-import { RouteString } from "../../packages/log/src/route/RouteString.js";
-import { RouteConsole } from "../../packages/log/src/route/RouteConsole.js";
-import {ErrorWidget} from "../_support/ErrorWidget.js";
-import {LogBox} from "../../packages/log/src/LogBox.js";
+import oRoot from "./_support/bootstrap.js";
+import { RouteString } from "../src/route/RouteString.js";
+import { RouteConsole } from "../src/route/RouteConsole.js";
+import { ErrorWidget } from "./_support/ErrorWidget.js";
 
-let oRootBox, oHelper, oDepsFix, oConsoleOrigin, fnSendSpy = jasmine.createSpy('spy');
+let oHelper, oRootFix, oConsoleOrigin, fnSendSpy = jasmine.createSpy('spy');
 
 /**
  * @implements ILogRoute
  */
 class TestRoute extends RouteString {
-  _send( ...aArgs) {
-    fnSendSpy( ...aArgs );
-  }
+	_send( ...aArgs) {
+		fnSendSpy( ...aArgs );
+	}
 }
 
 /**
  * внутри отправки ошибки куда то, ошибка ))
  */
 class TestRouteWithError extends RouteString {
-  _send( ...aArgs) {
-    fnSendSpy( ...aArgs );
-    throw new Error("error in error");
-  }
+	_send( ...aArgs) {
+		fnSendSpy( ...aArgs );
+		throw new Error("error in error");
+	}
 }
 
 describe( "base", () => {
 
-  beforeAll( ( fnDone ) => {
-    oRootBox = new RootBox( oDeps );
-    oRootBox.box( 'log' ).init();
-    const oCoreBox = oRootBox.box( 'core' );
-    oCoreBox.init( () => {
-      // чтобы не заморачиваться на задержку обработки stackMap
-      oRootBox.box( 'log' ).oneLogger().pMapStack = null;
+	beforeAll( ( fnDone ) => {
 
-      oCoreBox.oneLinker().setWidgets( { ErrorWidget } );
-      oHelper = oRootBox.box( 'test' ).oneHelper();
-      fnDone();
-    } );
-  } );
+		oRoot.core.init( ( oLinker ) => {
+			// чтобы не заморачиваться на задержку обработки stackMap
+			oRoot.log.oneLogger().pMapStack = null;
 
-  beforeEach( () => {
-    fnSendSpy.calls.reset();
-    oRootBox.box( 'log' ).oneLogger().oRoutes = null;
-  } );
+			oLinker.setWidgets( { ErrorWidget } );
+			oHelper = oRoot.test.oneHelper();
+			fnDone();
+		} );
+	} );
+
+	beforeEach( () => {
+		fnSendSpy.calls.reset();
+		oRoot.log.reset();
+	} );
 
 
-  it( "unset route by name", () => {
+	it( "unset route by name", () => {
 
-    const oLogger = oRootBox.box( 'log' ).oneLogger();
+		oRoot.log.init();
+		const oLogger = oRoot.log.oneLogger();
 
-    // изначально был задан тип
-    oLogger.oRouteTypes = { test: RouteConsole };
-    // потом его сбросили
-    oLogger.oRouteTypes = { test: false };
-    // нужно чтобы по новой Logger собрал oRoutes
-    oLogger.oRoutes = null;
+		// изначально был задан тип
+		oLogger.oRouteTypes = { test: RouteConsole };
+		// потом его сбросили
+		oLogger.oRouteTypes = { test: false };
+		// нужно чтобы по новой Logger собрал oRoutes
+		oLogger.oRoutes = null;
 
-    expect( oLogger._getRoutes() ).toEqual({  } );
-  } );
+		expect( oLogger._getRoutes() ).toEqual({  } );
+	} );
 
-  it( "MapStack", async ( fnDone ) => {
+	it( "MapStack", async ( fnDone ) => {
 
-    oRootBox.box( 'log' ).oneLogger().oRoutes = { test: new TestRoute() };
-    oRootBox.box( 'log' ).oneLogger().pMapStack = oRootBox.box( 'log' ).pMapStack;
+		oRoot.log.oRouteTypes = { test: TestRoute };
+		oRoot.log.init();
 
-    fnSendSpy.and.callFake( ( sMessage, oError ) => {
-      if( oError.msg() === 'error origin' ) {
-        fnDone();
-      }
-    } );
+		fnSendSpy.and.callFake( ( sMessage, oError ) => {
+			if( oError.msg() === 'error origin' ) {
+				fnDone();
+			}
+		} );
 
-    await oHelper.addHtml(
-      `<div class="_ _ErrorWidget"></div>`,
-    );
+		await oHelper.addHtml(
+			`<div class="_ _ErrorWidget"></div>`,
+		);
 
-  } );
+	} );
 } );
 
 describe( "SubErrors", () => {
 
-  beforeEach( () => {
-    fnSendSpy.calls.reset();
-    oConsoleOrigin = window.console;
-    oDepsFix = {...{}, ...oDeps};
-    oDepsFix.log.pMapStack = null;
-    oDepsFix.log.oRouteTypes = {
-      test: TestRouteWithError
-    };
-  } );
+	beforeEach( () => {
+		fnSendSpy.calls.reset();
+		oConsoleOrigin = window.console;
+		oRootFix = {...{}, ...oRoot};
+		oRootFix.log.reset();
+		oRootFix.log.pMapStack = null;
+		oRootFix.log.oRouteTypes = {
+			test: TestRouteWithError
+		};
+	} );
 
-  afterEach( () => {
-    window.console = oConsoleOrigin
-  } )
+	afterEach( () => {
+		window.console = oConsoleOrigin;
+	} )
 
-  it( "error in onunhandledrejection", async ( fnDone ) => {
+	it( "error in onunhandledrejection", async ( fnDone ) => {
 
-    console = {
-      log: fnDone
-    };
+		console = {
+			log: fnDone
+		};
 
-    oRootBox = new RootBox( oDepsFix );
-    oRootBox.box( 'log' ).init();
+		oRootFix.log.init();
 
-    // просто вызовет console.log в errorInOnunhandledrejection
-    new Promise( () => {
-      throw oRootBox.box( 'log' ).newError( {} );
-    } );
-  } );
+		// просто вызовет console.log в errorInOnunhandledrejection
+		new Promise( () => {
+			throw oRootFix.log.newError( {} );
+		} );
+	} );
 
-  it( "error in onunhandledrejection 2", async ( fnDone ) => {
+	it( "error in onunhandledrejection 2", async ( fnDone ) => {
 
-    // подменим обработчик
-    class LogBoxUpdated extends LogBox {
-      errorInOnunhandledrejection( oError, oEvent ) {
-        if( oEvent.reason.message.indexOf( 'error in onunhandledrejection 2' ) !== -1 ) {
-          fnDone();
-        }
-      }
-    }
-    oDepsFix.log._Box = LogBoxUpdated;
-    oRootBox = new RootBox( oDepsFix );
-    oRootBox.box( 'log' ).init();
+		// подменим обработчик`
+		class LoggerTest extends oRootFix.log.Logger {
+			errorInOnunhandledrejection( oError, oEvent ) {
+				if( oEvent.reason.message.indexOf( 'error in onunhandledrejection 2' ) !== -1 ) {
+					fnDone();
+				}
+			}
+		}
+		oRootFix.log.reset();
+		oRootFix.log.Logger = LoggerTest;
+		oRootFix.log.init();
 
-    new Promise( () => {
-      throw new Error('error in onunhandledrejection 2');
-    } );
-  } );
+		new Promise( () => {
+			throw new Error('error in onunhandledrejection 2');
+		} );
+	} );
 
-  it( "error in onerror", async ( fnDone ) => {
+	it( "error in onerror", async ( fnDone ) => {
 
-    console = {
-      log: fnDone
-    };
+		console = {
+			log: fnDone
+		};
 
-    oRootBox = new RootBox( oDepsFix );
-    oRootBox.box( 'log' ).init();
+		oRootFix.log.reset();
+		oRootFix.log.init();
 
-    setTimeout(
-      () => {
-        throw new Error();
-      },
-      0
-    );
-  } );
+		setTimeout(
+			() => {
+				throw new Error();
+			},
+			0
+		);
+	} );
 
-  it( "error in onerror 2", ( fnDone ) => {
+	 it( "error in onerror 2", ( fnDone ) => {
 
-    // подменим обработчик
-    class LogBoxUpdated extends LogBox {
-      errorInOnerror( oError, message, sourceURL, line, column, oErrorOrigin ) {
-        if( oErrorOrigin.message === 'error in onerror 2' ) {
-          //expect( fnSendSpy.calls.count() ).toEqual( 1 );
-          fnDone();
-        }
-      }
-    }
-    oDepsFix.log._Box = LogBoxUpdated;
-    oRootBox = new RootBox( oDepsFix );
-    oRootBox.box( 'log' ).init();
+		// подменим обработчик
+		class LoggerTest extends oRootFix.log.Logger {
+			errorInOnerror( oError, message, sourceURL, line, column, oErrorOrigin ) {
+				if( oErrorOrigin.message === 'error in onerror 2' ) {
+					//expect( fnSendSpy.calls.count() ).toEqual( 1 );
+					fnDone();
+				}
+			}
+		}
+		oRootFix.log.Logger = LoggerTest;
+		oRootFix.log.reset();
+		oRootFix.log.init();
 
-    setTimeout(
-      () => {
-        throw new Error( 'error in onerror 2' );
-      },
-      0
-    );
-  } );
+		 setTimeout(
+			 () => {
+				throw new Error( 'error in onerror 2' );
+			 },
+			 0
+		);
+	} );
 
-  it( "bad window.Error", async ( fnDone ) => {
+	it( "bad window.Error", async ( fnDone ) => {
 
-    const ErrorOrigin = window.Error;
-    window.Error = () => {
-      return {};
-    };
+		const ErrorOrigin = window.Error;
+		window.Error = () => {
+			return {};
+		};
 
-    try{
-      oRootBox = new RootBox( oDepsFix );
-      throw oRootBox.box( 'log' ).newError( {} );
-    } catch( e ) {
-      expect( e.stackOrigin() ).toEqual( null );
-      window.Error = ErrorOrigin;
-      fnDone();
-    }
-  } );
+		try{
+			throw oRootFix.log.newError( {} );
+		} catch( e ) {
+			expect( e.stackOrigin() ).toEqual( null );
+			window.Error = ErrorOrigin;
+			fnDone();
+		}
+	} );
 } );

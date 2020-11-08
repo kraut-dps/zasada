@@ -21,6 +21,9 @@ export class Logger {
      * обработка ошибки
      */
     error(mError: any): void;
+    init(): void;
+    errorInOnerror(oError: any, message: any, sourceURL: any, line: any, column: any, oErrorOrigin: any): void;
+    errorInOnunhandledrejection(oError: any, oEvent: any): void;
     /**
      * обогащение ошибки mapped stack, если это возможно
      * без Promise, может к моменту вызова не быть еще полифила

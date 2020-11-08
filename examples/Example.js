@@ -1,4 +1,4 @@
-import {Widget} from "zasada/src";
+import {Widget} from "@zasada/widget";
 
 /**
  * виджет для создания окружения примера
