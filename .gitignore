@@ -16,3 +16,4 @@
 /packages/test/package-lock.json
 /packages/widget/node_modules
 /packages/widget/package-lock.json
+/lerna-debug.log
