@@ -27,7 +27,7 @@ class Widget {
  * Легко переносить _виджеты_ из проекта в проект, достаточно перенести esmodule класс, и добавить HTML class верстку.
  * Минимум обращений к DOM, один запрос document.querySelectorAll( '_' ) для всех _виджетов_ на странице.
  * Кеширование _элементов_ внутри контекста _виджета_, к DOM обращение только один раз.
- * Легкое обращение из одного _виджета_ к другому через специальный интерфейс .rel или через события.
+ * Легкое обращение из одного _виджета_ к другому через специальный интерфейс ._rel или через события.
  * Dependency injection реализация, позволяющая гибко изменить - расширить функционал.
  * Возможность вложенности _виджетов_, например когда _элемент_ одного _виджета_ является _блоком_ другого
 ```html
@@ -46,7 +46,10 @@ class Widget {
  * Средний размер 38 kb ( 10 kb gz )
 
 ## Примеры
-[codesandbox](https://codesandbox.io/s/github/kraut-dps/zasada/tree/%40zasada/examples%400.0.5/packages/examples/?file=/src/1_HelloWorld/index.js)
+[Codesandbox](https://codesandbox.io/s/github/kraut-dps/zasada/tree/%40zasada/examples%400.0.5/packages/examples/?file=/src/1_HelloWorld/index.js)
+
+## API Reference
+Пока отдельного описания нет, но есть в [примерах](https://codesandbox.io/s/github/kraut-dps/zasada/tree/%40zasada/examples%400.0.5/packages/examples/?file=/src/1_HelloWorld/index.js) - нужно в окне browser кликнуть по WidgetApi или LinkerApi
 
 ## Концепция
  * По аналогии с DOM, CSSOM еще одна Object Model, где узлами являются DOM элементы с привязанным js функционалом.
@@ -138,9 +141,9 @@ class MyWidget extends Widget {
 ```javascript
 class MyWidget extends Widget {
     run() {
-        this.rel().typeOf( OtherWidget ).find(); // object OtherWidget ok 
-        this.rel().children().typeOf( OtherWidget ).find(); // error
-        this.rel().children().typeOf( OtherWidget ).canEmpty().find(); // null ok
+        this._rel().typeOf( OtherWidget ).find(); // object OtherWidget ok 
+        this._rel().children().typeOf( OtherWidget ).find(); // error
+        this._rel().children().typeOf( OtherWidget ).canEmpty().find(); // null ok
     }
 }
 ```
