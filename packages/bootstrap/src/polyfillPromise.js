@@ -1,1 +1,1 @@
-export default from "@zasada/core/src/utils/polyfillPromise.js";
+export {default} from "@zasada/core/src/utils/polyfillPromise.js";
