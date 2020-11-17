@@ -1,6 +1,6 @@
 {
   "name": "@zasada/examples",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
   "main": "index.html",
   "scripts": {
@@ -8,7 +8,7 @@
     "prod": "webpack --mode=production"
   },
   "dependencies": {
-    "@zasada/bootstrap": "^0.1.7",
+    "@zasada/bootstrap": "^0.1.8",
     "@zasada/core": "^0.1.2",
     "@zasada/log": "^0.1.2",
     "@zasada/widget": "^0.1.2"
