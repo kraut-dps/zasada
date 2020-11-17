@@ -99,6 +99,8 @@ module.exports = {
 		//contentBase: __dirname,
 
 		overlay: true, // display error overlay
-		stats: "errors-only"
+		stats: "errors-only",
+
+		clientLogLevel: "warning"
 	},
 };
