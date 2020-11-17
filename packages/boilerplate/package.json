@@ -1,6 +1,6 @@
 {
   "name": "@zasada/boilerplate",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "index.html",
   "scripts": {
@@ -8,7 +8,7 @@
     "prod": "webpack --mode=production"
   },
   "dependencies": {
-    "@zasada/bootstrap": "^0.1.6",
+    "@zasada/bootstrap": "^0.1.7",
     "@zasada/widget": "^0.1.2"
   },
   "devDependencies": {
