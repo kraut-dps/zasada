@@ -1,6 +1,6 @@
 {
   "name": "@zasada/examples",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Examples of zasada library",
   "keywords": [
     "examples",
@@ -18,9 +18,9 @@
     "prod": "webpack --mode=production"
   },
   "dependencies": {
-    "@zasada/bootstrap": "^0.1.9",
+    "@zasada/bootstrap": "^0.1.10",
     "@zasada/core": "^0.1.3",
-    "@zasada/log": "^0.1.6",
+    "@zasada/log": "^0.1.7",
     "@zasada/widget": "^0.1.3"
   },
   "devDependencies": {
