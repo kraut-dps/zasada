@@ -1,6 +1,6 @@
 {
   "name": "@zasada/bootstrap",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "UI widget factory on ES classes with DI",
   "keywords": [
     "javascript",
@@ -29,9 +29,9 @@
     "types/"
   ],
   "dependencies": {
-    "@zasada/core": "^0.1.2",
-    "@zasada/log": "^0.1.5",
-    "@zasada/test": "^0.1.2"
+    "@zasada/core": "^0.1.3",
+    "@zasada/log": "^0.1.6",
+    "@zasada/test": "^0.1.3"
   },
   "gitHead": "25ee253eba10bed085df28b51d26d62fb2b6fc23"
 }
