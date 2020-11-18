@@ -155,6 +155,17 @@ describe( "RelQuery", () => {
 
 		} );
 
+		it( "bad query", () => {
+			try {
+				oLinker.newRelQuery()
+					.from(10) // need Element
+					.find();
+				fail();
+			} catch ( e ) {
+
+			}
+		} );
+
 		it( "index", () => {
 
 			// находится по индексу, но не находится по css селектору

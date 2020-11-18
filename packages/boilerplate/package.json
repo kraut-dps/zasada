@@ -1,7 +1,17 @@
 {
   "name": "@zasada/boilerplate",
   "version": "0.0.3",
-  "description": "",
+  "description": "Boilerplate app of zasada library",
+  "keywords": [
+    "boilerplate",
+    "zasada"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kraut-dps/zasada.git"
+  },
+  "homepage": "https://github.com/kraut-dps/zasada",
+  "license": "MIT",
   "main": "index.html",
   "scripts": {
     "dev": "webpack-dev-server --mode=development",

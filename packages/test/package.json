@@ -1,7 +1,11 @@
 {
   "name": "@zasada/test",
   "version": "0.1.2",
-  "description": "",
+  "description": "Test helpers of zasada library",
+  "keywords": [
+    "test",
+    "zasada"
+  ],
   "main": "./src/index.js",
   "types": "./types/index.d.ts",
   "files": [
@@ -14,7 +18,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "di-box": "^0.1.0"
+    "di-box": "^0.2.2"
   },
   "gitHead": "f01faea8a93efda2908c7b28c1879af57b9a378f"
 }

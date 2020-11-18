@@ -1,18 +1,33 @@
 {
   "name": "@zasada/bootstrap",
   "version": "0.1.8",
-  "description": "",
+  "description": "UI widget factory on ES classes with DI",
+  "keywords": [
+    "javascript",
+    "typescript",
+    "factory",
+    "library",
+    "widget",
+    "es2015",
+    "es6",
+    "dependency injection",
+    "js",
+    "di",
+    "ui",
+    "framework"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kraut-dps/zasada.git"
+  },
+  "homepage": "https://github.com/kraut-dps/zasada",
+  "license": "MIT",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "files": [
     "src/",
     "types/"
   ],
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "MIT",
   "dependencies": {
     "@zasada/core": "^0.1.2",
     "@zasada/log": "^0.1.5",

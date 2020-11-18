@@ -48,8 +48,16 @@ class Widget {
 ## Примеры
 [Codesandbox](https://codesandbox.io/s/github/kraut-dps/zasada/tree/%40zasada/examples%400.0.5/packages/examples/?file=/src/1_HelloWorld/index.js)
 
+## Boilerplate app ( простой шаблон приложения )
+```bash
+npm install -g degit
+npx degit kraut-dps/zasada/packages/boilerplate#@zasada/boilerplate@0.0.4
+npm i
+npm run dev
+```
+
 ## API Reference
-Пока отдельного описания нет, но есть в [примерах](https://codesandbox.io/s/github/kraut-dps/zasada/tree/%40zasada/examples%400.0.5/packages/examples/?file=/src/1_HelloWorld/index.js) - нужно в окне browser кликнуть по WidgetApi или LinkerApi
+Пока отдельного описания нет, но есть в [примерах](https://codesandbox.io/s/github/kraut-dps/zasada/tree/%40zasada/examples%400.0.5/packages/examples/?file=/src/1_HelloWorld/index.js) - нужно в окне browser кликнуть по WidgetApi или LinkerApi.
 
 ## Концепция
  * По аналогии с DOM, CSSOM еще одна Object Model, где узлами являются DOM элементы с привязанным js функционалом.

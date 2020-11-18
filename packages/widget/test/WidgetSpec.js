@@ -1,6 +1,6 @@
 import {Widget} from "./../src/Widget.js";
-import oCoreBox from "@zasada/core";
-import oTestBox from "@zasada/test";
+import oCoreBox from "../../core/src/index.js";
+import oTestBox from "../../test/src/index.js";
 
 let oHelper, oLinker;
 

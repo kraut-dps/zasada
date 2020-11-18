@@ -1,22 +1,31 @@
 {
   "name": "zasada",
   "version": "0.0.27",
-  "description": "",
-  "author": "",
-  "license": "MIT",
-  "main": "./src/index.js",
-  "types": "./types/core/index.d.ts",
-  "files": [
-    "src/",
-    "types/"
+  "description": "UI widget factory on ES classes with DI",
+  "keywords": [
+    "javascript",
+    "typescript",
+    "factory",
+    "library",
+    "widget",
+    "es2015",
+    "es6",
+    "dependency injection",
+    "js",
+    "di",
+    "ui",
+    "framework"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kraut-dps/zasada.git"
+  },
+  "homepage": "https://github.com/kraut-dps/zasada",
+  "license": "MIT",
   "scripts": {
     "unit": "karma start karma.conf.js --single-run",
     "coverage": "karma start karma.conf.js --single-run --coverage",
-    "ts-types": "lerna run ts-types",
-    "bolerplate": "mkdir -p ./app && cp -r ./webpack-bolerplate/* ./app",
-    "webpack-bolerplate-development": "cd ./app && ./../node_modules/.bin/webpack --mode=development",
-    "webpack-bolerplate-pproduction": "cd ./app && ./../node_modules/.bin/webpack --mode=production"
+    "ts-types": "lerna run ts-types"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",
@@ -27,6 +36,9 @@
     "@babel/plugin-syntax-dynamic-import": "^7.7.4",
     "@babel/plugin-transform-runtime": "^7.10.5",
     "@babel/preset-env": "^7.7.5",
+    "@zasada/bootstrap": "^0.1.8",
+    "@zasada/core": "^0.1.2",
+    "@zasada/widget": "^0.1.2",
     "babel-loader": "^8.0.6",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine-core": "^2.9.1",
@@ -41,13 +53,13 @@
     "karma-virtualbox-ie11-launcher": "^1.2.0",
     "karma-webpack": "^3.0.5",
     "lerna": "^3.22.1",
+    "serialize-javascript": ">=3.1.0",
     "typescript": "^4.0.5",
     "uglifyjs-webpack-plugin": "^2.2.0",
-    "serialize-javascript": ">=3.1.0",
     "webpack": "^4.44.0",
     "webpack-cli": "^3.3.10",
-    "webpack-merge": "^5.1.1",
-    "webpack-dev-server": "3.11.0"
+    "webpack-dev-server": "3.11.0",
+    "webpack-merge": "^5.1.1"
   },
   "comments": {
     "devDependencies": {

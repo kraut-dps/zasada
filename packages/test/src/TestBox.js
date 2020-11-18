@@ -5,8 +5,6 @@
  */
 import {Box} from "di-box";
 
-
-
 export class TestBox extends Box{
 
 	/**
@@ -25,6 +23,7 @@ export class TestBox extends Box{
 	oneHelper() {
 		return this.one( this.newHelper );
 	}
+
 	newHelper () {
 		const oHelper = new this.Helper();
 		oHelper.oneLinker = this.oneLinker;

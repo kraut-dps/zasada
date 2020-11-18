@@ -33,6 +33,22 @@ describe( "Attrs", () => {
 		} );
 	} );
 
+	it( "no attr", () => {
+		document.body.insertAdjacentHTML(
+			'afterbegin',
+			`<div id="base">
+			</div>`
+		);
+		eBase = document.getElementById( 'base' );
+		expect(
+			oAttrs.parse(
+				[ eBase ],
+				[ 'foo' ]
+			) ).toEqual(
+			{}
+		);
+	} );
+
 	it( "map types", () => {
 		document.body.insertAdjacentHTML(
 			'afterbegin',

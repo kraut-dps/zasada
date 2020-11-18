@@ -1,7 +1,11 @@
 {
   "name": "@zasada/widget",
   "version": "0.1.2",
-  "description": "",
+  "description": "Widget base ES class for zasada library",
+  "keywords": [
+    "widget",
+    "zasada"
+  ],
   "main": "./src/Widget.js",
   "types": "./types/Widget.d.ts",
   "files": [
@@ -13,8 +17,5 @@
   },
   "author": "",
   "license": "MIT",
-  "dependencies": {
-    "di-box": "^0.1.0"
-  },
   "gitHead": "f01faea8a93efda2908c7b28c1879af57b9a378f"
 }

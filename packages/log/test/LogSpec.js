@@ -61,6 +61,18 @@ describe( "base", () => {
 		expect( oLogger._getRoutes() ).toEqual({  } );
 	} );
 
+	it( "set route by name", () => {
+
+		oRoot.log.init();
+		const oLogger = oRoot.log.oneLogger();
+
+		const oRoute = new RouteConsole()
+
+		oLogger.oRoutes = { test: oRoute };
+
+		expect( oLogger._getRoutes() ).toEqual({ test: oRoute } );
+	} );
+
 	it( "MapStack", async ( fnDone ) => {
 
 		oRoot.log.oRouteTypes = { test: TestRoute };
