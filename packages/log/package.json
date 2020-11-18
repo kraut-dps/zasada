@@ -1,6 +1,6 @@
 {
   "name": "@zasada/log",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Log part of zasada library",
   "keywords": [
     "log",
