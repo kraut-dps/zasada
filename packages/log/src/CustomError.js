@@ -60,7 +60,7 @@ export class CustomError {
 	}
 
 	help() {
-		return this.sHelp ? 'https://github.com/kraut-dps/zasada/docs/errors.md#' + this.sHelp : '';
+		return this.sHelp ? 'https://github.com/kraut-dps/zasada/blob/master/docs/errors.md#' + this.sHelp : '';
 	}
 
 	blockId() {
