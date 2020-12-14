@@ -1,6 +1,6 @@
 /**
  * @typedef {import('./interfaces').ICustomError} ICustomError
- * @typedef {import('@zasada/core/src/interfaces').IWidget} IWidget
+ * @typedef {import('../../core/src/interfaces').IWidget} IWidget
  */
 /**
  * расширенный класс ошибки, чтобы иметь больше данных для разбирательств

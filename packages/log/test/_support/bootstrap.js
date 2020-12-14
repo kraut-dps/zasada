@@ -1,7 +1,7 @@
 import oLogBox from "../../src/index.js";
-import oCoreBox from "@zasada/core";
-import oTestBox from "@zasada/test";
-export {Widget} from "@zasada/widget";
+import oCoreBox from "../../../core/src/index.js";
+import oTestBox from "../../../test/src/index.js";
+export {Widget} from "../../../widget/src/Widget.js";
 
 oCoreBox.newError = oLogBox.newError;
 oTestBox.oneLinker = oCoreBox.oneLinker;

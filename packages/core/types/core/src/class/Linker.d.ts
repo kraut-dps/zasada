@@ -3,10 +3,13 @@
  * @typedef {import('./../interfaces').ILinkerInit} ILinkerInit
  * @typedef {import('./../interfaces').ILinkerOpts} ILinkerOpts
  * @typedef {import('./../interfaces').ILinkerClasses} ILinkerClasses
+ * @typedef {import('./../interfaces').IRelQuery} IRelQuery
  * @typedef {import('./../interfaces').IWidget} IWidget
  * @typedef {import('./../interfaces').IWidgetConstructor} IWidgetConstructor
  * @typedef {import('./../interfaces').IDom} IDom
  * @typedef {import('./../interfaces').IStorage} IStorage
+ * @typedef {import('./../interfaces').ICustomErrorProps} ICustomErrorProps
+ * @typedef {import('./../../../log/src/interfaces').ICustomError} ICustomError
  */
 /**
  * основной класс связывающий {Element} с виджетами
@@ -17,8 +20,14 @@ export class Linker implements ILinkerInit {
      * @type {function(Element, string, IWidgetConstructor ): IWidget}
      */
     newWidget: (arg0: Element, arg1: string, arg2: IWidgetConstructor) => IWidget;
-    newError: any;
-    newRelQuery: any;
+    /**
+     * @type {function( Partial<ICustomErrorProps> ): ICustomError}
+     */
+    newError: (arg0: Partial<ICustomErrorProps>) => ICustomError;
+    /**
+     * @type {function(): IRelQuery}
+     */
+    newRelQuery: () => IRelQuery;
     /**
      * @type {function(): IStorage}
      */
@@ -61,9 +70,9 @@ export class Linker implements ILinkerInit {
      * связывание Element
      * @param {Element} eContext
      * @param {boolean} bWithSelf
-     * @return {Promise<any[]>}
+     * @return {Promise<any[]>[]}
      */
-    link(eContext: Element, bWithSelf?: boolean): Promise<any[]>;
+    link(eContext: Element, bWithSelf?: boolean): Promise<any[]>[];
     unlink(eContext: any, bWithSelf: any): void;
     widget(eContext: any, sBlockId: any, oCustomOpts?: any): Promise<any>;
     _setProps(oWidget: any, oProps: any): void;
@@ -72,7 +81,10 @@ export type ILinker = import("../interfaces").ILinker;
 export type ILinkerInit = import("../interfaces").ILinkerInit;
 export type ILinkerOpts = import("../interfaces").ILinkerOpts;
 export type ILinkerClasses = import("../interfaces").ILinkerClasses;
+export type IRelQuery = import("../interfaces").IRelQuery<import("../interfaces").IWidget>;
 export type IWidget = import("../interfaces").IWidget;
 export type IWidgetConstructor = import("../interfaces").IWidgetConstructor;
 export type IDom = import("../interfaces").IDom;
 export type IStorage = import("../interfaces").IStorage;
+export type ICustomErrorProps = import("../interfaces").ICustomErrorProps;
+export type ICustomError = import("../../../log/src/interfaces").ICustomError;

@@ -141,24 +141,17 @@ describe( "Linker", () => {
 	describe( 'link', () => {
 
 		it( 'not-found-blockid', async ( fnDone ) => {
-			await oHelper.addHtml(
-				`<div class="_"></div>`
-			).catch( ( oError ) => {
-				if( oError && oError.sHelp === 'not-found-blockid' ) {
-					fnDone();
-					return true;
-				}
-			} )
+			oHelper.addHtml( `<div class="_"></div>` ).catch( ( oError ) => {
+				expect( oError.sHelp ).toBe( 'not-found-blockid' );
+				fnDone();
+			} );
 		} );
 
 		it( 'no-widget-opts', async ( fnDone ) => {
-			await oHelper.addHtml(
-				`<div class="_ _UnknownWidget"></div>`
-			).catch( ( oError ) => {
-				if( oError && oError.sHelp === 'no-widget-opts' ) {
-					fnDone();
-				}
-			} )
+			oHelper.addHtml( `<div class="_ _UnknownWidget"></div>` ).catch( ( oError ) => {
+				expect(oError.sHelp).toBe('no-widget-opts');
+				fnDone();
+			} );
 		} );
 
 		it( 'no-widget-class', async ( fnDone ) => {
@@ -167,13 +160,10 @@ describe( "Linker", () => {
 				BadWidget: {}
 			} );
 
-			await oHelper.addHtml(
-				`<div class="_ _BadWidget"></div>`
-			).catch( ( oError ) => {
-				if( oError && oError.mOrigin.sHelp === 'no-widget-class' ) {
-					fnDone();
-				}
-			} )
+			oHelper.addHtml( `<div class="_ _BadWidget"></div>` ).catch( ( oError ) => {
+				expect(oError.mOrigin.sHelp).toBe('no-widget-class');
+				fnDone();
+			} );
 		} );
 
 		it( "no-widget-prop", async ( fnDone ) => {
@@ -190,12 +180,10 @@ describe( "Linker", () => {
 					}
 				}
 			} );
-			await oHelper.addHtml(
-				'<div class="widget _ _TestWidget"></div>'
-			).catch( ( oError ) => {
-				if( oError && oError.mOrigin.sHelp === 'no-widget-prop' ) {
-					fnDone();
-				}
+
+			oHelper.addHtml( `<div class="widget _ _TestWidget"></div>` ).catch( ( oError ) => {
+				expect(oError.mOrigin.sHelp).toBe('no-widget-prop');
+				fnDone();
 			} )
 		} );
 
@@ -249,6 +237,80 @@ describe( "Linker", () => {
 
 		await oHelper.addHtml( '<div class="_ _Widget"></div>' );
 		expect( bCheck ).toBe( false );
+		fnDone();
+	} );
+
+	it( 'parent-child', async ( fnDone ) => {
+
+		class ParentWidget extends Widget {
+			_iChildren;
+			run() {
+				this._iChildren = this._rel().child().typeOf( ChildWidget ).canEmpty().find( true ).length;
+			}
+			getChildren() {
+				return this._iChildren;
+			}
+		}
+
+		class ChildWidget extends Widget {
+		}
+
+		oLinker.setWidgets( {ParentWidget, ChildWidget} );
+
+		await oHelper.addHtml(
+			'<div class="parent _ _ParentWidget">' +
+				'<div class="child1 _ _ChildWidget"></div>' +
+				'<div class="child2 _ _ChildWidget"></div>' +
+			'</div>'
+		);
+
+		const oParent = oHelper.widget( '.parent', ParentWidget );
+		expect( oParent.getChildren() ).toBe( 2 );
+
+		fnDone();
+	} );
+
+	it( 'one two three', async ( fnDone ) => {
+
+		class OneWidget extends Widget {
+			run() {
+				return new Promise( ( fnResolve ) => {
+					setTimeout( () => {
+						fnResolve();
+					}, 1 );
+				} );
+			}
+		}
+
+		class TwoWidget extends Widget {
+			run() {
+				throw new Error( 2 );
+				//return Promise.resolve();
+			}
+		}
+
+		class ThreeWidget extends Widget {
+			run() {
+				return new Promise( ( fnResolve ) => {
+					setTimeout( () => {
+						this.bl().textContent = 'three';
+						fnResolve();
+					}, 3 );
+				} );
+			}
+		}
+
+		oLinker.setWidgets( {OneWidget, TwoWidget, ThreeWidget} );
+
+		await oHelper.addHtml(
+			'<div class="_ _OneWidget">' +
+			'<div class="_ _TwoWidget"></div>' +
+			'<div class="three _ _ThreeWidget"></div>' +
+			'</div>',
+			true
+		)
+		const oThree = oHelper.widget( '.three', ThreeWidget );
+		expect( oThree.bl().textContent ).toBe( 'three' );
 		fnDone();
 	} );
 } );

@@ -1,6 +1,6 @@
 /**
  * @typedef {import('./interfaces').ICustomError} ICustomError
- * @typedef {import('@zasada/core/src/interfaces').IWidget} IWidget
+ * @typedef {import('../../core/src/interfaces').IWidget} IWidget
  */
 /**
  * расширенный класс ошибки, чтобы иметь больше данных для разбирательств
@@ -47,9 +47,9 @@ export class CustomError implements ICustomError {
     stackMapped(): string;
     context(): Element;
     contextHtml(iSubStr?: number): string;
-    widget(): import("@zasada/core/src/interfaces").IWidget;
+    widget(): import("../../core/src/interfaces").IWidget;
     widgetClass(): string;
     skipLog(): any;
 }
 export type ICustomError = import("./interfaces").ICustomError;
-export type IWidget = import("@zasada/core/src/interfaces").IWidget;
+export type IWidget = import("../../core/src/interfaces").IWidget;

@@ -1,14 +1,14 @@
 /**
- * @typedef {import('@zasada/core/src/interfaces').IWidget} IWidget
- * @typedef {import('@zasada/core/src/interfaces').IWidgetInit} IWidgetInit
- * @typedef {import('@zasada/core/src/interfaces').ILinker} ILinker
- * @typedef {import('@zasada/core/src/interfaces').IAttrs} IAttrs
- * @typedef {import('@zasada/core/src/interfaces').IEl} IEl
- * @typedef {import('@zasada/core/src/interfaces').IElQuery} IElQuery
- * @typedef {import('@zasada/core/src/interfaces').IRelQuery} IRelQuery
- * @typedef {import('@zasada/core/src/interfaces').ICustomError} ICustomError
- * @typedef {import('@zasada/core/src/interfaces').ICustomErrorProps} ICustomErrorProps
- * @typedef {import('@zasada/core/src/interfaces').TContext} TContext
+ * @typedef {import('../../core/src/interfaces').IWidget} IWidget
+ * @typedef {import('../../core/src/interfaces').IWidgetInit} IWidgetInit
+ * @typedef {import('../../core/src/interfaces').ILinker} ILinker
+ * @typedef {import('../../core/src/interfaces').IAttrs} IAttrs
+ * @typedef {import('../../core/src/interfaces').IEl} IEl
+ * @typedef {import('../../core/src/interfaces').IElQuery} IElQuery
+ * @typedef {import('../../core/src/interfaces').IRelQuery} IRelQuery
+ * @typedef {import('../../log/src/interfaces').ICustomError} ICustomError
+ * @typedef {import('../../core/src/interfaces').ICustomErrorProps} ICustomErrorProps
+ * @typedef {import('../../core/src/interfaces').TContext} TContext
  */
 /**
  * виджет
@@ -250,14 +250,16 @@ export class Widget {
 	 * запустить привязку виджетов к контексту
 	 * @param {string|Element|Element[]} mContext
 	 * @param {boolean} bWithSelf включая DOM элемент контекста?
-	 * @return {Promise<any[]>}
+	 * @return {Promise<any[]>[]}
 	 */
 	_link( mContext, bWithSelf ) {
 		const aPromises = [];
 		this._context( mContext ).forEach( ( eContext ) => {
-			aPromises.push( this.oneLinker().link( eContext, bWithSelf ) );
+			this.oneLinker().link( eContext, bWithSelf ).forEach( ( oPromise ) => {
+				aPromises.push( oPromise );
+			} );
 		} );
-		return Promise.all( aPromises );
+		return aPromises;
 	}
 
 	/**

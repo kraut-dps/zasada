@@ -10,12 +10,13 @@ export class Helper{
 	oneLinker;
 	_eContext;
 
-	addHtml( sHtml ) {
+	addHtml( sHtml, bAllSettled = false ) {
 		const eDiv = document.createElement( 'div' );
 		eDiv.innerHTML = sHtml;
 		document.body.appendChild( eDiv );
 		this._eContext = eDiv;
-		return this.oneLinker().link( eDiv );
+		const aPromises = this.oneLinker().link(eDiv);
+		return bAllSettled ? Promise.allSettled( aPromises ) : Promise.all( aPromises );
 	}
 
 	destroy() {
@@ -34,5 +35,11 @@ export class Helper{
 			.onlyFirst( true )
 			.typeOf( cWidget )
 			.find();
+	}
+
+	getRejectResults( aResults ) {
+		return aResults.filter( ( oResult ) => {
+			return oResult.status === "rejected";
+		});
 	}
 }

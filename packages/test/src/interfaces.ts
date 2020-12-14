@@ -1,4 +1,4 @@
-import {IWidgetConstructor, IWidget, ILinker} from "@zasada/core/src/interfaces";
+import {IWidgetConstructor, IWidget, ILinker} from "../../core/src/interfaces";
 
 export interface IHelper {
 	addHtml( sHtml: string ): Promise<any>;

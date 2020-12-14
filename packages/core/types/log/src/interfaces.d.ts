@@ -1,4 +1,4 @@
-import { IWidget, ICustomErrorProps } from "@zasada/core/src/interfaces";
+import { IWidget, ICustomErrorProps } from "../../core/src/interfaces";
 export interface ILogger {
     error(oError: Error | ICustomErrorProps | ICustomError): void;
     init(): void;

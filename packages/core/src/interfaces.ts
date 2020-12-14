@@ -4,8 +4,6 @@ declare type constructor<T> = {
 
 export type TContext = string | Element| Element[];
 
-declare type TAttrMap = string[] | object;
-
 type TWay = "parent" | "child" | "prev" | "next" | "self";
 
 export interface IAttrs {
@@ -182,7 +180,7 @@ export interface ILinker {
 	setBeforeNew( aBlockIds: string[], fnBeforeNew: ( object ) => void ): void;
 	setImports( oDynamicImports: object ): void;
 	getImport( sImportName: string, sBlockId: string ): () => Promise<any[]>;
-	link( eContext: Element, bWithSelf?: boolean ): Promise<any[]>;
+	link( eContext: Element, bWithSelf?: boolean ): Promise<any[]>[];
 	unlink( eContext: Element, bWithSelf? : boolean ): void;
 	widget( eContext: Element, sBlockId : string, oCustomOpts: object|null ): Promise<any[]>;
 }
@@ -208,21 +206,6 @@ export interface IPolyfillsConstructor {
 	new(): IPolyfills;
 }
 
-interface ILogRaw {
-	mError: any;
-	eContext: Element;
-	sBlockId: string;
-	oWidget: IWidget;
-}
-
-export interface ILogger {
-	error( oLog: ILogRaw ): void;
-}
-
-interface ILogRoute {
-	error( oError: ICustomError ): void;
-}
-
 export interface ICustomErrorProps {
 	message: string;
 	name: string;
@@ -233,21 +216,6 @@ export interface ICustomErrorProps {
 	eContext: Element | null;
 	sBlockId: string;
 	sStackMapped: string;
-}
-
-export interface ICustomError extends ICustomErrorProps{
-	setStackMapped( sStackMapped: string ): void;
-	errorOrigin(): any;
-	msg(): string;
-	help(): string;
-	blockId(): string;
-	stackOrigin(): string;
-	stackMapped(): string;
-	context(): Element | null;
-	contextHtml( iSubStr: number ): string;
-	widget(): IWidget | null;
-	widgetClass(): string;
-	skipLog(): boolean;
 }
 
 export interface IWidget {

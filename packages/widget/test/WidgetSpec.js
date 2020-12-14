@@ -48,7 +48,7 @@ describe( "Widget", () => {
 
 		// создадим динамическое содержимое, привяжем
 		oWidget.bl().innerHTML = '<div class="sub_widget _ _TestSubWidget"></div>';
-		await oWidget._link( '' );
+		await Promise.all( oWidget._link( '' ) );
 
 		expect( fnRunSpy.calls.count() ).toEqual(1 );
 		expect( fnDestructorSpy.calls.count() ).toEqual(0 );

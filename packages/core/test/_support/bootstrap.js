@@ -1,6 +1,6 @@
 import oCoreBox from "../../src/index.js";
-import oTestBox from "@zasada/test";
-export  {Widget} from "@zasada/widget";
+import oTestBox from "../../../test/src/index.js";
+export {Widget} from "../../../widget/src/Widget.js";
 
 oTestBox.oneLinker = oCoreBox.oneLinker;
 const oRoot = {

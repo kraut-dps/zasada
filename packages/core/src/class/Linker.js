@@ -3,10 +3,13 @@
  * @typedef {import('./../interfaces').ILinkerInit} ILinkerInit
  * @typedef {import('./../interfaces').ILinkerOpts} ILinkerOpts
  * @typedef {import('./../interfaces').ILinkerClasses} ILinkerClasses
+ * @typedef {import('./../interfaces').IRelQuery} IRelQuery
  * @typedef {import('./../interfaces').IWidget} IWidget
  * @typedef {import('./../interfaces').IWidgetConstructor} IWidgetConstructor
  * @typedef {import('./../interfaces').IDom} IDom
  * @typedef {import('./../interfaces').IStorage} IStorage
+ * @typedef {import('./../interfaces').ICustomErrorProps} ICustomErrorProps
+ * @typedef {import('./../../../log/src/interfaces').ICustomError} ICustomError
  */
 /**
  * основной класс связывающий {Element} с виджетами
@@ -19,8 +22,14 @@ export class Linker {
 	 */
 	newWidget;
 
+	/**
+	 * @type {function( Partial<ICustomErrorProps> ): ICustomError}
+	 */
 	newError;
 
+	/**
+	 * @type {function(): IRelQuery}
+	 */
 	newRelQuery;
 
 	/**
@@ -101,7 +110,7 @@ export class Linker {
 	 * связывание Element
 	 * @param {Element} eContext
 	 * @param {boolean} bWithSelf
-	 * @return {Promise<any[]>}
+	 * @return {Promise<any[]>[]}
 	 */
 	link( eContext, bWithSelf = false ) {
 		let aModelContexts, eModelContext, sBlockId, aBlockIds, i, aPromises = [];
@@ -141,7 +150,7 @@ export class Linker {
 				aPromises.push( Promise.reject( oError ) );
 			}
 		}
-		return Promise.all( aPromises );
+		return aPromises;
 	}
 
 	unlink( eContext, bWithSelf ) {

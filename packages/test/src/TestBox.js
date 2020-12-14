@@ -1,7 +1,7 @@
 /**
  * @typedef {import('./interfaces').IHelperConstructor} IHelperConstructor
  * @typedef {import('./interfaces').IHelper} IHelper
- * @typedef {import('@zasada/core/src//interfaces').ILinker} ILinker
+ * @typedef {import('../../core/src/interfaces').ILinker} ILinker
  */
 import {Box} from "di-box";
 
