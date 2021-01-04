@@ -26,7 +26,7 @@ describe( "Storage", () => {
 
 		oLinker.setWidgets( { TestWidget, ItemWidget } );
 
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			`<div class="main _ _TestWidget"></div>`
 		);
 

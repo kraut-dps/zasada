@@ -37,7 +37,7 @@ describe( "Widget", () => {
 		}
 
 		oLinker.setWidgets( { TestWidget, TestSubWidget } );
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			'<div class="widget _ _TestWidget"></div>'
 		);
 
@@ -48,7 +48,7 @@ describe( "Widget", () => {
 
 		// создадим динамическое содержимое, привяжем
 		oWidget.bl().innerHTML = '<div class="sub_widget _ _TestSubWidget"></div>';
-		await Promise.all( oWidget._link( '' ) );
+		await oWidget._link( '' );
 
 		expect( fnRunSpy.calls.count() ).toEqual(1 );
 		expect( fnDestructorSpy.calls.count() ).toEqual(0 );
@@ -91,7 +91,7 @@ describe( "Widget", () => {
 		expect( fnRunTestSubWidget1Spy.calls.count() ).toEqual( 0 );
 		expect( fnRunTestSubWidget2Spy.calls.count() ).toEqual( 0 );
 
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			'<div class="widget _ _TestWidget"></div>'
 		);
 
@@ -102,7 +102,7 @@ describe( "Widget", () => {
 	it( "._el()", async () => {
 
 		oLinker.setWidgets( { Widget } );
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			'<div class="widget _ _Widget">' +
 				'<div class="_Widget-Item">1</div>' +
 				'<div class="_Widget-Item">2</div>' +
@@ -128,7 +128,7 @@ describe( "Widget", () => {
 		class Widget1 extends Widget {}
 		class Widget2 extends Widget{}
 		oLinker.setWidgets( { Widget1, Widget2 } );
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			'<div class="widget _ _Widget1 _Widget2">' +
 			'<div class="_Widget1-El">1</div>' +
 			'<div class="_Widget2-El">2</div>' +
@@ -149,7 +149,7 @@ describe( "Widget", () => {
 		}
 
 		oLinker.setWidgets( { TestWidget } );
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			`<div class="widget1 _ _TestWidget">
 				<div class="widget2 _ _TestWidget"></div>
 				<div class="widget3 _ _TestWidget _TestWidget-Element"></div>
@@ -181,7 +181,7 @@ describe( "Widget", () => {
 		}
 
 		oLinker.setWidgets( { TestWidget, TestWidget2 } );
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			`<div class="widget1 _ _TestWidget" data-index="widget1"></div>
 				<div class="widget2 _ _TestWidget2" data-index="widget2"></div>
 				<div class="widget3 _ _TestWidget" data-index="widget3"></div>
@@ -248,7 +248,7 @@ describe( "Widget", () => {
 		}
 
 		oLinker.setWidgets( { TestWidget, TestArray, TestItem } );
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			`<div class="main _ _TestWidget"><div class="array _ _TestArray"></div></div>`
 		);
 
@@ -331,7 +331,7 @@ describe( "Widget", () => {
 		}
 
 		oLinker.setWidgets( { TestWidget, AddWidget } );
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			`<div class="main _ _TestWidget"></div>`
 		);
 
@@ -355,7 +355,7 @@ describe( "Widget", () => {
 		}
 
 		oLinker.setWidgets( { TestWidget } );
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			'<div class="widget _ _TestWidget"></div>'
 		);
 
@@ -386,7 +386,7 @@ describe( "Widget", () => {
 	// 	}
 	//
 	// 	oLinker.setWidgets( { TestWidget } );
-	// 	await oHelper.addHtml(
+	// 	await oHelper.addHtmlAll(
 	// 		'<div class="widget _ _TestWidget">' +
 	// 			'<div class="_TestWidget-El"></div>' +
 	// 		'</div>'
@@ -418,7 +418,7 @@ describe( "Widget", () => {
 		}
 
 		oLinker.setWidgets( { TestWidget } );
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			'<div class="widget _ _TestWidget" data-var1="7" data-var2="two" var3="3"></div>'
 		);
 
@@ -442,7 +442,7 @@ describe( "Widget", () => {
 		}
 
 		oLinker.setWidgets( { TestWidget } );
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			'<div class="widget _ _TestWidget"></div>'
 		);
 
@@ -482,7 +482,7 @@ describe( "Widget", () => {
 			fnImport2,
 		} );
 
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			'<div class="widget _ _TestWidget"></div>'
 		);
 
@@ -516,7 +516,7 @@ describe( "Widget", () => {
 		class TestWidget extends Widget {}
 
 		oLinker.setWidgets( { TestWidget } );
-		await oHelper.addHtml( `<div class="widget1 _ _TestWidget"></div>
+		await oHelper.addHtmlAll( `<div class="widget1 _ _TestWidget"></div>
 			<div class="widget2 _ _TestWidget">
 				<div class="widget4 _ _TestWidget"></div>
 			</div>
@@ -599,7 +599,7 @@ describe( "Widget", () => {
 		class TestWidget extends Widget {}
 
 		oLinker.setWidgets( { TestWidget } );
-		await oHelper.addHtml( `<div class="widget _ _TestWidget"></div>` );
+		await oHelper.addHtmlAll( `<div class="widget _ _TestWidget"></div>` );
 
 		const oWidget = oHelper.widget( '.widget', TestWidget );
 

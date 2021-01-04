@@ -33,6 +33,11 @@ export class Storage {
 	_oEventFns = {};
 
 	/**
+	 * @type {object} { oWidget: { sEvent: string, oRelQuery: RelQuery, fnHandler: function() } )
+	 */
+	_oWidgetEventMap;
+
+	/**
 	 * @type {Object} sBlockId: { sIndex => oWidget }
 	 */
 	_oIndex = {};
@@ -48,8 +53,6 @@ export class Storage {
 	 * @param {IWidget} oWidget
 	 */
 	add( oWidget ) {
-
-		this._fire( 'add', oWidget );
 
 		this.addBlockIdWidgetClassRel( oWidget.constructor, oWidget.blockId() );
 
@@ -92,7 +95,10 @@ export class Storage {
 				aWidgets.push( oWidgets[ sBlockId ] );
 
 				// тут еще подумать, подходящее ли место для события
-				this._fire( 'drop', oWidgets[ sBlockId ] );
+				this.fire( 'drop', oWidgets[ sBlockId ] );
+
+				// удалим обработчики событий на виджете
+				this._cleanWidgetHandlers( oWidgets[ sBlockId ] );
 			}
 
 			this._dropFromIndex( oWidgets );
@@ -161,11 +167,18 @@ export class Storage {
 	}
 
 	on( oRelQuery, sEvent, fnHandler ) {
+
+		// логика добавления обработчика
 		if( !this._oEventFns[ sEvent ] ) {
 			this._oEventFns[ sEvent ] = [];
 		}
 		this._oEventFns[ sEvent ].push( { oRelQuery, fnHandler } );
+
+		// отдельная структура с индексом по виджету, чтобы очищать обработчики автоматом
+		// при удалении виджета
+		this._saveWidgetEventMap( oRelQuery, sEvent, fnHandler );
 	}
+
 	off( oRelQuery, sEvent, fnHandler ) {
 		let iIndex = -1;
 		for( let i = 0; i < this._oEventFns[ sEvent ].length; i++ ) {
@@ -179,7 +192,8 @@ export class Storage {
 			this._oEventFns[sEvent].splice( iIndex, 1 );
 		}
 	}
-	_fire( sEvent, oWidget ) {
+
+	fire( sEvent, oWidget ) {
 		if( !this._oEventFns[ sEvent ] ) {
 			return;
 		}
@@ -187,6 +201,48 @@ export class Storage {
 			if( this.checkWidget( oWidget, oRelQuery ) ) {
 				fnHandler( oWidget, sEvent, oRelQuery );
 			}
+		} );
+	}
+
+	/**
+	 * добавление данных в отдельный индекс
+	 * хранящий привязку виджет => обработчики событий
+	 * чтобы при удалении виджета, удалять все обработчики
+	 * @param {IRelQuery} oRelQuery
+	 * @param {string} sEvent
+	 * @param {function} fnHandler
+	 */
+	_saveWidgetEventMap( oRelQuery, sEvent, fnHandler ) {
+		const oWidget = oRelQuery.getWidget();
+		if( !oWidget ) {
+			return;
+		}
+
+		if ( !this._oWidgetEventMap ) {
+			this._oWidgetEventMap = new WeakMap();
+		}
+		let aEventHandlers = this._oWidgetEventMap.get( oWidget );
+		if( !aEventHandlers ) {
+			aEventHandlers = [];
+		}
+		aEventHandlers.push( { oRelQuery, sEvent, fnHandler } );
+		this._oWidgetEventMap.set( oWidget, aEventHandlers );
+	}
+
+	/**
+	 * очистка обработчиков событий, при удалении виджета
+	 * @param {IWidget} oWidget
+	 */
+	_cleanWidgetHandlers( oWidget ) {
+		if ( !this._oWidgetEventMap ) {
+			return;
+		}
+		let aEventHandlers = this._oWidgetEventMap.get( oWidget );
+		if( !Array.isArray( aEventHandlers ) ) {
+			return;
+		}
+		aEventHandlers.forEach( ( {oRelQuery, sEvent, fnHandler} ) => {
+			this.off( oRelQuery, sEvent, fnHandler );
 		} );
 	}
 

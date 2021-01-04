@@ -84,7 +84,7 @@ describe( "base", () => {
 			}
 		} );
 
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			`<div class="_ _ErrorWidget"></div>`,
 		);
 

@@ -8,9 +8,26 @@
 export class Helper implements IHelper {
     oneLinker: any;
     _eContext: any;
-    addHtml(sHtml: any, bAllSettled?: boolean): Promise<{
-        [x: string]: PromiseSettledResult<any>;
-    }> | Promise<[any, any, any, any, any, any, any, any, any, any]>;
+    /**
+     * @deprecated
+     * use addHtml*
+     */
+    addHtml(sHtml: any): Promise<any[]>;
+    /**
+     * @param {string} sHtml
+     * @return {Promise<any[]>[]}
+     */
+    addHtmlPromises(sHtml: string): Promise<any[]>[];
+    /**
+     * @param {string} sHtml
+     * @return {Promise<any[]>}
+     */
+    addHtmlAll(sHtml: string): Promise<any[]>;
+    /**
+     * @param {string} sHtml
+     * @return {Promise<any[]>}
+     */
+    addHtmlAllSettled(sHtml: string): Promise<any[]>;
     destroy(): void;
     element(sSelector: any): any;
     widget(sSelector: any, cWidget: any): any;

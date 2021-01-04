@@ -50,7 +50,7 @@ describe( "Polyfills", () => {
 			const oLinker = oRoot.core.oneLinker();
 			const oHelper = oRoot.test.oneHelper();
 			oLinker.setWidgets( { PolyfillWidget } );
-			oHelper.addHtml( '<div class="_ _PolyfillWidget"></div>' );
+			oHelper.addHtmlAll( '<div class="_ _PolyfillWidget"></div>' );
 		} );
 	} );
 
@@ -74,7 +74,7 @@ describe( "Polyfills", () => {
 			const oLinker = oRoot.core.oneLinker();
 			const oHelper = oRoot.test.oneHelper();
 			oLinker.setWidgets( { PolyfillClassListWidget } );
-			oHelper.addHtml( '<div class="_ _PolyfillClassListWidget"></div>' );
+			oHelper.addHtmlAll( '<div class="_ _PolyfillClassListWidget"></div>' );
 		} );
 	} );
 

@@ -14,7 +14,6 @@ class TestRouteConsole extends RouteConsole {
 	}
 }
 
-
 describe( "RouteConsole", () => {
 
 	beforeAll( ( fnDone ) => {
@@ -48,7 +47,7 @@ describe( "RouteConsole", () => {
 				fnDone();
 			}
 		} };
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			`<div class="_"></div>`,
 		);
 
@@ -62,7 +61,7 @@ describe( "RouteConsole", () => {
 			window.console = oOriginConsole;
 			fnDone();
 		} };
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			`<div class="_ _UndefinedWidget"></div>`,
 		);
 	} );
@@ -81,7 +80,7 @@ describe( "RouteConsole", () => {
 		window.console = { error: () => {
 			fnDone();
 		} };
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			`<div class="_ _ThrowWidget"></div>`,
 		);
 	} );
@@ -96,7 +95,7 @@ describe( "RouteConsole", () => {
 			fnDone();
 		} );
 
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_COMPAT}"></div>`,
 		);
 	} );
@@ -126,7 +125,7 @@ describe( "RouteConsole", () => {
 			fnDone();
 		} );
 
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_ERROR}"></div>`,
 		);
 	} );
@@ -141,7 +140,7 @@ describe( "RouteConsole", () => {
 			fnDone();
 		} );
 
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_STRING}"></div>`,
 		);
 	} );

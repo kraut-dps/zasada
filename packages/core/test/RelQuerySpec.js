@@ -1,4 +1,4 @@
-import oRoot, {Widget as WidgetBase} from "./_support/bootstrap.js";
+import oRoot, {Widget} from "./_support/bootstrap.js";
 
 /**
  *  @type {IStorage}
@@ -8,12 +8,12 @@ let oLinker;
 let eSupParent, eParent, eBase, eChild, eSubChild, eOut, eOther;
 let oSupParentWidget, oParentWidget, oBaseWidget, oChildWidget, oSubChildWidget, oOtherWidget, oHelper;
 
-class Widget extends WidgetBase {
+class BaseWidget extends Widget {
 	_getIndex() {
 		return this.bl().id;
 	}
 }
-class OtherWidget extends WidgetBase {
+class OtherWidget extends BaseWidget {
 	_getIndex() {
 		return 'other';
 	}
@@ -24,7 +24,7 @@ describe( "RelQuery", () => {
 	beforeAll( ( fnDone ) => {
 		oRoot.core.init( ( oLinkerReal ) => {
 			oLinker = oLinkerReal;
-			oLinker.setWidgets( { Widget } );
+			oLinker.setWidgets( { BaseWidget } );
 			oStorage = oRoot.core.oneStorage();
 			oHelper = oRoot.test.newHelper();
 			fnDone();
@@ -33,7 +33,7 @@ describe( "RelQuery", () => {
 
 	describe( "general", () => {
 		beforeAll( async () => {
-			await oHelper.addHtml(  )
+			await oHelper.addHtmlAll(  )
 			document.body.insertAdjacentHTML(
 				'afterbegin',
 				`<div id="supparent" class="_ _supparent">
@@ -57,11 +57,11 @@ describe( "RelQuery", () => {
 			eOut = document.getElementById( 'out' );
 			eOther = document.getElementById( 'other' );
 
-			oSupParentWidget = new Widget( eSupParent, 'supparent' );
-			oParentWidget = new Widget( eParent, 'parent' );
-			oBaseWidget = new Widget( eBase, 'base' );
-			oChildWidget = new Widget( eChild, 'child' );
-			oSubChildWidget = new Widget( eSubChild, 'subchild' );
+			oSupParentWidget = new BaseWidget( eSupParent, 'supparent' );
+			oParentWidget = new BaseWidget( eParent, 'parent' );
+			oBaseWidget = new BaseWidget( eBase, 'base' );
+			oChildWidget = new BaseWidget( eChild, 'child' );
+			oSubChildWidget = new BaseWidget( eSubChild, 'subchild' );
 			oOtherWidget = new OtherWidget( eOther, 'other' );
 			oStorage.add( oSupParentWidget );
 			oStorage.add( oParentWidget );
@@ -79,7 +79,7 @@ describe( "RelQuery", () => {
 				oLinker.newRelQuery()
 					.from( eBase )
 					.withFrom()
-					.typeOf( Widget )
+					.typeOf( BaseWidget )
 					.cssSel( '#base' )
 					.find()
 			).toEqual( oBaseWidget );
@@ -88,7 +88,7 @@ describe( "RelQuery", () => {
 				oLinker.newRelQuery()
 					.from( eBase )
 					.withFrom()
-					.typeOf( Widget )
+					.typeOf( BaseWidget )
 					.cssSel( '#base' )
 					.find()
 			).toEqual( oBaseWidget );
@@ -97,7 +97,7 @@ describe( "RelQuery", () => {
 				oLinker.newRelQuery()
 					.from( eBase )
 					.withFrom( false )
-					.typeOf( Widget )
+					.typeOf( BaseWidget )
 					.cssSel( '#base' )
 					.canEmpty( true )
 					.find()
@@ -106,7 +106,7 @@ describe( "RelQuery", () => {
 			// неподходящий css
 			expect(
 				oLinker.newRelQuery()
-					.typeOf( Widget )
+					.typeOf( BaseWidget )
 					.cssSel( '.undefined' )
 					.canEmpty( true )
 					.find()
@@ -117,7 +117,7 @@ describe( "RelQuery", () => {
 					.child()
 					.from( eBase )
 					.withFrom( false )
-					.typeOf( Widget )
+					.typeOf( BaseWidget )
 					.blockId( 'child' )
 					.find()
 			).toEqual( oChildWidget );
@@ -126,7 +126,7 @@ describe( "RelQuery", () => {
 				oLinker.newRelQuery()
 					.from( eBase )
 					.child()
-					.typeOf( Widget )
+					.typeOf( BaseWidget )
 					.blockId( 'child' )
 					.find()
 			).toEqual( oChildWidget );
@@ -136,7 +136,7 @@ describe( "RelQuery", () => {
 					.parent()
 					.from( eBase )
 					.withFrom( false )
-					.typeOf( Widget )
+					.typeOf( BaseWidget )
 					.find( true )
 			).toEqual( [ oParentWidget, oSupParentWidget ] );
 
@@ -182,7 +182,7 @@ describe( "RelQuery", () => {
 					.child()
 					.from( eBase )
 					.withFrom( false )
-					.typeOf( Widget )
+					.typeOf( BaseWidget )
 					.blockId( [ 'child', 'subchild' ] )
 					.index( [ 'subchild' ] )
 					.find()
@@ -202,7 +202,7 @@ describe( "RelQuery", () => {
 					.parent()
 					.from( eBase )
 					.withFrom( false )
-					.typeOf( Widget )
+					.typeOf( BaseWidget )
 					.blockId( [ 'child', 'subchild' ] )
 					.index( 'subchild' )
 					.canEmpty( true )
@@ -213,7 +213,7 @@ describe( "RelQuery", () => {
 				oLinker.newRelQuery()
 					.parent()
 					.from( eBase )
-					.typeOf( Widget )
+					.typeOf( BaseWidget )
 					.blockId( [ 'child', 'subchild' ] )
 					.index( 'subchild' )
 					.canEmpty( true )
@@ -236,13 +236,13 @@ describe( "RelQuery", () => {
 	describe( "reindex", () => {
 		it( "add", async () => {
 
-			await oHelper.addHtml(
-				`<div id="index" class="one _ _Widget"></div>
-					<div id="index" class="two _ _Widget"></div>`
+			await oHelper.addHtmlAll(
+				`<div id="index" class="one _ _BaseWidget"></div>
+					<div id="index" class="two _ _BaseWidget"></div>`
 			);
 
-			const oOne = oHelper.widget( '.one', Widget );
-			const oTwo = oHelper.widget( '.two', Widget );
+			const oOne = oHelper.widget( '.one', BaseWidget );
+			const oTwo = oHelper.widget( '.two', BaseWidget );
 
 			expect(
 				oOne._rel()

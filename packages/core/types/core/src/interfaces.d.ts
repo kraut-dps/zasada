@@ -104,6 +104,7 @@ export interface IStorage {
     add(oWidget: IWidget): void;
     drop(eContext: Element, bWithSelf: boolean): IWidget[];
     find(oRelQuery: IRelQuery): IWidget[];
+    fire(sEvent: string, oWidget: IWidget): void;
     on(oRelQuery: IRelQuery, sEvent: string, fnHandler: () => any): any;
     off(oRelQuery: IRelQuery, sEvent: string, fnHandler: () => any): any;
 }
@@ -132,7 +133,8 @@ export interface ILinker {
     setBeforeNew(aBlockIds: string[], fnBeforeNew: (object: any) => void): void;
     setImports(oDynamicImports: object): void;
     getImport(sImportName: string, sBlockId: string): () => Promise<any[]>;
-    link(eContext: Element, bWithSelf?: boolean): Promise<any[]>[];
+    linkPromises(eContext: Element, bWithSelf?: boolean): Promise<any[]>[];
+    link(eContext: Element, bWithSelf?: boolean): Promise<any[]>;
     unlink(eContext: Element, bWithSelf?: boolean): void;
     widget(eContext: Element, sBlockId: string, oCustomOpts: object | null): Promise<any[]>;
 }

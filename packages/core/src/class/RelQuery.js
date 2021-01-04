@@ -31,8 +31,6 @@ export class RelQuery{
 	oneStorage;
 
 	_oWidget = null;
-	_oEventsMap;
-	_bDropOff = false;
 
 	/**
 	 * @param cTypeOf
@@ -203,58 +201,37 @@ export class RelQuery{
 	}
 
 	/**
-	 * при добавлении в хранилище виджета с этими условиями, будет срабатывать
+	 * добавить обработчик события
+	 * @param sEvent
 	 * @param fnHandler
 	 * @return {RelQuery}
 	 */
-	onAdd( fnHandler ) {
-		return this._storageOn( this, 'add', fnHandler );
-	}
-
-	/**
-	 * при удалении из хранилища виджаета с этими условиями, будет срабатывать
-	 * @param fnHandler
-	 * @return {RelQuery}
-	 */
-	onDrop( fnHandler ) {
-		return this._storageOn( this, 'drop', fnHandler );
-	}
-
-	_storageOn( cTypeOf, sEvent, fnHandler ) {
+	on( sEvent, fnHandler ) {
 		this.oneStorage().on( this, sEvent, fnHandler );
-
-		// если из виджета, то при удалении виджета, надо удалить и обработчики его
-		if( this._oWidget ) {
-			if ( !this._oEventsMap ) {
-				this._oEventsMap = new WeakMap();
-			}
-			let aEventHandlers = this._oEventsMap.get( this._oWidget );
-			if( !aEventHandlers ) {
-				aEventHandlers = [];
-			}
-			const oRelQuery = this;
-			aEventHandlers.push( { oRelQuery, sEvent, fnHandler } );
-			this._oEventsMap.set( this._oWidget, aEventHandlers );
-			if( !this._bDropOff ) {
-				this.oneStorage().on( new RelQuery(), 'drop', this._onDropOff.bind( this ) );
-				this._bDropOff = true;
-			}
-		}
 		return this;
 	}
 
 	/**
-	 * срабатывает при удалении видета, удаляет обработчики из этого виджета
-	 * @param oWidget
-	 * @param sEvent
+	 * убрать обработчик события
 	 */
-	_onDropOff( oWidget, sEvent ) {
-		let aEventHandlers = this._oEventsMap.get( oWidget );
-		if( !aEventHandlers ) {
-			return;
-		}
-		aEventHandlers.forEach( ( {oRelQuery, sEvent, fnHandler} ) => {
-			this.oneStorage().off( oRelQuery, sEvent, fnHandler );
-		} );
+	/*off( sEvent, fnHandler ) {
+		this.oneStorage().off( this, sEvent, fnHandler );
+		return this;
+	}*/
+
+	/**
+	 * @deprecated
+	 * use this.on()
+	 */
+	onAdd( fnHandler ) {
+		return this.on( 'add', fnHandler );
+	}
+
+	/**
+	 * @deprecated
+	 * use this.on()
+	 */
+	onDrop( fnHandler ) {
+		return this.on( 'drop', fnHandler );
 	}
 }

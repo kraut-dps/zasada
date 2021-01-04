@@ -67,12 +67,18 @@ export class Linker implements ILinkerInit {
     setImports(oDynamicImports: any): void;
     getImport(sImportName: any, sBlockId: any): any;
     /**
-     * связывание Element
      * @param {Element} eContext
      * @param {boolean} bWithSelf
      * @return {Promise<any[]>[]}
      */
-    link(eContext: Element, bWithSelf?: boolean): Promise<any[]>[];
+    linkPromises(eContext: Element, bWithSelf?: boolean): Promise<any[]>[];
+    /**
+     * связывание Element
+     * @param {Element} eContext
+     * @param {boolean} bWithSelf
+     * @return {Promise<any[]>}
+     */
+    link(eContext: Element, bWithSelf?: boolean): Promise<any[]>;
     unlink(eContext: any, bWithSelf: any): void;
     widget(eContext: any, sBlockId: any, oCustomOpts?: any): Promise<any>;
     _setProps(oWidget: any, oProps: any): void;

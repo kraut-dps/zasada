@@ -107,12 +107,11 @@ export class Linker {
 	}
 
 	/**
-	 * связывание Element
 	 * @param {Element} eContext
 	 * @param {boolean} bWithSelf
 	 * @return {Promise<any[]>[]}
 	 */
-	link( eContext, bWithSelf = false ) {
+	linkPromises( eContext, bWithSelf = false ) {
 		let aModelContexts, eModelContext, sBlockId, aBlockIds, i, aPromises = [];
 		const oDom = this.oneDom();
 
@@ -153,6 +152,16 @@ export class Linker {
 		return aPromises;
 	}
 
+	/**
+	 * связывание Element
+	 * @param {Element} eContext
+	 * @param {boolean} bWithSelf
+	 * @return {Promise<any[]>}
+	 */
+	link( eContext, bWithSelf = false ) {
+		return Promise.allSettled( this.linkPromises( eContext, bWithSelf ) );
+	}
+
 	unlink( eContext, bWithSelf ) {
 		const oStorage = this.oneStorage();
 		let aWidgets = oStorage.drop( eContext, bWithSelf ), i, oWidget;
@@ -191,6 +200,7 @@ export class Linker {
 			.then( () => {
 				this.fnAssertUndefProps( oNewWidget );
 				this.oneStorage().add( oNewWidget );
+				this.oneStorage().fire( 'add', oNewWidget );
 				const { fnBeforeRun } = this.fnDeepKey( ['fnBeforeRun'], oCustomOpts, this._oOpts[ sBlockId ] );
 				return fnBeforeRun ? fnBeforeRun( oNewWidget, oCustomOpts ) : null;
 			} )
@@ -198,6 +208,7 @@ export class Linker {
 				const { bSkipRun } = this.fnDeepKey( ['bSkipRun'], oCustomOpts, this._oOpts[ sBlockId ] );
 				if( !bSkipRun ) {
 					return Promise.resolve( oNewWidget.run() ).then( () => {
+						this.oneStorage().fire( 'run', oNewWidget );
 						return oNewWidget;
 					} );
 				}

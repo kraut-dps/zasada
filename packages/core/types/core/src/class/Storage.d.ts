@@ -27,6 +27,10 @@ export class Storage implements IStorageInit {
      */
     _oEventFns: object;
     /**
+     * @type {object} { oWidget: { sEvent: string, oRelQuery: RelQuery, fnHandler: function() } )
+     */
+    _oWidgetEventMap: object;
+    /**
      * @type {Object} sBlockId: { sIndex => oWidget }
      */
     _oIndex: any;
@@ -52,7 +56,21 @@ export class Storage implements IStorageInit {
     find(oRelQuery: IRelQuery): IWidget[];
     on(oRelQuery: any, sEvent: any, fnHandler: any): void;
     off(oRelQuery: any, sEvent: any, fnHandler: any): void;
-    _fire(sEvent: any, oWidget: any): void;
+    fire(sEvent: any, oWidget: any): void;
+    /**
+     * добавление данных в отдельный индекс
+     * хранящий привязку виджет => обработчики событий
+     * чтобы при удалении виджета, удалять все обработчики
+     * @param {IRelQuery} oRelQuery
+     * @param {string} sEvent
+     * @param {function} fnHandler
+     */
+    _saveWidgetEventMap(oRelQuery: IRelQuery, sEvent: string, fnHandler: Function): void;
+    /**
+     * очистка обработчиков событий, при удалении виджета
+     * @param {IWidget} oWidget
+     */
+    _cleanWidgetHandlers(oWidget: IWidget): void;
     _canEmptyCheck(aRet: any, oRelQuery: any): any;
     reindex(eContext: any, bWithSelf?: boolean): void;
     _widgetsFromMap(aBlocks: any, aBlockIds: any, cWidget: any, bOnlyFirst: any): any[];

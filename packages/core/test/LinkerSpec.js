@@ -55,7 +55,7 @@ describe( "Linker", () => {
 						}
 					}
 				} );
-			await oHelper.addHtml(
+			await oHelper.addHtmlAll(
 				'<div class="widget _ _TestWidget"></div>'
 			);
 
@@ -99,7 +99,7 @@ describe( "Linker", () => {
 					}
 				}
 			} );
-			await oHelper.addHtml(
+			await oHelper.addHtmlAll(
 				'<div class="widget _ _TestWidget2"></div>'
 			);
 
@@ -125,7 +125,7 @@ describe( "Linker", () => {
 			}
 		);
 
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			'<div class="base _ _BaseWidget"></div>' +
 			'<div class="lazy _ _LazyWidget"></div>'
 		);
@@ -141,14 +141,14 @@ describe( "Linker", () => {
 	describe( 'link', () => {
 
 		it( 'not-found-blockid', async ( fnDone ) => {
-			oHelper.addHtml( `<div class="_"></div>` ).catch( ( oError ) => {
+			oHelper.addHtmlAll( `<div class="_"></div>` ).catch( ( oError ) => {
 				expect( oError.sHelp ).toBe( 'not-found-blockid' );
 				fnDone();
 			} );
 		} );
 
 		it( 'no-widget-opts', async ( fnDone ) => {
-			oHelper.addHtml( `<div class="_ _UnknownWidget"></div>` ).catch( ( oError ) => {
+			oHelper.addHtmlAll( `<div class="_ _UnknownWidget"></div>` ).catch( ( oError ) => {
 				expect(oError.sHelp).toBe('no-widget-opts');
 				fnDone();
 			} );
@@ -160,7 +160,7 @@ describe( "Linker", () => {
 				BadWidget: {}
 			} );
 
-			oHelper.addHtml( `<div class="_ _BadWidget"></div>` ).catch( ( oError ) => {
+			oHelper.addHtmlAll( `<div class="_ _BadWidget"></div>` ).catch( ( oError ) => {
 				expect(oError.mOrigin.sHelp).toBe('no-widget-class');
 				fnDone();
 			} );
@@ -181,7 +181,7 @@ describe( "Linker", () => {
 				}
 			} );
 
-			oHelper.addHtml( `<div class="widget _ _TestWidget"></div>` ).catch( ( oError ) => {
+			oHelper.addHtmlAll( `<div class="widget _ _TestWidget"></div>` ).catch( ( oError ) => {
 				expect(oError.mOrigin.sHelp).toBe('no-widget-prop');
 				fnDone();
 			} )
@@ -189,9 +189,11 @@ describe( "Linker", () => {
 
 		it( 'link with self', async ( fnDone ) => {
 
+			const fnSelfWidgetRunSpy = jasmine.createSpy('spy' );
+
 			class SelfWidget extends Widget {
 				run() {
-					fnDone();
+					fnSelfWidgetRunSpy();
 				}
 			}
 
@@ -199,7 +201,17 @@ describe( "Linker", () => {
 			const eDiv = document.createElement( 'div' );
 			eDiv.className = '_ _SelfWidget'
 			document.body.appendChild( eDiv );
-			oLinker.link( eDiv, true );
+
+			await oLinker.link( eDiv, false );
+			expect( fnSelfWidgetRunSpy.calls.count() ).toEqual(0 );
+
+			await oLinker.link( eDiv );
+			expect( fnSelfWidgetRunSpy.calls.count() ).toEqual(0 );
+
+			await oLinker.link( eDiv, true );
+			expect( fnSelfWidgetRunSpy.calls.count() ).toEqual(1 );
+
+			fnDone();
 		} );
 
 	} );
@@ -223,7 +235,7 @@ describe( "Linker", () => {
 			}
 		} );
 
-		await oHelper.addHtml( '<div class="_ _Widget"></div>' );
+		await oHelper.addHtmlAll( '<div class="_ _Widget"></div>' );
 		expect( bCheck ).toBe( true );
 
 		// потом запуск с пропуском run
@@ -235,7 +247,7 @@ describe( "Linker", () => {
 			}
 		} );
 
-		await oHelper.addHtml( '<div class="_ _Widget"></div>' );
+		await oHelper.addHtmlAll( '<div class="_ _Widget"></div>' );
 		expect( bCheck ).toBe( false );
 		fnDone();
 	} );
@@ -257,7 +269,7 @@ describe( "Linker", () => {
 
 		oLinker.setWidgets( {ParentWidget, ChildWidget} );
 
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			'<div class="parent _ _ParentWidget">' +
 				'<div class="child1 _ _ChildWidget"></div>' +
 				'<div class="child2 _ _ChildWidget"></div>' +
@@ -302,7 +314,7 @@ describe( "Linker", () => {
 
 		oLinker.setWidgets( {OneWidget, TwoWidget, ThreeWidget} );
 
-		await oHelper.addHtml(
+		await oHelper.addHtmlAllSettled(
 			'<div class="_ _OneWidget">' +
 			'<div class="_ _TwoWidget"></div>' +
 			'<div class="three _ _ThreeWidget"></div>' +

@@ -27,8 +27,6 @@ export class RelQuery implements IRelQueryInit {
      */
     oneStorage: () => IStorage;
     _oWidget: any;
-    _oEventsMap: any;
-    _bDropOff: boolean;
     /**
      * @param cTypeOf
      * @return {RelQuery}
@@ -105,24 +103,25 @@ export class RelQuery implements IRelQueryInit {
      */
     getQuery(): any;
     /**
-     * при добавлении в хранилище виджета с этими условиями, будет срабатывать
+     * добавить обработчик события
+     * @param sEvent
      * @param fnHandler
      * @return {RelQuery}
+     */
+    on(sEvent: any, fnHandler: any): RelQuery;
+    /**
+     * убрать обработчик события
+     */
+    /**
+     * @deprecated
+     * use this.on()
      */
     onAdd(fnHandler: any): RelQuery;
     /**
-     * при удалении из хранилища виджаета с этими условиями, будет срабатывать
-     * @param fnHandler
-     * @return {RelQuery}
+     * @deprecated
+     * use this.on()
      */
     onDrop(fnHandler: any): RelQuery;
-    _storageOn(cTypeOf: any, sEvent: any, fnHandler: any): RelQuery;
-    /**
-     * срабатывает при удалении видета, удаляет обработчики из этого виджета
-     * @param oWidget
-     * @param sEvent
-     */
-    _onDropOff(oWidget: any, sEvent: any): void;
 }
 export type IRelQuery = import("../interfaces").IRelQuery<import("../interfaces").IWidget>;
 export type IRelQueryInit = import("../interfaces").IRelQueryInit;

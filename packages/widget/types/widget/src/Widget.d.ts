@@ -162,7 +162,14 @@ export class Widget implements IWidgetInit {
      * @param {boolean} bWithSelf включая DOM элемент контекста?
      * @return {Promise<any[]>[]}
      */
-    _link(mContext: string | Element | Element[], bWithSelf: boolean): Promise<any[]>[];
+    _linkPromises(mContext: string | Element | Element[], bWithSelf: boolean): Promise<any[]>[];
+    /**
+     * запустить привязку виджетов к контексту
+     * @param {string|Element|Element[]} mContext
+     * @param {boolean} bWithSelf включая DOM элемент контекста?
+     * @return {Promise<any[]>}
+     */
+    _link(mContext: string | Element | Element[], bWithSelf: boolean): Promise<any[]>;
     /**
      * отвязать виджеты от контекста
      * @param {string|Element|Element[]} mContext
@@ -178,6 +185,19 @@ export class Widget implements IWidgetInit {
      * @return {Promise<any>}
      */
     _widget(eContext: Element, sBlockId: string, oCustomOpts?: object | null): Promise<any>;
+    /**
+     * @param {string|Element|Element[]} mContext
+     * @param {string} sHtml
+     * @return {Promise<any[]>[]}
+     */
+    _innerHtmlPromises(mContext: string | Element | Element[], sHtml: string): Promise<any[]>[];
+    /**
+     * @param {string|Element|Element[]} mContext
+     * @param {string} sHtml
+     * @param {InsertPosition} sInsertPosition for { @link Element.insertAdjacentHTML }
+     * @return {Promise<any[]>[]}
+     */
+    _insertAdjacentHtmlPromises(mContext: string | Element | Element[], sHtml: string, sInsertPosition: InsertPosition): Promise<any[]>[];
     /**
      * обертка Element.innerHTML и Element.insertAdjacentHTML для динамического изменения HTML
      * @param {string|Element|Element[]} mContext

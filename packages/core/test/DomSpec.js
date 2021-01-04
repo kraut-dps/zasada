@@ -22,7 +22,7 @@ describe( "Dom", () => {
 
 	describe( ".children()", () => {
 		beforeAll( async() => {
-			await oHelper.addHtml( `<div id="base" class="all">
+			await oHelper.addHtmlAll( `<div id="base" class="all">
 					<div id="child" class="all">
 						<div id="subchild" class="all">
 						</div>
@@ -60,7 +60,7 @@ describe( "Dom", () => {
 	
 	describe( ".parents()", () => {
 		beforeAll( async() => {
-			oHelper.addHtml(
+			oHelper.addHtmlAll(
 				`<div id="supparent" class="all">
 				  <div id="parent" class="all">
 					<div id="base" class="all">
@@ -104,7 +104,7 @@ describe( "Dom", () => {
 
 	describe( ".prevs() .nexts()", () => {
 		beforeAll( async() => {
-			oHelper.addHtml(
+			oHelper.addHtmlAll(
 				`<div id="prev" class="all"></div>
 					<div id="base" class="all"></div>
 				  <div id="next" class="all"></div>`
@@ -126,7 +126,7 @@ describe( "Dom", () => {
 	
 	describe( ".parseBlockIds()", () => {
 		beforeAll( async() => {
-			await oHelper.addHtml(
+			await oHelper.addHtmlAll(
 				`<div class="base _BlockId Block _BlockId-ElementId _BlockId2-ElementId2 _BlockId3_Block _OtherBlockId"></div>`
 			);
 			eBase = oHelper.element( '.base' );

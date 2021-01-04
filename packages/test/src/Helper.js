@@ -10,13 +10,40 @@ export class Helper{
 	oneLinker;
 	_eContext;
 
-	addHtml( sHtml, bAllSettled = false ) {
+	/**
+	 * @deprecated
+	 * use addHtml*
+	 */
+	addHtml( sHtml ) {
+		return this.addHtmlAll( sHtml );
+	}
+
+	/**
+	 * @param {string} sHtml
+	 * @return {Promise<any[]>[]}
+	 */
+	addHtmlPromises( sHtml ) {
 		const eDiv = document.createElement( 'div' );
 		eDiv.innerHTML = sHtml;
 		document.body.appendChild( eDiv );
 		this._eContext = eDiv;
-		const aPromises = this.oneLinker().link(eDiv);
-		return bAllSettled ? Promise.allSettled( aPromises ) : Promise.all( aPromises );
+		return this.oneLinker().linkPromises( eDiv );
+	}
+
+	/**
+	 * @param {string} sHtml
+	 * @return {Promise<any[]>}
+	 */
+	addHtmlAll( sHtml ) {
+		return Promise.all( this.addHtmlPromises( sHtml ) );
+	}
+
+	/**
+	 * @param {string} sHtml
+	 * @return {Promise<any[]>}
+	 */
+	addHtmlAllSettled( sHtml ) {
+		return Promise.allSettled( this.addHtmlPromises( sHtml ) );
 	}
 
 	destroy() {

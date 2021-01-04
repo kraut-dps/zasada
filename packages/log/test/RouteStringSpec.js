@@ -1,4 +1,4 @@
-import oRoot, {Widget} from "./_support/bootstrap.js";
+import oRoot from "./_support/bootstrap.js";
 import { RouteString } from "../src/route/RouteString.js";
 import { CustomError } from "../src/CustomError.js";
 import {ErrorWidget} from "./_support/ErrorWidget.js";
@@ -58,7 +58,7 @@ describe( "RouteString", () => {
 		oRoot.log.init();
 
 		window.console = { log: fnDone };
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			`<div class="_ _UndefinedWidget"></div>`,
 		);
 	} );
@@ -75,7 +75,7 @@ describe( "RouteString", () => {
 		} );
 
 		const s100Len = "1".repeat(100);
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			`<div class="_ _UndefinedWidget" data="${s100Len}"></div>`,
 		);
 	} );
@@ -89,7 +89,7 @@ describe( "RouteString", () => {
 				expect(sMessage.indexOf('#') !== -1).toBe(false);
 				fnDone();
 			} };
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			`<div class="_ _ErrorWidget" data-type="${ErrorWidget.TYPE_REL_FROM_BAD}"></div>`,
 		);
 	} );
@@ -144,7 +144,7 @@ describe( "RouteString", () => {
 			fnDone();
 		} );
 
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			`<div class="_ _ErrorWidget"></div>`,
 		);
 	} );

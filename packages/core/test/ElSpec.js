@@ -17,7 +17,7 @@ describe( "El", () => {
 
 	it( "find", async ( fnDone ) => {
 
-		await oHelper.addHtml(
+		await oHelper.addHtmlAll(
 			`<div class="widget _ _WidgetTest _WidgetTest-Bar">
 				<div class="_WidgetTest-Foo"></div>
 				<div class="_WidgetTest-Foo"></div>

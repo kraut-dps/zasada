@@ -163,7 +163,7 @@ export class Widget {
 	 *
 	 * @example
 	 * ._mod( '', { one: 'new_class1', two: 'new_class2' ], 'one' )
-	 * 
+	 *
 	 * @param {string|Element|Element[]} mContext
 	 * @param {string|array|object} mMod
 	 * @param {boolean|string} mValue
@@ -252,14 +252,24 @@ export class Widget {
 	 * @param {boolean} bWithSelf включая DOM элемент контекста?
 	 * @return {Promise<any[]>[]}
 	 */
-	_link( mContext, bWithSelf ) {
+	_linkPromises( mContext, bWithSelf ) {
 		const aPromises = [];
 		this._context( mContext ).forEach( ( eContext ) => {
-			this.oneLinker().link( eContext, bWithSelf ).forEach( ( oPromise ) => {
+			this.oneLinker().linkPromises( eContext, bWithSelf ).forEach( ( oPromise ) => {
 				aPromises.push( oPromise );
 			} );
 		} );
 		return aPromises;
+	}
+
+	/**
+	 * запустить привязку виджетов к контексту
+	 * @param {string|Element|Element[]} mContext
+	 * @param {boolean} bWithSelf включая DOM элемент контекста?
+	 * @return {Promise<any[]>}
+	 */
+	_link( mContext, bWithSelf ) {
+		return Promise.allSettled( this._linkPromises( mContext, bWithSelf ) );
 	}
 
 	/**
@@ -286,25 +296,32 @@ export class Widget {
 	}
 
 	/**
-	 * обертка Element.innerHTML и Element.insertAdjacentHTML для динамического изменения HTML
 	 * @param {string|Element|Element[]} mContext
 	 * @param {string} sHtml
-	 * @param {null|InsertPosition} sInsertPosition for { @link Element.insertAdjacentHTML }
-	 * @return {Promise<any[]>}
+	 * @return {Promise<any[]>[]}
 	 */
-	_html( mContext, sHtml, sInsertPosition = null ) {
+	_innerHtmlPromises( mContext, sHtml ) {
 		const aPromises = [];
-
 		this._context( mContext ).forEach( ( eContext ) => {
 
-			if( !sInsertPosition ) {
-				// самый простой вариант, заменяем innerHTML
-				this._unlink( eContext, false );
-				eContext.innerHTML = sHtml;
-				let pPromise = this._link( eContext, false );
-				aPromises.push( pPromise );
-				return;
-			}
+			// самый простой вариант, заменяем innerHTML
+			this._unlink( eContext, false );
+			eContext.innerHTML = sHtml;
+			const aLinkPromises = this._linkPromises( eContext, false );
+			aPromises.push( ...aLinkPromises );
+		} );
+		return aPromises;
+	}
+
+	/**
+	 * @param {string|Element|Element[]} mContext
+	 * @param {string} sHtml
+	 * @param {InsertPosition} sInsertPosition for { @link Element.insertAdjacentHTML }
+	 * @return {Promise<any[]>[]}
+	 */
+	_insertAdjacentHtmlPromises( mContext, sHtml, sInsertPosition ) {
+		const aPromises = [];
+		this._context( mContext ).forEach( ( eContext ) => {
 
 			// специальная метка, чтобы разобраться, какой новый узел, а какой старый
 			// после вставки, проходимся по всем новым узлам, выполняем по ним _link
@@ -333,7 +350,7 @@ export class Widget {
 			do {
 				if( eContextItem.nodeType === 1 ) {
 					// DOM Element link
-					aPromises.push( this._link( eContextItem, true ) );
+					aPromises.push( ...this._linkPromises( eContextItem, true ) );
 				} else if( eContextItem.nodeType === 8 && eContextItem.textContent.trim() === sMarkComment ) {
 					// DOM comment with mark remove
 					eContextItem.parentNode.removeChild( eContextItem );
@@ -341,7 +358,22 @@ export class Widget {
 				}
 			} while ( ( eContextItem = fnNext( eContextItem ) ) )
 		} );
-		return Promise.all( aPromises );
+		return aPromises;
+	}
+
+
+	/**
+	 * обертка Element.innerHTML и Element.insertAdjacentHTML для динамического изменения HTML
+	 * @param {string|Element|Element[]} mContext
+	 * @param {string} sHtml
+	 * @param {null|InsertPosition} sInsertPosition for { @link Element.insertAdjacentHTML }
+	 * @return {Promise<any[]>}
+	 */
+	_html( mContext, sHtml, sInsertPosition = null ) {
+		const aPromises = sInsertPosition
+			? this._insertAdjacentHtmlPromises( mContext, sHtml, sInsertPosition )
+			: this._innerHtmlPromises( mContext, sHtml );
+		return Promise.allSettled( aPromises );
 	}
 
 	/**
