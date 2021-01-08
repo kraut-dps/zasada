@@ -23,9 +23,9 @@
   "homepage": "https://github.com/kraut-dps/zasada",
   "license": "MIT",
   "scripts": {
+    "ts-types": "lerna run ts-types",
     "unit": "karma start karma.conf.js --single-run",
-    "coverage": "karma start karma.conf.js --single-run --coverage",
-    "ts-types": "lerna run ts-types"
+    "coverage": "karma start karma.conf.js --single-run --coverage"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",
@@ -36,9 +36,6 @@
     "@babel/plugin-syntax-dynamic-import": "^7.7.4",
     "@babel/plugin-transform-runtime": "^7.10.5",
     "@babel/preset-env": "^7.7.5",
-    "@zasada/bootstrap": "^0.1.8",
-    "@zasada/core": "^0.1.2",
-    "@zasada/widget": "^0.1.2",
     "babel-loader": "^8.0.6",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine-core": "^2.9.1",
@@ -77,5 +74,15 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "@zasada/boilerplate": "file:packages/boilerplate",
+    "@zasada/bootstrap": "file:packages/bootstrap",
+    "@zasada/core": "file:packages/core",
+    "@zasada/examples": "file:packages/examples",
+    "@zasada/frame": "file:packages/frame",
+    "@zasada/log": "file:packages/log",
+    "@zasada/test": "file:packages/test",
+    "@zasada/widget": "file:packages/widget"
+  }
 }

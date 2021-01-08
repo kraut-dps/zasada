@@ -7,7 +7,7 @@
     "zasada"
   ],
   "main": "./src/Widget.js",
-  "types": "./types/Widget.d.ts",
+  "types": "./types/widget/src/Widget.d.ts",
   "files": [
     "src/",
     "types/"

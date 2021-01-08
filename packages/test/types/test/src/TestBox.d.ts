@@ -1,5 +1,5 @@
 export class TestBox extends Box {
-    constructor(sNeedCheckPrefix?: string, sProtectedPrefix?: string);
+    constructor(oOpts?: import("di-box").IOpts);
     /**
      * @type {IHelperConstructor}
      */

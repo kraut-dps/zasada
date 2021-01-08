@@ -1,7 +1,7 @@
 declare type constructor<T> = {
     new (...args: any[]): T;
 };
-export declare type TContext = string | Element | Element[];
+export declare type TContext = string | Element | Element[] | GlobalEventHandlers;
 declare type TWay = "parent" | "child" | "prev" | "next" | "self";
 export interface IAttrs {
     parse(aElements: Element[], mMap: (string | object | [][]), sPrefix?: string): any;
@@ -85,9 +85,8 @@ export interface IRelQuery<T = IWidget> {
     canEmpty(bCanEmpty?: boolean): IRelQuery<T>;
     onlyFirst(bOnlyFirst?: boolean): IRelQuery<T>;
     typeOf<T>(cTypeOf: constructor<T>): IRelQuery<T>;
-    find(bAll: false): T;
+    find(bAll?: false): T;
     find(bAll: true): T[];
-    find(bAll: null): T;
     getQuery(): IRelQueryStruct;
     onAdd(fnHandler: (oWidget: T, sEvent: string) => void): IRelQuery<T>;
     onDrop(fnHandler: (oWidget: T, sEvent: string) => void): IRelQuery<T>;
@@ -170,6 +169,8 @@ export interface ICustomErrorProps {
 export interface IWidget {
     newError: (oError: ICustomErrorProps) => any;
     run(): Promise<any> | any | void;
+    attach(): void;
+    detach(): void;
     bl(): Element;
     blockId(): string;
     index(): string;

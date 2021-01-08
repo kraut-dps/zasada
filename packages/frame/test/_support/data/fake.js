@@ -1,0 +1,1 @@
+window.fakeLoad = 1;

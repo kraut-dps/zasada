@@ -19,7 +19,7 @@
  * @typedef {import('./interfaces').IPolyfillsConstructor} IPolyfillsConstructor
  */
 export class CoreBox extends Box {
-    constructor(sNeedCheckPrefix?: string, sProtectedPrefix?: string);
+    constructor(oOpts?: import("di-box").IOpts);
     /** @type {IAttrsConstructor} */
     Attrs: IAttrsConstructor;
     /** @type {IDomConstructor} */

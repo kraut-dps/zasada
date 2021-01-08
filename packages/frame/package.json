@@ -1,0 +1,28 @@
+{
+  "name": "@zasada/frame",
+  "version": "0.0.1",
+  "description": "Frame part of zasada library",
+  "keywords": [
+    "frame",
+    "zasada"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kraut-dps/zasada.git"
+  },
+  "homepage": "https://github.com/kraut-dps/zasada",
+  "license": "MIT",
+  "main": "./src/index.js",
+  "types": "./types/index.d.ts",
+  "files": [
+    "src/",
+    "types/"
+  ],
+  "scripts": {
+    "ts-types": "tsc --build ./tsconfig.json"
+  },
+  "author": "",
+  "dependencies": {
+    "@zasada/widget": "^0.2.0"
+  }
+}

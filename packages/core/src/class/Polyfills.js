@@ -12,6 +12,8 @@ export class Polyfills{
 	pMozilla;
 	pWeakMap;
 	pClassList;
+	pBlob;
+	pFormData;
 
 	base( fnCallback ) {
 		this.Promise( () => {
@@ -19,7 +21,8 @@ export class Polyfills{
 				this.ObjectProto(),
 				this.Mozilla(), // Object.assign, CustomEvent, Element.prototype.matches, Element.prototype.closest
 				this.WeakMap(),
-				this.ElementClassList()
+				this.ElementClassList(),
+				this.Blob().then( () => this.FormData() )
 			] ).then( fnCallback );
 		} );
 	}
@@ -85,6 +88,29 @@ export class Polyfills{
 			bCheck
 			||
 			this.pClassList()
+		);
+	}
+
+	Blob() {
+		// @ts-ignore
+		const bIsIe = !!window.document.documentMode;
+		let bSupported = false;
+		try {
+			bSupported = new Blob( [ "ä" ] ).size === 2;
+		} catch ( e ) {}
+
+		return Promise.resolve(
+			( bSupported && !bIsIe )
+			||
+			this.pBlob()
+		);
+	}
+
+	FormData() {
+		return Promise.resolve(
+			( typeof FormData !== 'undefined' && FormData.prototype.keys )
+			||
+			this.pFormData()
 		);
 	}
 }

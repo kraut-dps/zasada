@@ -6,7 +6,7 @@
  * @typedef {import('./interfaces').IRouteTypes} IRouteTypes
  */
 export class LogBox extends Box {
-    constructor(sNeedCheckPrefix?: string, sProtectedPrefix?: string);
+    constructor(oOpts?: import("di-box").IOpts);
     /**
      * @type {ILoggerConstructor}
      */

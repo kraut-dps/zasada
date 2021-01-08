@@ -127,7 +127,7 @@ export class Widget {
 
 	/**
 	 * убрать обработчик события
-	 * @param {string|Element|Element[]} mContext
+	 * @param {TContext} mContext
 	 * @param {string} sEvent
 	 * @param {function} fnHandler
 	 */

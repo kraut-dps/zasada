@@ -13,7 +13,7 @@
   "homepage": "https://github.com/kraut-dps/zasada",
   "license": "MIT",
   "main": "./src/index.js",
-  "types": "./types/index.d.ts",
+  "types": "./types/log/src/index.d.ts",
   "files": [
     "src/",
     "types/"
@@ -23,10 +23,8 @@
   },
   "author": "",
   "dependencies": {
-    "di-box": "^0.2.2"
-  },
-  "devDependencies": {
-    "@zasada/test": "^0.2.0"
+    "di-box": "^0.2.2",
+    "sourcemapped-stacktrace": "^1.1.11"
   },
   "gitHead": "f01faea8a93efda2908c7b28c1879af57b9a378f"
 }

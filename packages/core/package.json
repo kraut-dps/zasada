@@ -13,7 +13,7 @@
   "homepage": "https://github.com/kraut-dps/zasada",
   "license": "MIT",
   "main": "./src/index.js",
-  "types": "./types/index.d.ts",
+  "types": "./types/core/src/index.d.ts",
   "files": [
     "src/",
     "types/"
@@ -22,10 +22,11 @@
     "ts-types": "tsc --build ./tsconfig.json"
   },
   "dependencies": {
+    "blob-polyfill": "^4.0.20200601",
     "classlist-polyfill": "^1.2.0",
     "di-box": "^0.2.2",
+    "formdata-polyfill": "^3.0.19",
     "proto-polyfill": "^1.7.0",
-    "sourcemapped-stacktrace": "^1.1.11",
     "weakmap-polyfill": "^2.0.2",
     "yaku": "^1.0.1"
   },

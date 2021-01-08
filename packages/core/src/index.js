@@ -26,6 +26,10 @@ oBox.oPolyfills = {
 	pProto: () => import( /* webpackChunkName: "polyfill-proto" */ "proto-polyfill" ),
 	pMozilla: () => import( /* webpackChunkName: "polyfill-mozilla" */ "./utils/polyfillsMozilla.js" ),
 	pWeakMap: () => import( /* webpackChunkName: "polyfill-weakmap" */ 'weakmap-polyfill' ),
-	pClassList: () => import( /* webpackChunkName: "polyfill-classlist" */ 'classlist-polyfill' )
+	pClassList: () => import( /* webpackChunkName: "polyfill-classlist" */ 'classlist-polyfill' ),
+	pBlob: () => import( /* webpackChunkName: "polyfill-blob" */ 'blob-polyfill' ).then( ( oPolyfill ) => {
+		window.Blob = oPolyfill.Blob;
+	} ),
+	pFormData: () => import( /* webpackChunkName: "polyfill-formdata" */ 'formdata-polyfill' )
 };
 export {oBox as default};

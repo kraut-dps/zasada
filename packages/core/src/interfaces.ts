@@ -2,7 +2,7 @@ declare type constructor<T> = {
 	new (...args: any[]): T;
 };
 
-export type TContext = string | Element| Element[];
+export type TContext = string | Element| Element[] | GlobalEventHandlers;
 
 type TWay = "parent" | "child" | "prev" | "next" | "self";
 
@@ -116,9 +116,8 @@ export interface IRelQuery<T = IWidget> {
 
 	typeOf<T>(cTypeOf: constructor<T>): IRelQuery<T>;
 
-	find( bAll: false ): T;
+	find( bAll?: false ): T;
 	find( bAll: true ): T[];
-	find( bAll: null ): T;
 
 	getQuery(): IRelQueryStruct;
 
@@ -227,6 +226,9 @@ export interface IWidget {
 	newError: ( oError: ICustomErrorProps ) => any;
 
 	run(): Promise<any> | any | void;
+
+	attach(): void;
+	detach(): void;
 
 	bl(): Element;
 

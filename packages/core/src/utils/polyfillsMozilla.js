@@ -78,3 +78,14 @@ if( !Element.prototype.closest ) {
 	};
 }
 export {};
+
+/*!
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/slice
+ */
+if ( !Uint8Array.prototype.slice ) {
+	Object.defineProperty( Uint8Array.prototype, 'slice', {
+		value: function ( begin, end ) {
+			return new Uint8Array( Array.prototype.slice.call( this, begin, end ) );
+		}
+	} );
+}

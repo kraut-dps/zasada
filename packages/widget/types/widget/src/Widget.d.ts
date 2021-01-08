@@ -88,11 +88,11 @@ export class Widget implements IWidgetInit {
     _on(mContext: TContext, sEvent: string, fnHandler: (arg0: Event) => any): void;
     /**
      * убрать обработчик события
-     * @param {string|Element|Element[]} mContext
+     * @param {TContext} mContext
      * @param {string} sEvent
      * @param {function} fnHandler
      */
-    _off(mContext: string | Element | Element[], sEvent: string, fnHandler: Function): void;
+    _off(mContext: TContext, sEvent: string, fnHandler: Function): void;
     /**
      * fire CustomEvent
      * @param {string|Element|Element[]} mContext
@@ -243,4 +243,4 @@ export type IElQuery = import("../../core/src/interfaces").IElQuery;
 export type IRelQuery = import("../../core/src/interfaces").IRelQuery<import("../../core/src/interfaces").IWidget>;
 export type ICustomError = import("../../log/src/interfaces").ICustomError;
 export type ICustomErrorProps = import("../../core/src/interfaces").ICustomErrorProps;
-export type TContext = string | Element | Element[];
+export type TContext = string | Element | GlobalEventHandlers | Element[];
