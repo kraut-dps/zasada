@@ -24,5 +24,6 @@
   "author": "",
   "dependencies": {
     "@zasada/widget": "^0.3.0-alpha.0"
-  }
+  },
+  "gitHead": "a870b7680235769b6601f1bd82e2b7893e69a254"
 }
