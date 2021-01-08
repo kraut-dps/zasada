@@ -1,6 +1,6 @@
 {
   "name": "@zasada/frame",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Frame part of zasada library",
   "keywords": [
     "frame",
@@ -23,7 +23,7 @@
   },
   "author": "",
   "dependencies": {
-    "@zasada/widget": "^0.3.0-alpha.0"
+    "@zasada/widget": "^0.3.0-alpha.1"
   },
   "gitHead": "fe50b563cbf834ab39f11b84d91d6d94b7abda12"
 }
