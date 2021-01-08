@@ -1,6 +1,6 @@
 {
   "name": "@zasada/boilerplate",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Boilerplate app of zasada library",
   "keywords": [
     "boilerplate",
@@ -18,8 +18,8 @@
     "prod": "webpack --mode=production"
   },
   "dependencies": {
-    "@zasada/bootstrap": "^0.1.12",
-    "@zasada/widget": "^0.2.0"
+    "@zasada/bootstrap": "^0.1.13",
+    "@zasada/widget": "^0.3.0-alpha.0"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",
