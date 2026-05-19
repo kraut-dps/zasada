@@ -37,7 +37,7 @@
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.44.0",
     "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "3.11.0",
+    "webpack-dev-server": "5.2.4",
     "webpack-merge": "^5.1.1"
   },
   "gitHead": "fe50b563cbf834ab39f11b84d91d6d94b7abda12"
